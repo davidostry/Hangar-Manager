@@ -2,7 +2,9 @@ import api from "./api";
 
 import type {
   Aircraft,
+  AircraftCreateRequest,
   AircraftListParams,
+  AircraftUpdateRequest,
   PaginatedResponse,
 } from "../types/aircraft";
 
@@ -10,7 +12,7 @@ const USE_MOCK_DATA =
   import.meta.env.DEV &&
   import.meta.env.VITE_USE_MOCK_DATA === "true";
 
-const MOCK_AIRCRAFT: Aircraft[] = [
+let mockAircraftRecords: Aircraft[] = [
   {
     id: "7eaf9c2a-3d5a-4f81-9a90-000000000001",
     tail_number: "4X-ABC",
@@ -70,21 +72,26 @@ export async function getAircraftList(
   if (USE_MOCK_DATA) {
     const search = params.search?.trim().toLowerCase() ?? "";
 
-    const filteredAircraft = MOCK_AIRCRAFT.filter((aircraft) => {
-      const matchesSearch =
-        search.length === 0 ||
-        [
-          aircraft.tail_number,
-          aircraft.manufacturer,
-          aircraft.model,
-          aircraft.serial_number,
-        ].some((value) => value.toLowerCase().includes(search));
+    const filteredAircraft = mockAircraftRecords.filter(
+      (aircraft) => {
+        const matchesSearch =
+          search.length === 0 ||
+          [
+            aircraft.tail_number,
+            aircraft.manufacturer,
+            aircraft.model,
+            aircraft.serial_number,
+          ].some((value) =>
+            value.toLowerCase().includes(search),
+          );
 
-      const matchesStatus =
-        !params.status || aircraft.status === params.status;
+        const matchesStatus =
+          !params.status ||
+          aircraft.status === params.status;
 
-      return matchesSearch && matchesStatus;
-    });
+        return matchesSearch && matchesStatus;
+      },
+    );
 
     const startIndex = (page - 1) * pageSize;
 
@@ -105,8 +112,12 @@ export async function getAircraftList(
       params: {
         page,
         page_size: pageSize,
-        ...(params.search ? { search: params.search } : {}),
-        ...(params.status ? { status: params.status } : {}),
+        ...(params.search
+          ? { search: params.search }
+          : {}),
+        ...(params.status
+          ? { status: params.status }
+          : {}),
       },
     },
   );
@@ -119,13 +130,90 @@ export async function getAircraftById(
 ): Promise<Aircraft | null> {
   if (USE_MOCK_DATA) {
     return (
-      MOCK_AIRCRAFT.find((aircraft) => aircraft.id === aircraftId) ??
-      null
+      mockAircraftRecords.find(
+        (aircraft) => aircraft.id === aircraftId,
+      ) ?? null
     );
   }
 
   const response = await api.get<Aircraft>(
     `/aircraft/${encodeURIComponent(aircraftId)}`,
+  );
+
+  return response.data;
+}
+
+export async function createAircraft(
+  payload: AircraftCreateRequest,
+): Promise<Aircraft> {
+  if (USE_MOCK_DATA) {
+    const now = new Date().toISOString();
+
+    const aircraft: Aircraft = {
+      ...payload,
+      id: crypto.randomUUID(),
+      status: "Available",
+      created_at: now,
+      updated_at: now,
+    };
+
+    mockAircraftRecords = [
+      aircraft,
+      ...mockAircraftRecords,
+    ];
+
+    return aircraft;
+  }
+
+  const response = await api.post<Aircraft>(
+    "/aircraft",
+    payload,
+  );
+
+  return response.data;
+}
+
+export async function updateAircraft(
+  aircraftId: string,
+  payload: AircraftUpdateRequest,
+): Promise<Aircraft> {
+  if (USE_MOCK_DATA) {
+    const index = mockAircraftRecords.findIndex(
+      (aircraft) => aircraft.id === aircraftId,
+    );
+
+    if (index === -1) {
+      throw new Error("Aircraft not found.");
+    }
+
+    const currentAircraft = mockAircraftRecords[index];
+
+    if (!currentAircraft) {
+      throw new Error("Aircraft not found.");
+    }
+
+    const updatedAircraft: Aircraft = {
+      ...currentAircraft,
+      ...payload,
+      id: currentAircraft.id,
+      status: currentAircraft.status,
+      created_at: currentAircraft.created_at,
+      updated_at: new Date().toISOString(),
+    };
+
+    mockAircraftRecords = mockAircraftRecords.map(
+      (aircraft) =>
+        aircraft.id === aircraftId
+          ? updatedAircraft
+          : aircraft,
+    );
+
+    return updatedAircraft;
+  }
+
+  const response = await api.patch<Aircraft>(
+    `/aircraft/${encodeURIComponent(aircraftId)}`,
+    payload,
   );
 
   return response.data;

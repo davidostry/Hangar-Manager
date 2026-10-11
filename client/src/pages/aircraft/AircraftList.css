@@ -2,6 +2,17 @@
   width: 100%;
 }
 
+.aircraft-page-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.aircraft-page-top .page-heading {
+  flex: 1;
+}
+
 .aircraft-toolbar {
   display: flex;
   align-items: flex-end;
@@ -88,6 +99,7 @@
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
+  text-decoration: none;
   cursor: pointer;
   transition:
     background-color 0.2s ease,
@@ -97,6 +109,7 @@
 .aircraft-button:hover {
   border-color: #1d4fb0;
   background-color: #1d4fb0;
+  color: #ffffff;
 }
 
 .aircraft-button:focus-visible {
@@ -250,6 +263,12 @@
   color: #991b1b;
 }
 
+.aircraft-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .aircraft-results-count {
   margin: 14px 0 0;
   color: #64748b;
@@ -265,6 +284,18 @@
 
   .aircraft-status-filter {
     width: 100%;
+  }
+}
+
+@media (max-width: 650px) {
+  .aircraft-page-top {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .aircraft-page-top > .aircraft-button {
+    align-self: flex-start;
+    margin-bottom: 22px;
   }
 }
 

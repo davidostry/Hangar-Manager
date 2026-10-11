@@ -12,6 +12,7 @@ import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 import AircraftList from "../pages/aircraft/AircraftList";
 import AircraftDetails from "../pages/aircraft/AircraftDetails";
+import AircraftFormPage from "../pages/aircraft/AircraftFormPage";
 import MaintenanceReports from "../pages/maintenance/MaintenanceReports";
 import MaintenanceReportDetails from "../pages/maintenance/MaintenanceReportDetails";
 import Inspections from "../pages/inspections/Inspections";
@@ -51,6 +52,16 @@ function AppRoutes() {
           <Route
             path="aircraft"
             element={<AircraftList />}
+          />
+
+          <Route
+            path="aircraft/new"
+            element={<AircraftFormPage mode="create" />}
+          />
+
+          <Route
+            path="aircraft/:aircraftId/edit"
+            element={<AircraftFormPage mode="edit" />}
           />
 
           <Route

@@ -16,6 +16,17 @@ export interface Aircraft {
   updated_at: string;
 }
 
+export interface AircraftCreateRequest {
+  tail_number: string;
+  manufacturer: string;
+  model: string;
+  serial_number: string;
+  manufacture_year: number;
+}
+
+export type AircraftUpdateRequest =
+  Partial<AircraftCreateRequest>;
+
 export interface AircraftListParams {
   search?: string;
   status?: AircraftStatus;

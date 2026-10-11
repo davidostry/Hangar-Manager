@@ -20,36 +20,31 @@ function getErrorMessage(error: unknown): string {
       return "Cannot connect to the Backend. Check that the server is running.";
     }
 
-    const responseData = error.response.data as
+    const data = error.response.data as
       | { detail?: unknown }
       | undefined;
 
-    const detail = responseData?.detail;
-
-    if (typeof detail === "string" && detail.trim()) {
-      return detail;
+    if (
+      typeof data?.detail === "string" &&
+      data.detail.trim()
+    ) {
+      return data.detail;
     }
 
-    if (Array.isArray(detail)) {
-      const messages: string[] = [];
-
-      for (const item of detail) {
-        if (typeof item !== "object" || item === null) {
-          continue;
-        }
-
-        const message = (item as { msg?: unknown }).msg;
-
-        if (typeof message === "string") {
-          messages.push(message);
-        }
-      }
+    if (Array.isArray(data?.detail)) {
+      const messages = data.detail
+        .filter(
+          (item): item is { msg: string } =>
+            typeof item === "object" &&
+            item !== null &&
+            "msg" in item &&
+            typeof item.msg === "string",
+        )
+        .map((item) => item.msg);
 
       if (messages.length > 0) {
         return messages.join(" ");
       }
-
-      return "Please check the submitted information.";
     }
 
     return `Failed to load aircraft. HTTP status: ${error.response.status}.`;
@@ -141,20 +136,25 @@ function AircraftList() {
     }
   }
 
-  function handleRetry(): void {
-    setRetryCount((current) => current + 1);
-  }
-
   return (
     <section className="aircraft-page">
-      <div className="page-heading">
-        <p className="page-eyebrow">Fleet Management</p>
+      <div className="aircraft-page-top">
+        <div className="page-heading">
+          <p className="page-eyebrow">Fleet Management</p>
 
-        <h1>Aircraft</h1>
+          <h1>Aircraft</h1>
 
-        <p className="page-description">
-          View, search and filter the aircraft in your fleet.
-        </p>
+          <p className="page-description">
+            View, search and manage the aircraft in your fleet.
+          </p>
+        </div>
+
+        <Link
+          to="/app/aircraft/new"
+          className="aircraft-button"
+        >
+          Add Aircraft
+        </Link>
       </div>
 
       <section
@@ -237,7 +237,7 @@ function AircraftList() {
           <button
             type="button"
             className="aircraft-button"
-            onClick={handleRetry}
+            onClick={() => setRetryCount((count) => count + 1)}
           >
             Try again
           </button>
@@ -272,10 +272,45 @@ function AircraftList() {
 
               <tbody>
                 {aircraft.map((item) => (
-                  <AircraftRow
-                    key={item.id}
-                    aircraft={item}
-                  />
+                  <tr key={item.id}>
+                    <td className="aircraft-tail-number">
+                      {item.tail_number}
+                    </td>
+
+                    <td>{item.manufacturer}</td>
+
+                    <td>{item.model}</td>
+
+                    <td>{item.serial_number}</td>
+
+                    <td>{item.manufacture_year}</td>
+
+                    <td>
+                      <span
+                        className={`aircraft-status-badge status-${item.status.toLowerCase()}`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+
+                    <td>
+                      <div className="aircraft-row-actions">
+                        <Link
+                          className="aircraft-button aircraft-button-secondary"
+                          to={`/app/aircraft/${item.id}`}
+                        >
+                          Details
+                        </Link>
+
+                        <Link
+                          className="aircraft-button aircraft-button-secondary"
+                          to={`/app/aircraft/${item.id}/edit`}
+                        >
+                          Edit
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>
@@ -287,45 +322,6 @@ function AircraftList() {
         </>
       )}
     </section>
-  );
-}
-
-interface AircraftRowProps {
-  aircraft: Aircraft;
-}
-
-function AircraftRow({ aircraft }: AircraftRowProps) {
-  return (
-    <tr>
-      <td className="aircraft-tail-number">
-        {aircraft.tail_number}
-      </td>
-
-      <td>{aircraft.manufacturer}</td>
-
-      <td>{aircraft.model}</td>
-
-      <td>{aircraft.serial_number}</td>
-
-      <td>{aircraft.manufacture_year}</td>
-
-      <td>
-        <span
-          className={`aircraft-status-badge status-${aircraft.status.toLowerCase()}`}
-        >
-          {aircraft.status}
-        </span>
-      </td>
-
-      <td>
-        <Link
-          className="aircraft-button aircraft-button-secondary"
-          to={`/app/aircraft/${aircraft.id}`}
-        >
-          View details
-        </Link>
-      </td>
-    </tr>
   );
 }
 
