@@ -1,4 +1,6 @@
+
 import api from "./api";
+
 import type { MaintenanceReport } from "../types/maintenance";
 import type { PaginatedResponse } from "../types/aircraft";
 
@@ -176,7 +178,7 @@ export async function getMaintenanceReportById(
       throw new Error("Maintenance report not found.");
     }
 
-    return report;
+    return { ...report };
   }
 
   const response = await api.get<MaintenanceReport>(
@@ -207,7 +209,7 @@ export async function createMaintenanceReport(
 
     MOCK_MAINTENANCE_REPORTS.unshift(newReport);
 
-    return newReport;
+    return { ...newReport };
   }
 
   const response = await api.post<MaintenanceReport>(
@@ -221,4 +223,32 @@ export async function createMaintenanceReport(
   );
 
   return response.data;
+}
+
+export async function updateMaintenanceReportStatus(
+  reportId: string,
+  status: MaintenanceReport["status"],
+): Promise<MaintenanceReport> {
+  if (USE_MOCK_DATA) {
+    const report = MOCK_MAINTENANCE_REPORTS.find(
+      (item) => item.id === reportId,
+    );
+
+    if (!report) {
+      throw new Error("Maintenance report not found.");
+    }
+
+    report.status = status;
+    report.completed_at =
+      status === "Resolved" ? new Date().toISOString() : null;
+
+    return { ...report };
+  }
+
+  await api.patch(
+    `/maintenance-reports/${reportId}`,
+    { status },
+  );
+
+  return getMaintenanceReportById(reportId);
 }

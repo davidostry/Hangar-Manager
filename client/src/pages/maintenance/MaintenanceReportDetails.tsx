@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
 import { Link, useParams } from "react-router";
 
-import { getMaintenanceReportById } from "../../services/maintenanceService";
+import {
+  getMaintenanceReportById,
+  updateMaintenanceReportStatus,
+} from "../../services/maintenanceService";
 
 import type {
   MaintenancePriority,
@@ -60,7 +63,7 @@ function getErrorMessage(error: unknown): string {
       return data.detail;
     }
 
-    return `Failed to load the report. HTTP status: ${error.response.status}.`;
+    return `Request failed. HTTP status: ${error.response.status}.`;
   }
 
   if (error instanceof Error) {
@@ -76,9 +79,17 @@ function MaintenanceReportDetails() {
   const [report, setReport] =
     useState<MaintenanceReport | null>(null);
 
+  const [selectedStatus, setSelectedStatus] =
+    useState<MaintenanceStatus>("Open");
+
   const [isLoading, setIsLoading] = useState(true);
+  const [isUpdatingStatus, setIsUpdatingStatus] =
+    useState(false);
+
   const [isNotFound, setIsNotFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [statusError, setStatusError] = useState("");
+  const [statusSuccess, setStatusSuccess] = useState("");
   const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
@@ -109,6 +120,7 @@ function MaintenanceReportDetails() {
         }
 
         setReport(result);
+        setSelectedStatus(result.status);
       } catch (error: unknown) {
         if (!isActive) {
           return;
@@ -136,6 +148,42 @@ function MaintenanceReportDetails() {
     };
   }, [reportId, retryCount]);
 
+  async function handleStatusUpdate(
+    event: React.FormEvent<HTMLFormElement>,
+  ): Promise<void> {
+    event.preventDefault();
+
+    if (!report || !reportId) {
+      return;
+    }
+
+    if (selectedStatus === report.status) {
+      setStatusError("Select a different status first.");
+      setStatusSuccess("");
+      return;
+    }
+
+    setIsUpdatingStatus(true);
+    setStatusError("");
+    setStatusSuccess("");
+
+    try {
+      const updatedReport =
+        await updateMaintenanceReportStatus(
+          reportId,
+          selectedStatus,
+        );
+
+      setReport(updatedReport);
+      setSelectedStatus(updatedReport.status);
+      setStatusSuccess("Report status updated successfully.");
+    } catch (error: unknown) {
+      setStatusError(getErrorMessage(error));
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  }
+
   if (isLoading) {
     return (
       <section className="maintenance-detail-page">
@@ -162,7 +210,6 @@ function MaintenanceReportDetails() {
 
         <div className="maintenance-detail-state">
           <h1>Report not found</h1>
-
           <p>
             The requested maintenance report does not exist or
             is no longer available.
@@ -236,7 +283,7 @@ function MaintenanceReportDetails() {
 
         <div>
           <span className="maintenance-detail-label">
-            Status
+            Current Status
           </span>
 
           <span
@@ -246,6 +293,77 @@ function MaintenanceReportDetails() {
           </span>
         </div>
       </div>
+
+      <section className="maintenance-detail-card">
+        <div className="maintenance-status-heading">
+          <div>
+            <h2>Update Report Status</h2>
+            <p>
+              Change the status as the maintenance work progresses.
+            </p>
+          </div>
+        </div>
+
+        <form
+          className="maintenance-status-form"
+          onSubmit={handleStatusUpdate}
+        >
+          <div className="maintenance-status-control">
+            <label htmlFor="maintenance-report-status">
+              New status
+            </label>
+
+            <select
+              id="maintenance-report-status"
+              value={selectedStatus}
+              onChange={(event) => {
+                setSelectedStatus(
+                  event.target.value as MaintenanceStatus,
+                );
+                setStatusError("");
+                setStatusSuccess("");
+              }}
+              disabled={isUpdatingStatus}
+            >
+              <option value="Open">Open</option>
+              <option value="InProgress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            className="maintenance-button"
+            disabled={
+              isUpdatingStatus ||
+              selectedStatus === report.status
+            }
+          >
+            {isUpdatingStatus
+              ? "Saving status..."
+              : "Save status"}
+          </button>
+        </form>
+
+        {statusError && (
+          <p
+            className="maintenance-status-message maintenance-status-message-error"
+            role="alert"
+          >
+            {statusError}
+          </p>
+        )}
+
+        {statusSuccess && (
+          <p
+            className="maintenance-status-message maintenance-status-message-success"
+            role="status"
+          >
+            {statusSuccess}
+          </p>
+        )}
+      </section>
 
       <section className="maintenance-detail-card">
         <h2>Report Information</h2>
