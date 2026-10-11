@@ -6,20 +6,37 @@ import {
 } from "react-router";
 
 import Layout from "../components/layout/Layout";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
-import PlaceholderPage from "../pages/PlaceHolderPage"
+import PlaceholderPage from "../pages/PlaceholderPage";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-        <Route path="/app" element={<Layout />}>
+        <Route
+          path="/app"
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
           <Route
             index
-            element={<Navigate to="/app/dashboard" replace />}
+            element={
+              <Navigate
+                to="/app/dashboard"
+                replace
+              />
+            }
           />
 
           <Route
@@ -29,7 +46,9 @@ function AppRoutes() {
 
           <Route
             path="aircraft"
-            element={<PlaceholderPage title="Aircraft" />}
+            element={
+              <PlaceholderPage title="Aircraft" />
+            }
           />
 
           <Route
@@ -41,18 +60,30 @@ function AppRoutes() {
 
           <Route
             path="inspections"
-            element={<PlaceholderPage title="Inspections" />}
+            element={
+              <PlaceholderPage title="Inspections" />
+            }
           />
         </Route>
 
         <Route
           path="/"
-          element={<Navigate to="/app/dashboard" replace />}
+          element={
+            <Navigate
+              to="/app/dashboard"
+              replace
+            />
+          }
         />
 
         <Route
           path="*"
-          element={<Navigate to="/app/dashboard" replace />}
+          element={
+            <Navigate
+              to="/app/dashboard"
+              replace
+            />
+          }
         />
       </Routes>
     </BrowserRouter>

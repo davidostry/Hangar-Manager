@@ -1,6 +1,16 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+
+import { useAuth } from "../../context/AuthContext";
 
 function Header() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  function handleLogout(): void {
+    logout();
+    navigate("/login", { replace: true });
+  }
+
   return (
     <header className="app-header">
       <NavLink
@@ -57,6 +67,26 @@ function Header() {
           Inspections
         </NavLink>
       </nav>
+
+      <div className="header-account">
+        <div className="account-information">
+          <span className="account-name">
+            {user?.display_name || user?.email}
+          </span>
+
+          <span className="account-role">
+            {user?.role}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          className="logout-button"
+          onClick={handleLogout}
+        >
+          Log out
+        </button>
+      </div>
     </header>
   );
 }
