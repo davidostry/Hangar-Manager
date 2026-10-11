@@ -34,3 +34,13 @@ def create_user(user_data: dict):
     )
 
     return response.data[0]
+
+def update_user_role(user_id: str, role: str):
+    response = (
+        supabase.table("users")
+        .update({"role": role})
+        .eq("id", user_id)
+        .execute()
+    )
+
+    return response.data[0] if response.data else None
