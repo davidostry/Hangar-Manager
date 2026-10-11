@@ -8,7 +8,7 @@ import {
 import Layout from "../components/layout/Layout";
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
-import PlaceholderPage from "../pages/PlaceholderPage";
+import PlaceholderPage from "../pages/PlaceHolderPage"
 
 function AppRoutes() {
   return (
