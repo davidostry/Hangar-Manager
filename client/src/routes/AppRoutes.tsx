@@ -10,21 +10,22 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
+
 import AircraftList from "../pages/aircraft/AircraftList";
 import AircraftDetails from "../pages/aircraft/AircraftDetails";
 import AircraftFormPage from "../pages/aircraft/AircraftFormPage";
+
 import MaintenanceReports from "../pages/maintenance/MaintenanceReports";
+import MaintenanceReportForm from "../pages/maintenance/MaintenanceReportForm";
 import MaintenanceReportDetails from "../pages/maintenance/MaintenanceReportDetails";
+
 import Inspections from "../pages/inspections/Inspections";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+        <Route path="/login" element={<Login />} />
 
         <Route
           path="/app"
@@ -37,10 +38,7 @@ function AppRoutes() {
           <Route
             index
             element={
-              <Navigate
-                to="/app/dashboard"
-                replace
-              />
+              <Navigate to="/app/dashboard" replace />
             }
           />
 
@@ -75,6 +73,11 @@ function AppRoutes() {
           />
 
           <Route
+            path="maintenance/new"
+            element={<MaintenanceReportForm />}
+          />
+
+          <Route
             path="maintenance/:reportId"
             element={<MaintenanceReportDetails />}
           />
@@ -88,20 +91,14 @@ function AppRoutes() {
         <Route
           path="/"
           element={
-            <Navigate
-              to="/app/dashboard"
-              replace
-            />
+            <Navigate to="/app/dashboard" replace />
           }
         />
 
         <Route
           path="*"
           element={
-            <Navigate
-              to="/app/dashboard"
-              replace
-            />
+            <Navigate to="/app/dashboard" replace />
           }
         />
       </Routes>

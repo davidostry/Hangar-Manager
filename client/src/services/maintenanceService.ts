@@ -1,78 +1,89 @@
 import api from "./api";
+import type { MaintenanceReport } from "../types/maintenance";
+import type { PaginatedResponse } from "../types/aircraft";
 
-import type {
-  MaintenanceReport,
-  MaintenanceReportListParams,
-  MaintenanceReportListResponse,
-} from "../types/maintenance";
+export interface MaintenanceReportListParams {
+  search?: string;
+  status?: MaintenanceReport["status"];
+  priority?: MaintenanceReport["priority"];
+  page?: number;
+  page_size?: number;
+}
+
+export interface MaintenanceReportCreateRequest {
+  aircraft_id: string;
+  title: string;
+  description: string;
+  priority: MaintenanceReport["priority"];
+}
 
 const USE_MOCK_DATA =
   import.meta.env.DEV &&
   import.meta.env.VITE_USE_MOCK_DATA === "true";
 
-const MOCK_REPORTS: MaintenanceReport[] = [
+const MOCK_MAINTENANCE_REPORTS: MaintenanceReport[] = [
   {
-    id: "8a100001-1111-4111-8111-111111111111",
+    id: "8eaf9c2a-3d5a-4f81-9a90-000000000001",
     aircraft_id: "7eaf9c2a-3d5a-4f81-9a90-000000000001",
-    title: "Engine temperature warning",
+    title: "Engine vibration detected",
     description:
-      "An abnormal engine temperature warning was reported during operation.",
-    priority: "Critical",
+      "Unusual vibration was reported during the last engine inspection.",
+    priority: "High",
     status: "Open",
     reported_at: "2026-10-10T08:30:00Z",
-    reported_by: "11111111-1111-4111-8111-111111111111",
+    reported_by: "Mock Administrator",
     assigned_to: null,
     completed_at: null,
   },
   {
-    id: "8a100002-2222-4222-8222-222222222222",
+    id: "8eaf9c2a-3d5a-4f81-9a90-000000000002",
     aircraft_id: "7eaf9c2a-3d5a-4f81-9a90-000000000002",
-    title: "Hydraulic system inspection",
+    title: "Hydraulic system leak",
     description:
-      "Hydraulic pressure requires inspection and additional testing.",
-    priority: "High",
+      "A hydraulic fluid leak was identified near the landing gear.",
+    priority: "Critical",
     status: "InProgress",
-    reported_at: "2026-10-08T11:15:00Z",
-    reported_by: "22222222-2222-4222-8222-222222222222",
-    assigned_to: "22222222-2222-4222-8222-222222222222",
+    reported_at: "2026-10-09T11:15:00Z",
+    reported_by: "Mock Administrator",
+    assigned_to: "Mock Technician",
     completed_at: null,
   },
   {
-    id: "8a100003-3333-4333-8333-333333333333",
+    id: "8eaf9c2a-3d5a-4f81-9a90-000000000003",
     aircraft_id: "7eaf9c2a-3d5a-4f81-9a90-000000000003",
-    title: "Landing gear maintenance",
+    title: "Cabin lighting malfunction",
     description:
-      "Landing gear maintenance and operational tests were completed.",
-    priority: "Medium",
-    status: "Resolved",
-    reported_at: "2026-10-04T09:00:00Z",
-    reported_by: "11111111-1111-4111-8111-111111111111",
-    assigned_to: "22222222-2222-4222-8222-222222222222",
-    completed_at: "2026-10-06T13:45:00Z",
-  },
-  {
-    id: "8a100004-4444-4444-8444-444444444444",
-    aircraft_id: "7eaf9c2a-3d5a-4f81-9a90-000000000004",
-    title: "Cabin lighting issue",
-    description:
-      "A cabin lighting issue was reported for further assessment.",
+      "Several cabin lights are not functioning correctly.",
     priority: "Low",
     status: "Open",
-    reported_at: "2026-10-03T14:20:00Z",
-    reported_by: "11111111-1111-4111-8111-111111111111",
+    reported_at: "2026-10-08T14:00:00Z",
+    reported_by: "Mock Administrator",
     assigned_to: null,
     completed_at: null,
   },
   {
-    id: "8a100005-5555-4555-8555-555555555555",
-    aircraft_id: "7eaf9c2a-3d5a-4f81-9a90-000000000002",
-    title: "Brake system noise",
+    id: "8eaf9c2a-3d5a-4f81-9a90-000000000004",
+    aircraft_id: "7eaf9c2a-3d5a-4f81-9a90-000000000004",
+    title: "Landing gear inspection",
     description:
-      "An unusual noise was reported during a brake system check.",
+      "Inspection and adjustment of the landing gear assembly.",
+    priority: "Medium",
+    status: "Resolved",
+    reported_at: "2026-10-06T09:00:00Z",
+    reported_by: "Mock Administrator",
+    assigned_to: "Mock Technician",
+    completed_at: "2026-10-07T13:30:00Z",
+  },
+  {
+    id: "8eaf9c2a-3d5a-4f81-9a90-000000000005",
+    aircraft_id: "7eaf9c2a-3d5a-4f81-9a90-000000000001",
+    title: "Oil pressure warning",
+    description:
+      "Oil pressure warning was recorded and requires further investigation.",
     priority: "High",
     status: "Cancelled",
-    reported_at: "2026-09-28T07:45:00Z",
-    reported_by: "22222222-2222-4222-8222-222222222222",
+    reported_at: "2026-10-05T07:45:00Z",
+    reported_by: "Mock Administrator",
     assigned_to: null,
     completed_at: null,
   },
@@ -80,7 +91,7 @@ const MOCK_REPORTS: MaintenanceReport[] = [
 
 export async function getMaintenanceReports(
   params: MaintenanceReportListParams = {},
-): Promise<MaintenanceReportListResponse> {
+): Promise<PaginatedResponse<MaintenanceReport>> {
   const page = Math.max(1, params.page ?? 1);
   const pageSize = Math.min(
     100,
@@ -90,25 +101,36 @@ export async function getMaintenanceReports(
   if (USE_MOCK_DATA) {
     const search = params.search?.trim().toLowerCase() ?? "";
 
-    const filteredReports = MOCK_REPORTS.filter((report) => {
-      const matchesSearch =
-        search.length === 0 ||
-        [
-          report.title,
-          report.description,
-          report.aircraft_id,
-          report.priority,
-          report.status,
-        ].some((value) => value.toLowerCase().includes(search));
+    const filteredReports = MOCK_MAINTENANCE_REPORTS
+      .filter((report) => {
+        const matchesSearch =
+          search.length === 0 ||
+          [
+            report.title,
+            report.description,
+            report.aircraft_id,
+          ].some((value) =>
+            value.toLowerCase().includes(search),
+          );
 
-      const matchesStatus =
-        !params.status || report.status === params.status;
+        const matchesStatus =
+          !params.status || report.status === params.status;
 
-      const matchesPriority =
-        !params.priority || report.priority === params.priority;
+        const matchesPriority =
+          !params.priority ||
+          report.priority === params.priority;
 
-      return matchesSearch && matchesStatus && matchesPriority;
-    });
+        return (
+          matchesSearch &&
+          matchesStatus &&
+          matchesPriority
+        );
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.reported_at).getTime() -
+          new Date(a.reported_at).getTime(),
+      );
 
     const startIndex = (page - 1) * pageSize;
 
@@ -123,34 +145,79 @@ export async function getMaintenanceReports(
     };
   }
 
-  const response =
-    await api.get<MaintenanceReportListResponse>(
-      "/maintenance-reports",
-      {
-        params: {
-          page,
-          page_size: pageSize,
-          ...(params.search ? { search: params.search } : {}),
-          ...(params.status ? { status: params.status } : {}),
-          ...(params.priority ? { priority: params.priority } : {}),
-        },
-      },
-    );
+  const response = await api.get<
+    PaginatedResponse<MaintenanceReport>
+  >("/maintenance-reports", {
+    params: {
+      page,
+      page_size: pageSize,
+      ...(params.search?.trim()
+        ? { search: params.search.trim() }
+        : {}),
+      ...(params.status ? { status: params.status } : {}),
+      ...(params.priority
+        ? { priority: params.priority }
+        : {}),
+    },
+  });
 
   return response.data;
 }
 
 export async function getMaintenanceReportById(
   reportId: string,
-): Promise<MaintenanceReport | null> {
+): Promise<MaintenanceReport> {
   if (USE_MOCK_DATA) {
-    return (
-      MOCK_REPORTS.find((report) => report.id === reportId) ?? null
+    const report = MOCK_MAINTENANCE_REPORTS.find(
+      (item) => item.id === reportId,
     );
+
+    if (!report) {
+      throw new Error("Maintenance report not found.");
+    }
+
+    return report;
   }
 
   const response = await api.get<MaintenanceReport>(
-    `/maintenance-reports/${encodeURIComponent(reportId)}`,
+    `/maintenance-reports/${reportId}`,
+  );
+
+  return response.data;
+}
+
+export async function createMaintenanceReport(
+  payload: MaintenanceReportCreateRequest,
+): Promise<MaintenanceReport> {
+  if (USE_MOCK_DATA) {
+    const now = new Date().toISOString();
+
+    const newReport: MaintenanceReport = {
+      id: crypto.randomUUID(),
+      aircraft_id: payload.aircraft_id,
+      title: payload.title.trim(),
+      description: payload.description.trim(),
+      priority: payload.priority,
+      status: "Open",
+      reported_at: now,
+      reported_by: "Mock Administrator",
+      assigned_to: null,
+      completed_at: null,
+    };
+
+    MOCK_MAINTENANCE_REPORTS.unshift(newReport);
+
+    return newReport;
+  }
+
+  const response = await api.post<MaintenanceReport>(
+    "/maintenance-reports",
+    {
+      aircraft_id: payload.aircraft_id,
+      title: payload.title.trim(),
+      description: payload.description.trim(),
+      priority: payload.priority,
+    },
   );
 
   return response.data;
