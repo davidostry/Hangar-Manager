@@ -1,0 +1,136 @@
+.aircraft-details-page {
+  width: 100%;
+}
+
+.aircraft-back-link {
+  display: inline-flex;
+  margin-bottom: 24px;
+  color: #1d4fb0;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.aircraft-back-link:hover {
+  text-decoration: underline;
+}
+
+.aircraft-back-link:focus-visible {
+  border-radius: 3px;
+  outline: 2px solid #2d6cdf;
+  outline-offset: 3px;
+}
+
+.aircraft-details-card {
+  padding: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 16px rgb(15 23 42 / 3%);
+}
+
+.aircraft-details-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.aircraft-details-card-heading h2 {
+  margin: 0;
+  color: #132b49;
+  font-size: 20px;
+}
+
+.aircraft-details-card-heading p {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.aircraft-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 32px;
+  margin: 0;
+}
+
+.aircraft-detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.aircraft-detail-field dt {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.aircraft-detail-field dd {
+  margin: 0;
+  color: #1e293b;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.aircraft-detail-field .aircraft-detail-uuid {
+  color: #475569;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.aircraft-details-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 220px;
+  padding: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  text-align: center;
+}
+
+.aircraft-details-state h1 {
+  margin: 0;
+  color: #132b49;
+  font-size: 24px;
+}
+
+.aircraft-details-state p {
+  max-width: 600px;
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 650px) {
+  .aircraft-details-card {
+    padding: 20px;
+  }
+
+  .aircraft-details-card-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .aircraft-details-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .aircraft-details-state {
+    padding: 24px 16px;
+  }
+}

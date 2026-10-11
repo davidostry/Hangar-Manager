@@ -61,6 +61,7 @@ export async function getAircraftList(
   params: AircraftListParams = {},
 ): Promise<PaginatedResponse<Aircraft>> {
   const page = Math.max(1, params.page ?? 1);
+
   const pageSize = Math.min(
     100,
     Math.max(1, params.page_size ?? 20),
@@ -104,14 +105,27 @@ export async function getAircraftList(
       params: {
         page,
         page_size: pageSize,
-        ...(params.search
-          ? { search: params.search }
-          : {}),
-        ...(params.status
-          ? { status: params.status }
-          : {}),
+        ...(params.search ? { search: params.search } : {}),
+        ...(params.status ? { status: params.status } : {}),
       },
     },
+  );
+
+  return response.data;
+}
+
+export async function getAircraftById(
+  aircraftId: string,
+): Promise<Aircraft | null> {
+  if (USE_MOCK_DATA) {
+    return (
+      MOCK_AIRCRAFT.find((aircraft) => aircraft.id === aircraftId) ??
+      null
+    );
+  }
+
+  const response = await api.get<Aircraft>(
+    `/aircraft/${encodeURIComponent(aircraftId)}`,
   );
 
   return response.data;

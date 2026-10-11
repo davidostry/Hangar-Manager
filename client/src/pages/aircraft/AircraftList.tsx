@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { isAxiosError } from "axios";
+import { Link } from "react-router";
 
 import { getAircraftList } from "../../services/aircraftService";
 
@@ -30,19 +31,25 @@ function getErrorMessage(error: unknown): string {
     }
 
     if (Array.isArray(detail)) {
-      const messages = detail
-        .filter(
-          (item): item is { msg: string } =>
-            typeof item === "object" &&
-            item !== null &&
-            "msg" in item &&
-            typeof item.msg === "string",
-        )
-        .map((item) => item.msg);
+      const messages: string[] = [];
+
+      for (const item of detail) {
+        if (typeof item !== "object" || item === null) {
+          continue;
+        }
+
+        const message = (item as { msg?: unknown }).msg;
+
+        if (typeof message === "string") {
+          messages.push(message);
+        }
+      }
 
       if (messages.length > 0) {
         return messages.join(" ");
       }
+
+      return "Please check the submitted information.";
     }
 
     return `Failed to load aircraft. HTTP status: ${error.response.status}.`;
@@ -52,7 +59,7 @@ function getErrorMessage(error: unknown): string {
     return error.message;
   }
 
-  return "An unexpected error occurred while loading aircraft.";
+  return "An unexpected error occurred.";
 }
 
 function AircraftList() {
@@ -122,9 +129,7 @@ function AircraftList() {
     setAppliedSearch("");
   }
 
-  function handleStatusChange(
-    value: string,
-  ): void {
+  function handleStatusChange(value: string): void {
     if (
       value === "All" ||
       value === "Available" ||
@@ -239,51 +244,48 @@ function AircraftList() {
         </div>
       )}
 
-      {!isLoading &&
-        !errorMessage &&
-        aircraft.length === 0 && (
-          <div className="aircraft-state">
-            <h2>No aircraft found</h2>
+      {!isLoading && !errorMessage && aircraft.length === 0 && (
+        <div className="aircraft-state">
+          <h2>No aircraft found</h2>
 
-            <p>
-              Try changing your search or selecting a different status.
-            </p>
+          <p>
+            Try changing your search or selecting a different status.
+          </p>
+        </div>
+      )}
+
+      {!isLoading && !errorMessage && aircraft.length > 0 && (
+        <>
+          <div className="aircraft-table-wrapper">
+            <table className="aircraft-table">
+              <thead>
+                <tr>
+                  <th scope="col">Tail Number</th>
+                  <th scope="col">Manufacturer</th>
+                  <th scope="col">Model</th>
+                  <th scope="col">Serial Number</th>
+                  <th scope="col">Year</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {aircraft.map((item) => (
+                  <AircraftRow
+                    key={item.id}
+                    aircraft={item}
+                  />
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
 
-      {!isLoading &&
-        !errorMessage &&
-        aircraft.length > 0 && (
-          <>
-            <div className="aircraft-table-wrapper">
-              <table className="aircraft-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Tail Number</th>
-                    <th scope="col">Manufacturer</th>
-                    <th scope="col">Model</th>
-                    <th scope="col">Serial Number</th>
-                    <th scope="col">Year</th>
-                    <th scope="col">Status</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {aircraft.map((item) => (
-                    <AircraftRow
-                      key={item.id}
-                      aircraft={item}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <p className="aircraft-results-count">
-              Showing {aircraft.length} of {total} aircraft
-            </p>
-          </>
-        )}
+          <p className="aircraft-results-count">
+            Showing {aircraft.length} of {total} aircraft
+          </p>
+        </>
+      )}
     </section>
   );
 }
@@ -313,6 +315,15 @@ function AircraftRow({ aircraft }: AircraftRowProps) {
         >
           {aircraft.status}
         </span>
+      </td>
+
+      <td>
+        <Link
+          className="aircraft-button aircraft-button-secondary"
+          to={`/app/aircraft/${aircraft.id}`}
+        >
+          View details
+        </Link>
       </td>
     </tr>
   );
