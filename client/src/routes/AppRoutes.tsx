@@ -56,12 +56,20 @@ function AppRoutes() {
 
           <Route
             path="aircraft/new"
-            element={<AircraftFormPage mode="create" />}
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AircraftFormPage mode="create" />
+              </ProtectedRoute>
+            }
           />
 
           <Route
             path="aircraft/:aircraftId/edit"
-            element={<AircraftFormPage mode="edit" />}
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AircraftFormPage mode="edit" />
+              </ProtectedRoute>
+            }
           />
 
           <Route
