@@ -11,6 +11,9 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 import PlaceholderPage from "../pages/PlaceholderPage";
+import AircraftList from "../pages/aircraft/AircraftList";
+import MaintenanceReports from "../pages/maintenance/MaintenanceReports";
+import MaintenanceReportDetails from "../pages/maintenance/MaintenanceReportDetails";
 
 function AppRoutes() {
   return (
@@ -46,16 +49,17 @@ function AppRoutes() {
 
           <Route
             path="aircraft"
-            element={
-              <PlaceholderPage title="Aircraft" />
-            }
+            element={<AircraftList />}
           />
 
           <Route
             path="maintenance"
-            element={
-              <PlaceholderPage title="Maintenance Reports" />
-            }
+            element={<MaintenanceReports />}
+          />
+
+          <Route
+            path="maintenance/:reportId"
+            element={<MaintenanceReportDetails />}
           />
 
           <Route
