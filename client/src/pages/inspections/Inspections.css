@@ -23,46 +23,6 @@
   margin: 0;
 }
 
-.inspection-create-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  min-height: 45px;
-  padding: 11px 18px;
-  border: 1px solid rgba(103, 220, 255, 0.42);
-  border-radius: 12px;
-  color: #061426;
-  background: linear-gradient(
-    115deg,
-    #55edff,
-    #60a4ff 57%,
-    #b99aff
-  );
-  box-shadow: 0 8px 22px rgba(42, 143, 255, 0.19);
-  font-size: 0.9rem;
-  font-weight: 850;
-  white-space: nowrap;
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    filter 180ms ease;
-}
-
-.inspection-create-button span {
-  font-size: 1.3rem;
-  line-height: 1;
-}
-
-.inspection-create-button:hover {
-  color: #061426;
-  transform: translateY(-3px);
-  filter: brightness(1.07);
-  box-shadow:
-    0 12px 28px rgba(42, 143, 255, 0.26),
-    0 0 22px rgba(53, 230, 255, 0.12);
-}
-
 /* Filters */
 
 .inspections-toolbar,
@@ -136,6 +96,15 @@
   cursor: pointer;
 }
 
+.inspection-filter-note {
+  margin: -8px 0 0;
+  color: #9bb2ce;
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+/* Shared buttons */
+
 .inspection-button {
   display: inline-flex;
   align-items: center;
@@ -190,11 +159,27 @@
   padding: 11px 19px;
 }
 
-.inspection-filter-note {
-  margin: -8px 0 0;
-  color: #9bb2ce;
-  font-size: 0.84rem;
-  line-height: 1.6;
+/* Action feedback */
+
+.inspection-action-message {
+  padding: 13px 16px;
+  border: 1px solid;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  animation: inspection-message-enter 250ms ease both;
+}
+
+.inspection-action-success {
+  border-color: rgba(67, 230, 176, 0.31);
+  color: #8af4cb;
+  background: rgba(67, 230, 176, 0.08);
+}
+
+.inspection-action-error {
+  border-color: rgba(255, 93, 120, 0.35);
+  color: #ffabb7;
+  background: rgba(255, 93, 120, 0.08);
 }
 
 /* Table */
@@ -300,6 +285,8 @@
   overflow-wrap: anywhere;
 }
 
+/* Status labels */
+
 .inspection-status {
   display: inline-flex;
   align-items: center;
@@ -348,7 +335,6 @@
   font-size: 0.75rem;
   font-weight: 850;
   white-space: nowrap;
-  box-shadow: 0 0 13px rgba(255, 93, 120, 0.05);
 }
 
 .inspection-due-date,
@@ -368,7 +354,68 @@
   text-shadow: 0 0 13px rgba(53, 230, 255, 0.3);
 }
 
-/* Loading, error and empty states */
+/* Row actions */
+
+.inspection-row-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  min-width: 150px;
+}
+
+.inspection-row-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 33px;
+  padding: 7px 10px;
+  border: 1px solid;
+  border-radius: 9px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.inspection-action-complete {
+  border-color: rgba(67, 230, 176, 0.33);
+  color: #8af4cb;
+  background: rgba(67, 230, 176, 0.08);
+}
+
+.inspection-action-complete:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(67, 230, 176, 0.16);
+  box-shadow: 0 5px 15px rgba(67, 230, 176, 0.08);
+}
+
+.inspection-action-cancel {
+  border-color: rgba(255, 93, 120, 0.32);
+  color: #ff9cac;
+  background: rgba(255, 93, 120, 0.07);
+}
+
+.inspection-action-cancel:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(255, 93, 120, 0.15);
+  box-shadow: 0 5px 15px rgba(255, 93, 120, 0.08);
+}
+
+.inspection-row-actions button:disabled {
+  opacity: 0.42;
+  cursor: wait;
+}
+
+.inspection-no-actions {
+  color: #748ca6;
+  font-size: 0.78rem;
+}
+
+/* Loading and empty states */
 
 .inspection-state {
   display: flex;
@@ -448,7 +495,7 @@
   font-size: 0.84rem;
 }
 
-/* New inspection form */
+/* Create inspection form */
 
 .inspection-back-link {
   display: inline-flex;
@@ -650,6 +697,8 @@
   transform: translateY(-2px);
 }
 
+/* Animations */
+
 @keyframes inspections-enter {
   from {
     opacity: 0;
@@ -666,6 +715,18 @@
   from {
     opacity: 0;
     transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes inspection-message-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
   }
 
   to {
@@ -710,7 +771,13 @@
     font-size: 0.81rem;
   }
 
-  .inspection-create-button {
+  .inspection-row-actions {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 100px;
+  }
+
+  .inspection-row-actions button {
     width: 100%;
   }
 }
@@ -746,7 +813,7 @@
     animation: none;
   }
 
-  .inspection-create-button,
+  .inspection-row-actions button,
   .inspection-button,
   .inspection-cancel-link {
     transition: none;

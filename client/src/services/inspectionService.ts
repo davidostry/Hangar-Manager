@@ -6,6 +6,7 @@ import type {
   InspectionCreateRequest,
   InspectionListParams,
   InspectionListResponse,
+  InspectionStatus,
 } from "../types/inspection";
 
 const USE_MOCK_DATA =
@@ -70,8 +71,8 @@ const MOCK_INSPECTIONS: Inspection[] = [
 ];
 
 /*
- * These IDs simulate results returned by the Backend's overdue filter.
- * They are test fixtures, not production overdue-calculation logic.
+ * Mock fixtures for testing the overdue filter.
+ * Production overdue calculations belong to the Backend.
  */
 const MOCK_OVERDUE_IDS = new Set([
   "9b200001-1111-4111-8111-111111111111",
@@ -122,6 +123,7 @@ export async function getInspections(
     if (params.overdue === true) {
       filteredInspections = filteredInspections.filter(
         (inspection) =>
+          inspection.status === "Scheduled" &&
           MOCK_OVERDUE_IDS.has(inspection.id),
       );
     }
@@ -196,6 +198,34 @@ export async function createInspection(
   const response = await api.post<Inspection>(
     "/inspections",
     normalizedPayload,
+  );
+
+  return response.data;
+}
+
+export async function updateInspectionStatus(
+  inspectionId: string,
+  status: InspectionStatus,
+): Promise<Inspection> {
+  if (USE_MOCK_DATA) {
+    const inspection = MOCK_INSPECTIONS.find(
+      (item) => item.id === inspectionId,
+    );
+
+    if (!inspection) {
+      throw new Error("Inspection not found.");
+    }
+
+    inspection.status = status;
+    inspection.completed_at =
+      status === "Completed" ? new Date().toISOString() : null;
+
+    return { ...inspection };
+  }
+
+  const response = await api.patch<Inspection>(
+    `/inspections/${inspectionId}`,
+    { status },
   );
 
   return response.data;
