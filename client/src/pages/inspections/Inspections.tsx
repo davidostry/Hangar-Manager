@@ -1,5 +1,7 @@
+
 import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
+import { Link } from "react-router";
 
 import { getInspections } from "../../services/inspectionService";
 
@@ -89,7 +91,6 @@ function formatStatus(status: InspectionStatus): string {
 function Inspections() {
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [total, setTotal] = useState(0);
-
   const [status, setStatus] = useState<StatusFilter>("All");
   const [dueAfter, setDueAfter] = useState("");
   const [dueBefore, setDueBefore] = useState("");
@@ -192,14 +193,22 @@ function Inspections() {
 
   return (
     <section className="inspections-page">
-      <div className="page-heading">
-        <p className="page-eyebrow">Compliance & Safety</p>
+      <div className="page-heading inspections-page-heading">
+        <div>
+          <p className="page-eyebrow">Compliance & Safety</p>
+          <h1>Inspections</h1>
+          <p className="page-description">
+            Monitor scheduled inspections and review their completion status.
+          </p>
+        </div>
 
-        <h1>Inspections</h1>
-
-        <p className="page-description">
-          Monitor scheduled inspections and review their completion status.
-        </p>
+        <Link
+          to="/app/inspections/new"
+          className="inspection-create-button"
+        >
+          <span aria-hidden="true">+</span>
+          Schedule inspection
+        </Link>
       </div>
 
       <section
@@ -291,7 +300,6 @@ function Inspections() {
       {!isLoading && errorMessage && (
         <div className="inspection-state inspection-state-error">
           <h2>Unable to load inspections</h2>
-
           <p role="alert">{errorMessage}</p>
 
           {!hasInvalidDateRange && (
@@ -311,7 +319,6 @@ function Inspections() {
         inspections.length === 0 && (
           <div className="inspection-state">
             <h2>No inspections found</h2>
-
             <p>
               Try changing the status, date range, or overdue filter.
             </p>

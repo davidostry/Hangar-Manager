@@ -1,7 +1,9 @@
+
 import api from "./api";
 
 import type {
   Inspection,
+  InspectionCreateRequest,
   InspectionListParams,
   InspectionListResponse,
 } from "../types/inspection";
@@ -98,7 +100,8 @@ export async function getInspections(
 
     if (params.status) {
       filteredInspections = filteredInspections.filter(
-        (inspection) => inspection.status === params.status,
+        (inspection) =>
+          inspection.status === params.status,
       );
     }
 
@@ -159,6 +162,40 @@ export async function getInspections(
           : {}),
       },
     },
+  );
+
+  return response.data;
+}
+
+export async function createInspection(
+  payload: InspectionCreateRequest,
+): Promise<Inspection> {
+  const normalizedPayload: InspectionCreateRequest = {
+    aircraft_id: payload.aircraft_id,
+    inspection_type: payload.inspection_type.trim(),
+    due_date: payload.due_date,
+    notes: payload.notes?.trim() || null,
+  };
+
+  if (USE_MOCK_DATA) {
+    const newInspection: Inspection = {
+      id: crypto.randomUUID(),
+      aircraft_id: normalizedPayload.aircraft_id,
+      inspection_type: normalizedPayload.inspection_type,
+      due_date: normalizedPayload.due_date,
+      status: "Scheduled",
+      completed_at: null,
+      notes: normalizedPayload.notes ?? null,
+    };
+
+    MOCK_INSPECTIONS.unshift(newInspection);
+
+    return { ...newInspection };
+  }
+
+  const response = await api.post<Inspection>(
+    "/inspections",
+    normalizedPayload,
   );
 
   return response.data;

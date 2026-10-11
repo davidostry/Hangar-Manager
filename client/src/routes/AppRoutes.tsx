@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter,
   Navigate,
@@ -20,6 +21,7 @@ import MaintenanceReportForm from "../pages/maintenance/MaintenanceReportForm";
 import MaintenanceReportDetails from "../pages/maintenance/MaintenanceReportDetails";
 
 import Inspections from "../pages/inspections/Inspections";
+import InspectionForm from "../pages/inspections/InspectionForm";
 
 function AppRoutes() {
   return (
@@ -85,6 +87,11 @@ function AppRoutes() {
           <Route
             path="inspections"
             element={<Inspections />}
+          />
+
+          <Route
+            path="inspections/new"
+            element={<InspectionForm />}
           />
         </Route>
 
