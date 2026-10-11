@@ -10,10 +10,10 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
-import PlaceholderPage from "../pages/PlaceholderPage";
 import AircraftList from "../pages/aircraft/AircraftList";
 import MaintenanceReports from "../pages/maintenance/MaintenanceReports";
 import MaintenanceReportDetails from "../pages/maintenance/MaintenanceReportDetails";
+import Inspections from "../pages/inspections/Inspections";
 
 function AppRoutes() {
   return (
@@ -64,9 +64,7 @@ function AppRoutes() {
 
           <Route
             path="inspections"
-            element={
-              <PlaceholderPage title="Inspections" />
-            }
+            element={<Inspections />}
           />
         </Route>
 
