@@ -5,7 +5,7 @@ import { isAxiosError } from "axios";
 import { useNavigate } from "react-router";
 
 import { useAuth } from "../context/AuthContext";
-import "../components/layout/layout.css";
+import "../components/Layout/layout.css";
 
 function getLoginErrorMessage(error: unknown): string {
   if (isAxiosError(error)) {
@@ -31,9 +31,7 @@ function getLoginErrorMessage(error: unknown): string {
           continue;
         }
 
-        const message = (
-          item as { msg?: unknown }
-        ).msg;
+        const message = (item as { msg?: unknown }).msg;
 
         if (typeof message === "string") {
           messages.push(message);
@@ -130,10 +128,7 @@ function Login() {
 
         <p>Sign in to manage your aircraft fleet.</p>
 
-        <form
-          className="login-form"
-          onSubmit={handleSubmit}
-        >
+        <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-field">
             <label htmlFor="email">Email</label>
 
@@ -159,9 +154,7 @@ function Login() {
               type="password"
               autoComplete="current-password"
               value={password}
-              onChange={(event) =>
-                setPassword(event.target.value)
-              }
+              onChange={(event) => setPassword(event.target.value)}
               placeholder="Enter your password"
               required
               disabled={isSubmitting}

@@ -1,379 +1,312 @@
-.maintenance-page {
-  width: 100%;
+
+.maintenance-page,
+.maintenance-reports-page {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  animation: maintenance-list-enter 450ms ease both;
 }
 
-.maintenance-toolbar {
+.maintenance-toolbar,
+.maintenance-filters,
+.maintenance-filter-bar {
   display: flex;
   align-items: flex-end;
-  gap: 20px;
-  margin-bottom: 24px;
-  padding: 22px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background-color: #ffffff;
+  flex-wrap: wrap;
+  gap: 17px;
+  padding: 21px;
+  border: 1px solid rgba(126, 184, 255, 0.2);
+  border-radius: 17px;
+  background: linear-gradient(
+    145deg,
+    rgba(19, 43, 72, 0.88),
+    rgba(9, 24, 43, 0.92)
+  );
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
 }
 
 .maintenance-search-form {
   display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 9px;
+  align-items: flex-end;
+  flex: 1 1 260px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.maintenance-search-form label {
+  width: 100%;
+  color: #cce6ff;
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.maintenance-search-form input {
+  flex: 1 1 180px;
   min-width: 0;
+  margin: 0;
 }
 
-.maintenance-search-form label,
-.maintenance-filter label {
-  color: #334155;
-  font-size: 13px;
-  font-weight: 600;
+.maintenance-toolbar label,
+.maintenance-filters label,
+.maintenance-filter-bar label {
+  color: #cce6ff;
+  font-size: 0.85rem;
+  font-weight: 750;
 }
 
-.maintenance-search-controls {
+.maintenance-filter-field {
   display: flex;
+  flex: 1 1 150px;
+  flex-direction: column;
   gap: 8px;
-  min-width: 0;
+  min-width: 140px;
 }
 
-.maintenance-search-controls input,
-.maintenance-filter select {
-  min-height: 42px;
-  border: 1px solid #cbd5e1;
-  border-radius: 7px;
-  background-color: #ffffff;
-  color: #1e293b;
-  font-size: 13px;
-}
-
-.maintenance-search-controls input {
-  width: 100%;
-  min-width: 0;
-  padding: 10px 12px;
-}
-
-.maintenance-search-controls input:focus,
-.maintenance-filter select:focus {
-  border-color: #2d6cdf;
-  outline: 2px solid rgb(45 108 223 / 15%);
-  outline-offset: 1px;
-}
-
-.maintenance-filter {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  width: 160px;
-  flex-shrink: 0;
-}
-
-.maintenance-filter select {
-  width: 100%;
-  padding: 10px;
-}
-
-.maintenance-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  padding: 10px 15px;
-  border: 1px solid #2d6cdf;
-  border-radius: 7px;
-  background-color: #2d6cdf;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.maintenance-button:hover:not(:disabled) {
-  border-color: #1d4fb0;
-  background-color: #1d4fb0;
-}
-
-.maintenance-button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.maintenance-button:focus-visible {
-  outline: 3px solid #93c5fd;
-  outline-offset: 2px;
-}
-
-.maintenance-button-secondary {
-  border-color: #cbd5e1;
-  background-color: #ffffff;
-  color: #334155;
-}
-
-.maintenance-button-secondary:hover:not(:disabled) {
-  border-color: #94a3b8;
-  background-color: #f1f5f9;
-  color: #1e293b;
-}
-
-.maintenance-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  min-height: 220px;
-  padding: 32px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background-color: #ffffff;
-  text-align: center;
-}
-
-.maintenance-state h2 {
+.maintenance-filter-field input,
+.maintenance-filter-field select {
   margin: 0;
-  color: #132b49;
-  font-size: 19px;
 }
 
-.maintenance-state p {
-  max-width: 600px;
-  margin: 0;
-  color: #64748b;
-  font-size: 14px;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-}
-
-.maintenance-state-error {
-  border-color: #fecaca;
-}
-
-.maintenance-state-error h2 {
-  color: #991b1b;
-}
-
-.maintenance-state-error p {
-  color: #b91c1c;
-}
-
-.maintenance-spinner {
-  width: 30px;
-  height: 30px;
-  border: 3px solid #dbeafe;
-  border-top-color: #2d6cdf;
-  border-radius: 50%;
-  animation: maintenance-spin 0.8s linear infinite;
-}
-
-@keyframes maintenance-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.maintenance-table-wrapper {
+.maintenance-table-wrapper,
+.maintenance-reports-table-wrapper {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 16px rgb(15 23 42 / 3%);
+  border: 1px solid rgba(126, 184, 255, 0.2);
+  border-radius: 16px;
+  background: rgba(9, 24, 43, 0.77);
+  box-shadow: 0 17px 38px rgba(0, 0, 0, 0.18);
 }
 
-.maintenance-table {
+.maintenance-table,
+.maintenance-reports-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.maintenance-table thead th,
+.maintenance-reports-table thead th {
+  padding: 15px;
+  border-bottom: 1px solid rgba(53, 230, 255, 0.2);
+  color: #8feeff;
+  background: linear-gradient(
+    100deg,
+    rgba(32, 71, 112, 0.9),
+    rgba(25, 45, 81, 0.92)
+  );
   text-align: left;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
   white-space: nowrap;
 }
 
-.maintenance-table thead {
-  background-color: #f8fafc;
-}
-
-.maintenance-table th {
-  padding: 16px 18px;
-  border-bottom: 1px solid #e2e8f0;
-  color: #475569;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.maintenance-table td {
-  padding: 17px 18px;
-  border-bottom: 1px solid #edf2f7;
-  color: #475569;
-  font-size: 12px;
+.maintenance-table tbody td,
+.maintenance-reports-table tbody td {
+  padding: 15px;
+  border-bottom: 1px solid rgba(126, 184, 255, 0.1);
+  color: #ccdbed;
+  font-size: 0.88rem;
   vertical-align: middle;
 }
 
-.maintenance-table tbody tr:last-child td {
+.maintenance-table tbody tr,
+.maintenance-reports-table tbody tr {
+  transition: background 180ms ease;
+}
+
+.maintenance-table tbody tr:nth-child(even),
+.maintenance-reports-table tbody tr:nth-child(even) {
+  background: rgba(104, 155, 220, 0.025);
+}
+
+.maintenance-table tbody tr:hover,
+.maintenance-reports-table tbody tr:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(53, 230, 255, 0.075),
+    rgba(57, 132, 255, 0.06)
+  );
+}
+
+.maintenance-table tbody tr:hover td,
+.maintenance-reports-table tbody tr:hover td {
+  color: #fff;
+}
+
+.maintenance-table tbody tr:last-child td,
+.maintenance-reports-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.maintenance-table tbody tr:hover {
-  background-color: #f8fafc;
-}
-
-.maintenance-report-link {
-  display: inline-block;
+.maintenance-report-cell {
   min-width: 190px;
-  max-width: 280px;
-  overflow-wrap: anywhere;
-  color: #1d4fb0;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
+  max-width: 360px;
 }
 
+.maintenance-report-cell a,
+.maintenance-report-link {
+  color: #8feeff;
+  font-weight: 800;
+  line-height: 1.45;
+  transition: color 180ms ease, text-shadow 180ms ease;
+}
+
+.maintenance-report-cell a:hover,
 .maintenance-report-link:hover {
-  text-decoration: underline;
-}
-
-.maintenance-report-link:focus-visible {
-  border-radius: 3px;
-  outline: 2px solid #2d6cdf;
-  outline-offset: 3px;
+  color: white;
+  text-shadow: 0 0 13px rgba(53, 230, 255, 0.3);
 }
 
 .maintenance-report-description {
-  max-width: 280px;
-  margin-top: 6px;
-  overflow: hidden;
-  color: #64748b;
-  line-height: 1.5;
-  text-overflow: ellipsis;
+  margin: 6px 0 0;
+  color: #93abc5;
+  font-size: 0.81rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
-.maintenance-aircraft-id {
-  color: #334155;
-  font-family: monospace;
-  font-size: 12px;
-}
-
-.maintenance-priority,
-.maintenance-status {
+.maintenance-status-badge,
+.maintenance-priority-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 10px;
+  min-height: 26px;
+  padding: 5px 10px;
+  border: 1px solid rgba(126, 184, 255, 0.25);
   border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.priority-low {
-  background-color: #f1f5f9;
-  color: #475569;
-}
-
-.priority-medium {
-  background-color: #dbeafe;
-  color: #1d4ed8;
-}
-
-.priority-high {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-.priority-critical {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
-.status-open {
-  background-color: #dbeafe;
-  color: #1d4ed8;
-}
-
-.status-inprogress {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-.status-resolved {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-.status-cancelled {
-  background-color: #f1f5f9;
-  color: #475569;
-}
-
-.maintenance-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 18px;
-}
-
-.maintenance-pagination > p {
-  margin: 0;
-  color: #64748b;
-  font-size: 12px;
-}
-
-.maintenance-pagination-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.maintenance-pagination-controls > span {
-  color: #475569;
-  font-size: 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
   white-space: nowrap;
 }
 
-@media (max-width: 1100px) {
-  .maintenance-toolbar {
+.maintenance-status-badge.status-open,
+.maintenance-status-badge.status-inprogress,
+.maintenance-status-badge.status-in-progress {
+  border-color: rgba(255, 173, 91, 0.35);
+  color: #ffd09d;
+  background: rgba(255, 173, 91, 0.1);
+}
+
+.maintenance-status-badge.status-resolved {
+  border-color: rgba(67, 230, 176, 0.32);
+  color: #8af4cb;
+  background: rgba(67, 230, 176, 0.09);
+}
+
+.maintenance-status-badge.status-cancelled {
+  border-color: rgba(155, 178, 206, 0.27);
+  color: #adbed3;
+  background: rgba(155, 178, 206, 0.08);
+}
+
+.maintenance-priority-badge.priority-low {
+  border-color: rgba(67, 230, 176, 0.3);
+  color: #8af4cb;
+  background: rgba(67, 230, 176, 0.08);
+}
+
+.maintenance-priority-badge.priority-medium {
+  border-color: rgba(53, 230, 255, 0.32);
+  color: #8feeff;
+  background: rgba(53, 230, 255, 0.08);
+}
+
+.maintenance-priority-badge.priority-high {
+  border-color: rgba(255, 173, 91, 0.38);
+  color: #ffd09d;
+  background: rgba(255, 173, 91, 0.1);
+}
+
+.maintenance-priority-badge.priority-critical {
+  border-color: rgba(255, 93, 120, 0.4);
+  color: #ff9cac;
+  background: rgba(255, 93, 120, 0.12);
+  box-shadow: 0 0 13px rgba(255, 93, 120, 0.06);
+}
+
+.maintenance-results-count {
+  margin: 12px 0 0;
+  color: #8fa9c5;
+  font-size: 0.84rem;
+  text-align: right;
+}
+
+.maintenance-pagination,
+.maintenance-pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.maintenance-pagination button,
+.maintenance-pagination-controls button {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 8px 13px;
+  border: 1px solid rgba(126, 184, 255, 0.22);
+  border-radius: 10px;
+  color: #dcecff;
+  background: rgba(18, 42, 68, 0.8);
+  transition: all 180ms ease;
+}
+
+.maintenance-pagination button:hover,
+.maintenance-pagination-controls button:hover {
+  border-color: rgba(53, 230, 255, 0.4);
+  background: rgba(53, 230, 255, 0.09);
+  transform: translateY(-2px);
+}
+
+.maintenance-pagination button.active,
+.maintenance-pagination-controls button.active {
+  border-color: rgba(53, 230, 255, 0.5);
+  color: #061426;
+  background: linear-gradient(115deg, #55edff, #60a4ff);
+}
+
+.maintenance-page .aircraft-state,
+.maintenance-reports-page .aircraft-state {
+  margin-top: 5px;
+}
+
+@keyframes maintenance-list-enter {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .maintenance-toolbar,
+  .maintenance-filters,
+  .maintenance-filter-bar {
     align-items: stretch;
-    flex-wrap: wrap;
+    padding: 16px;
   }
 
   .maintenance-search-form {
     flex-basis: 100%;
   }
 
-  .maintenance-filter {
-    flex: 1;
-    width: auto;
-    min-width: 140px;
-  }
-}
-
-@media (max-width: 600px) {
-  .maintenance-toolbar {
-    padding: 16px;
-  }
-
-  .maintenance-search-controls {
-    flex-wrap: wrap;
-  }
-
-  .maintenance-search-controls input {
+  .maintenance-filter-field {
     flex-basis: 100%;
   }
 
-  .maintenance-search-controls button {
-    flex: 1;
-  }
-
-  .maintenance-pagination {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .maintenance-pagination-controls {
-    flex-wrap: wrap;
-  }
-
-  .maintenance-state {
-    min-height: 180px;
-    padding: 24px 16px;
+  .maintenance-table thead th,
+  .maintenance-table tbody td,
+  .maintenance-reports-table thead th,
+  .maintenance-reports-table tbody td {
+    padding: 12px 10px;
+    font-size: 0.81rem;
   }
 }

@@ -4,70 +4,99 @@
 
 .maintenance-back-link {
   display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
   margin-bottom: 24px;
-  color: #1d4fb0;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
+  color: var(--blue);
+
+  font-size: 12px;
+  font-weight: 750;
+
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
 }
 
 .maintenance-back-link:hover {
-  text-decoration: underline;
+  transform: translateX(-3px);
+  color: #079eb6;
 }
 
 .maintenance-back-link:focus-visible {
-  border-radius: 3px;
-  outline: 2px solid #2d6cdf;
-  outline-offset: 3px;
+  outline: 2px solid var(--cyan);
+  outline-offset: 4px;
 }
 
 .maintenance-detail-heading {
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .maintenance-detail-summary {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin-bottom: 24px;
+  margin-bottom: 23px;
 }
 
 .maintenance-detail-summary > div {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-width: 180px;
-  padding: 16px 20px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  background-color: #ffffff;
+  gap: 13px;
+
+  min-width: 190px;
+  padding: 15px 19px;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #ffffff, #f5f8ff);
+  box-shadow: var(--shadow-soft);
+
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.maintenance-detail-summary > div:hover {
+  transform: translateY(-3px);
+  border-color: #d0ddff;
+  box-shadow: var(--shadow-hover);
 }
 
 .maintenance-detail-label {
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 600;
+  color: #8190aa;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
 }
 
 .maintenance-detail-card {
   margin-bottom: 22px;
-  padding: 26px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 16px rgb(15 23 42 / 3%);
+  padding: 27px;
+  border-top: 3px solid var(--blue);
+
+  animation: hangar-rise-in 550ms ease both;
+}
+
+.maintenance-detail-card:nth-of-type(2) {
+  animation-delay: 80ms;
 }
 
 .maintenance-detail-card h2 {
   margin: 0 0 22px;
-  color: #132b49;
-  font-size: 18px;
+  color: var(--navy-light);
+  font-size: 19px;
+  font-weight: 850;
+  letter-spacing: -0.3px;
 }
 
 .maintenance-detail-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  gap: 15px;
   margin: 0;
 }
 
@@ -75,64 +104,68 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+
   min-width: 0;
+  padding: 15px;
+
+  border: 1px solid #edf1f8;
+  border-radius: 11px;
+
+  background: linear-gradient(140deg, #ffffff, #f7faff);
+
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.maintenance-detail-field:hover {
+  transform: translateY(-2px);
+  border-color: #d1ddff;
+  box-shadow: 0 6px 16px rgb(49 92 245 / 6%);
 }
 
 .maintenance-detail-field dt {
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 600;
+  color: #8190aa;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
 }
 
 .maintenance-detail-field dd {
   margin: 0;
-  color: #1e293b;
-  font-size: 14px;
-  line-height: 1.6;
+  color: #1e3157;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.7;
   overflow-wrap: anywhere;
 }
 
 .maintenance-detail-field .maintenance-detail-uuid {
-  font-family: monospace;
-  font-size: 12px;
+  color: #52627d;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 10px;
 }
 
 .maintenance-detail-description {
   margin: 0;
-  color: #475569;
-  font-size: 14px;
-  line-height: 1.8;
+  padding: 17px;
+
+  border: 1px solid #edf1f8;
+  border-radius: 11px;
+
+  background: linear-gradient(140deg, #ffffff, #f7faff);
+  color: #52627d;
+
+  font-size: 13px;
+  line-height: 1.9;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
 .maintenance-detail-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  min-height: 240px;
-  padding: 32px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background-color: #ffffff;
-  text-align: center;
-}
-
-.maintenance-detail-state h1 {
-  margin: 0;
-  color: #132b49;
-  font-size: 24px;
-}
-
-.maintenance-detail-state p {
-  max-width: 600px;
-  margin: 0;
-  color: #64748b;
-  font-size: 14px;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
+  margin-top: 10px;
 }
 
 @media (max-width: 600px) {
@@ -142,18 +175,15 @@
 
   .maintenance-detail-summary > div {
     justify-content: space-between;
+    width: 100%;
   }
 
   .maintenance-detail-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
+    gap: 12px;
   }
 
   .maintenance-detail-card {
-    padding: 20px;
-  }
-
-  .maintenance-detail-state {
-    padding: 24px 16px;
+    padding: 19px;
   }
 }
