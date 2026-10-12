@@ -1,4 +1,4 @@
-
+import logging
 from datetime import datetime, timezone
 
 from dal.maintenance_dal import (
@@ -14,12 +14,20 @@ from dal.user_dal import get_user_by_id
 
 from services.aircraft_status_service import sync_aircraft_status
 
+from services.email_service import (
+    send_critical_maintenance_email,
+    send_resolved_maintenance_email,
+)
+
 from schemas.maintenance_schema import (
     MaintenanceCreate,
     MaintenanceUpdate,
     MaintenanceAssign,
     MaintenanceResolve,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 def now_iso():
@@ -59,6 +67,18 @@ def create_report_service(
     report = create_report(report_data)
 
     sync_aircraft_status(aircraft_id)
+
+    # Notify when critical maintenance is reported.
+    if report["priority"] == "Critical":
+        try:
+            send_critical_maintenance_email(report)
+
+        except (ValueError, RuntimeError) as error:
+            logger.warning(
+                "Critical report %s email failed: %s",
+                report["id"],
+                error
+            )
 
     return report
 
@@ -144,6 +164,18 @@ def resolve_report_service(
     updated_report = update_report(report_id, updates)
 
     sync_aircraft_status(report["aircraft_id"])
+
+    # Notify when critical maintenance is resolved.
+    if updated_report["priority"] == "Critical":
+        try:
+            send_resolved_maintenance_email(updated_report)
+
+        except (ValueError, RuntimeError) as error:
+            logger.warning(
+                "Resolved report %s email failed: %s",
+                updated_report["id"],
+                error
+            )
 
     return updated_report
 

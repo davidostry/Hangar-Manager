@@ -7,7 +7,7 @@ from routes.user_routes import router as user_router
 from routes.maintenance_routes import router as maintenance_router
 from routes.inspection_routes import router as inspection_router
 from routes.dashboard_routes import router as dashboard_router
-
+from routes.email_routes import router as email_router
 app = FastAPI()
 
 
@@ -22,3 +22,4 @@ app.include_router(user_router, prefix="/api/v1")
 app.include_router(maintenance_router, prefix="/api/v1")
 app.include_router(inspection_router, prefix="/api/v1")
 app.include_router(dashboard_router, prefix="/api/v1")
+app.include_router(email_router, prefix="/api/v1")
