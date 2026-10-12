@@ -7,15 +7,12 @@ from dal.maintenance_dal import (
     create_report,
     update_report,
     delete_report,
-    get_active_reports_by_aircraft,
 )
 
-from dal.aircraft_dal import (
-    get_aircraft_by_id,
-    update_aircraft,
-)
-
+from dal.aircraft_dal import get_aircraft_by_id
 from dal.user_dal import get_user_by_id
+
+from services.aircraft_status_service import sync_aircraft_status
 
 from schemas.maintenance_schema import (
     MaintenanceCreate,
@@ -40,42 +37,6 @@ def get_report_by_id_service(report_id: str):
         raise ValueError("Maintenance report not found")
 
     return report
-
-
-def sync_aircraft_status(aircraft_id: str):
-    aircraft = get_aircraft_by_id(aircraft_id)
-
-    if not aircraft:
-        raise ValueError("Aircraft not found")
-
-    reports = get_active_reports_by_aircraft(aircraft_id)
-
-    has_critical = any(
-        report["priority"] == "Critical"
-        for report in reports
-    )
-
-    current_status = aircraft["status"]
-
-    if has_critical:
-        new_status = "Grounded"
-
-    elif current_status in ["Grounded", "Inspection"]:
-        return aircraft
-
-    elif reports:
-        new_status = "Maintenance"
-
-    else:
-        new_status = "Available"
-
-    if current_status == new_status:
-        return aircraft
-
-    return update_aircraft(aircraft_id, {
-        "status": new_status,
-        "updated_at": now_iso(),
-    })
 
 
 def create_report_service(
