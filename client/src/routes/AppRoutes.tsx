@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter,
   Navigate,
@@ -20,6 +21,7 @@ import MaintenanceReportForm from "../pages/maintenance/MaintenanceReportForm";
 import MaintenanceReportDetails from "../pages/maintenance/MaintenanceReportDetails";
 
 import Inspections from "../pages/inspections/Inspections";
+import InspectionForm from "../pages/inspections/InspectionForm";
 
 function AppRoutes() {
   return (
@@ -54,12 +56,20 @@ function AppRoutes() {
 
           <Route
             path="aircraft/new"
-            element={<AircraftFormPage mode="create" />}
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AircraftFormPage mode="create" />
+              </ProtectedRoute>
+            }
           />
 
           <Route
             path="aircraft/:aircraftId/edit"
-            element={<AircraftFormPage mode="edit" />}
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AircraftFormPage mode="edit" />
+              </ProtectedRoute>
+            }
           />
 
           <Route
@@ -85,6 +95,11 @@ function AppRoutes() {
           <Route
             path="inspections"
             element={<Inspections />}
+          />
+
+          <Route
+            path="inspections/new"
+            element={<InspectionForm />}
           />
         </Route>
 

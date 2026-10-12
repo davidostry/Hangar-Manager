@@ -1,8 +1,10 @@
+
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { isAxiosError } from "axios";
 import { Link } from "react-router";
 
+import { useAuth } from "../../context/AuthContext";
 import { getAircraftList } from "../../services/aircraftService";
 
 import type {
@@ -20,19 +22,18 @@ function getErrorMessage(error: unknown): string {
       return "Cannot connect to the Backend. Check that the server is running.";
     }
 
-    const data = error.response.data as
+    const responseData = error.response.data as
       | { detail?: unknown }
       | undefined;
 
-    if (
-      typeof data?.detail === "string" &&
-      data.detail.trim()
-    ) {
-      return data.detail;
+    const detail = responseData?.detail;
+
+    if (typeof detail === "string" && detail.trim()) {
+      return detail;
     }
 
-    if (Array.isArray(data?.detail)) {
-      const messages = data.detail
+    if (Array.isArray(detail)) {
+      const messages = detail
         .filter(
           (item): item is { msg: string } =>
             typeof item === "object" &&
@@ -54,10 +55,13 @@ function getErrorMessage(error: unknown): string {
     return error.message;
   }
 
-  return "An unexpected error occurred.";
+  return "An unexpected error occurred while loading aircraft.";
 }
 
 function AircraftList() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
+
   const [aircraft, setAircraft] = useState<Aircraft[]>([]);
   const [total, setTotal] = useState(0);
 
@@ -136,25 +140,29 @@ function AircraftList() {
     }
   }
 
+  function handleRetry(): void {
+    setRetryCount((current) => current + 1);
+  }
+
   return (
     <section className="aircraft-page">
-      <div className="aircraft-page-top">
-        <div className="page-heading">
+      <div className="page-heading aircraft-page-top">
+        <div>
           <p className="page-eyebrow">Fleet Management</p>
-
           <h1>Aircraft</h1>
-
           <p className="page-description">
-            View, search and manage the aircraft in your fleet.
+            View, search and filter the aircraft in your fleet.
           </p>
         </div>
 
-        <Link
-          to="/app/aircraft/new"
-          className="aircraft-button"
-        >
-          Add Aircraft
-        </Link>
+        {isAdmin && (
+          <Link
+            to="/app/aircraft/new"
+            className="aircraft-button"
+          >
+            + Add Aircraft
+          </Link>
+        )}
       </div>
 
       <section
@@ -223,7 +231,10 @@ function AircraftList() {
 
       {isLoading && (
         <div className="aircraft-state" role="status">
-          <span className="aircraft-spinner" aria-hidden="true" />
+          <span
+            className="aircraft-spinner"
+            aria-hidden="true"
+          />
           <p>Loading aircraft...</p>
         </div>
       )}
@@ -237,91 +248,124 @@ function AircraftList() {
           <button
             type="button"
             className="aircraft-button"
-            onClick={() => setRetryCount((count) => count + 1)}
+            onClick={handleRetry}
           >
             Try again
           </button>
         </div>
       )}
 
-      {!isLoading && !errorMessage && aircraft.length === 0 && (
-        <div className="aircraft-state">
-          <h2>No aircraft found</h2>
+      {!isLoading &&
+        !errorMessage &&
+        aircraft.length === 0 && (
+          <div className="aircraft-state">
+            <h2>No aircraft found</h2>
 
-          <p>
-            Try changing your search or selecting a different status.
-          </p>
-        </div>
-      )}
+            <p>
+              Try changing your search or selecting a different status.
+            </p>
 
-      {!isLoading && !errorMessage && aircraft.length > 0 && (
-        <>
-          <div className="aircraft-table-wrapper">
-            <table className="aircraft-table">
-              <thead>
-                <tr>
-                  <th scope="col">Tail Number</th>
-                  <th scope="col">Manufacturer</th>
-                  <th scope="col">Model</th>
-                  <th scope="col">Serial Number</th>
-                  <th scope="col">Year</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {aircraft.map((item) => (
-                  <tr key={item.id}>
-                    <td className="aircraft-tail-number">
-                      {item.tail_number}
-                    </td>
-
-                    <td>{item.manufacturer}</td>
-
-                    <td>{item.model}</td>
-
-                    <td>{item.serial_number}</td>
-
-                    <td>{item.manufacture_year}</td>
-
-                    <td>
-                      <span
-                        className={`aircraft-status-badge status-${item.status.toLowerCase()}`}
-                      >
-                        {item.status}
-                      </span>
-                    </td>
-
-                    <td>
-                      <div className="aircraft-row-actions">
-                        <Link
-                          className="aircraft-button aircraft-button-secondary"
-                          to={`/app/aircraft/${item.id}`}
-                        >
-                          Details
-                        </Link>
-
-                        <Link
-                          className="aircraft-button aircraft-button-secondary"
-                          to={`/app/aircraft/${item.id}/edit`}
-                        >
-                          Edit
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {isAdmin && (
+              <Link
+                to="/app/aircraft/new"
+                className="aircraft-button"
+              >
+                Add your first aircraft
+              </Link>
+            )}
           </div>
+        )}
 
-          <p className="aircraft-results-count">
-            Showing {aircraft.length} of {total} aircraft
-          </p>
-        </>
-      )}
+      {!isLoading &&
+        !errorMessage &&
+        aircraft.length > 0 && (
+          <>
+            <div className="aircraft-table-wrapper">
+              <table className="aircraft-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Tail Number</th>
+                    <th scope="col">Manufacturer</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">Serial Number</th>
+                    <th scope="col">Year</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {aircraft.map((item) => (
+                    <AircraftRow
+                      key={item.id}
+                      aircraft={item}
+                      isAdmin={isAdmin}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p className="aircraft-results-count">
+              Showing {aircraft.length} of {total} aircraft
+            </p>
+          </>
+        )}
     </section>
+  );
+}
+
+interface AircraftRowProps {
+  aircraft: Aircraft;
+  isAdmin: boolean;
+}
+
+function AircraftRow({
+  aircraft,
+  isAdmin,
+}: AircraftRowProps) {
+  return (
+    <tr>
+      <td className="aircraft-tail-number">
+        {aircraft.tail_number}
+      </td>
+
+      <td>{aircraft.manufacturer}</td>
+
+      <td>{aircraft.model}</td>
+
+      <td>{aircraft.serial_number}</td>
+
+      <td>{aircraft.manufacture_year}</td>
+
+      <td>
+        <span
+          className={`aircraft-status-badge status-${aircraft.status.toLowerCase()}`}
+        >
+          {aircraft.status}
+        </span>
+      </td>
+
+      <td>
+        <div className="aircraft-row-actions">
+          <Link
+            to={`/app/aircraft/${aircraft.id}`}
+            className="aircraft-button aircraft-button-secondary"
+          >
+            Details
+          </Link>
+
+          {isAdmin && (
+            <Link
+              to={`/app/aircraft/${aircraft.id}/edit`}
+              className="aircraft-button"
+            >
+              Edit
+            </Link>
+          )}
+        </div>
+      </td>
+    </tr>
   );
 }
 

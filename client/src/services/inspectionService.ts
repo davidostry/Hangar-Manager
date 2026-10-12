@@ -1,9 +1,12 @@
+
 import api from "./api";
 
 import type {
   Inspection,
+  InspectionCreateRequest,
   InspectionListParams,
   InspectionListResponse,
+  InspectionStatus,
 } from "../types/inspection";
 
 const USE_MOCK_DATA =
@@ -68,8 +71,8 @@ const MOCK_INSPECTIONS: Inspection[] = [
 ];
 
 /*
- * These IDs simulate results returned by the Backend's overdue filter.
- * They are test fixtures, not production overdue-calculation logic.
+ * Mock fixtures for testing the overdue filter.
+ * Production overdue calculations belong to the Backend.
  */
 const MOCK_OVERDUE_IDS = new Set([
   "9b200001-1111-4111-8111-111111111111",
@@ -98,7 +101,8 @@ export async function getInspections(
 
     if (params.status) {
       filteredInspections = filteredInspections.filter(
-        (inspection) => inspection.status === params.status,
+        (inspection) =>
+          inspection.status === params.status,
       );
     }
 
@@ -119,6 +123,7 @@ export async function getInspections(
     if (params.overdue === true) {
       filteredInspections = filteredInspections.filter(
         (inspection) =>
+          inspection.status === "Scheduled" &&
           MOCK_OVERDUE_IDS.has(inspection.id),
       );
     }
@@ -159,6 +164,68 @@ export async function getInspections(
           : {}),
       },
     },
+  );
+
+  return response.data;
+}
+
+export async function createInspection(
+  payload: InspectionCreateRequest,
+): Promise<Inspection> {
+  const normalizedPayload: InspectionCreateRequest = {
+    aircraft_id: payload.aircraft_id,
+    inspection_type: payload.inspection_type.trim(),
+    due_date: payload.due_date,
+    notes: payload.notes?.trim() || null,
+  };
+
+  if (USE_MOCK_DATA) {
+    const newInspection: Inspection = {
+      id: crypto.randomUUID(),
+      aircraft_id: normalizedPayload.aircraft_id,
+      inspection_type: normalizedPayload.inspection_type,
+      due_date: normalizedPayload.due_date,
+      status: "Scheduled",
+      completed_at: null,
+      notes: normalizedPayload.notes ?? null,
+    };
+
+    MOCK_INSPECTIONS.unshift(newInspection);
+
+    return { ...newInspection };
+  }
+
+  const response = await api.post<Inspection>(
+    "/inspections",
+    normalizedPayload,
+  );
+
+  return response.data;
+}
+
+export async function updateInspectionStatus(
+  inspectionId: string,
+  status: InspectionStatus,
+): Promise<Inspection> {
+  if (USE_MOCK_DATA) {
+    const inspection = MOCK_INSPECTIONS.find(
+      (item) => item.id === inspectionId,
+    );
+
+    if (!inspection) {
+      throw new Error("Inspection not found.");
+    }
+
+    inspection.status = status;
+    inspection.completed_at =
+      status === "Completed" ? new Date().toISOString() : null;
+
+    return { ...inspection };
+  }
+
+  const response = await api.patch<Inspection>(
+    `/inspections/${inspectionId}`,
+    { status },
   );
 
   return response.data;

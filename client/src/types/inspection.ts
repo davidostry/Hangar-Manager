@@ -1,3 +1,4 @@
+
 export type InspectionStatus =
   | "Scheduled"
   | "Completed"
@@ -11,6 +12,13 @@ export interface Inspection {
   status: InspectionStatus;
   completed_at: string | null;
   notes: string | null;
+}
+
+export interface InspectionCreateRequest {
+  aircraft_id: string;
+  inspection_type: string;
+  due_date: string;
+  notes?: string | null;
 }
 
 export interface InspectionListParams {

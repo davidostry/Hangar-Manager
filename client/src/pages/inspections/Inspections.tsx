@@ -1,7 +1,11 @@
+
 import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
 
-import { getInspections } from "../../services/inspectionService";
+import {
+  getInspections,
+  updateInspectionStatus,
+} from "../../services/inspectionService";
 
 import type {
   Inspection,
@@ -24,14 +28,15 @@ function getErrorMessage(error: unknown): string {
       | { detail?: unknown }
       | undefined;
 
-    const detail = data?.detail;
-
-    if (typeof detail === "string" && detail.trim()) {
-      return detail;
+    if (
+      typeof data?.detail === "string" &&
+      data.detail.trim()
+    ) {
+      return data.detail;
     }
 
-    if (Array.isArray(detail)) {
-      const messages = detail
+    if (Array.isArray(data?.detail)) {
+      const messages = data.detail
         .filter(
           (item): item is { msg: string } =>
             typeof item === "object" &&
@@ -46,7 +51,7 @@ function getErrorMessage(error: unknown): string {
       }
     }
 
-    return `Failed to load inspections. HTTP status: ${error.response.status}.`;
+    return `Request failed. HTTP status: ${error.response.status}.`;
   }
 
   if (error instanceof Error) {
@@ -98,6 +103,13 @@ function Inspections() {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [updatingInspectionId, setUpdatingInspectionId] =
+    useState<string | null>(null);
+
+  const [actionError, setActionError] = useState("");
+  const [actionSuccess, setActionSuccess] = useState("");
+
   const [retryCount, setRetryCount] = useState(0);
 
   const hasInvalidDateRange =
@@ -188,18 +200,49 @@ function Inspections() {
     setPage(1);
   }
 
+  async function handleUpdateStatus(
+    inspection: Inspection,
+    newStatus: InspectionStatus,
+  ): Promise<void> {
+    if (updatingInspectionId) {
+      return;
+    }
+
+    setUpdatingInspectionId(inspection.id);
+    setActionError("");
+    setActionSuccess("");
+
+    try {
+      await updateInspectionStatus(inspection.id, newStatus);
+
+      setActionSuccess(
+        newStatus === "Completed"
+          ? "Inspection marked as completed."
+          : "Inspection cancelled successfully.",
+      );
+
+      setRetryCount((count) => count + 1);
+    } catch (error: unknown) {
+      setActionError(
+        `Could not update the inspection. ${getErrorMessage(error)}`,
+      );
+    } finally {
+      setUpdatingInspectionId(null);
+    }
+  }
+
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
     <section className="inspections-page">
-      <div className="page-heading">
-        <p className="page-eyebrow">Compliance & Safety</p>
-
-        <h1>Inspections</h1>
-
-        <p className="page-description">
-          Monitor scheduled inspections and review their completion status.
-        </p>
+      <div className="page-heading inspections-page-heading">
+        <div>
+          <p className="page-eyebrow">Compliance & Safety</p>
+          <h1>Inspections</h1>
+          <p className="page-description">
+            Monitor scheduled inspections and review their completion status.
+          </p>
+        </div>
       </div>
 
       <section
@@ -275,6 +318,18 @@ function Inspections() {
         </button>
       </section>
 
+      {actionError && (
+        <div className="inspection-action-message inspection-action-error" role="alert">
+          {actionError}
+        </div>
+      )}
+
+      {actionSuccess && (
+        <div className="inspection-action-message inspection-action-success" role="status">
+          {actionSuccess}
+        </div>
+      )}
+
       {overdueOnly && (
         <p className="inspection-filter-note">
           Showing inspections identified as overdue by the Backend.
@@ -291,7 +346,6 @@ function Inspections() {
       {!isLoading && errorMessage && (
         <div className="inspection-state inspection-state-error">
           <h2>Unable to load inspections</h2>
-
           <p role="alert">{errorMessage}</p>
 
           {!hasInvalidDateRange && (
@@ -311,7 +365,6 @@ function Inspections() {
         inspections.length === 0 && (
           <div className="inspection-state">
             <h2>No inspections found</h2>
-
             <p>
               Try changing the status, date range, or overdue filter.
             </p>
@@ -332,53 +385,101 @@ function Inspections() {
                     <th scope="col">Status</th>
                     <th scope="col">Completed At</th>
                     <th scope="col">Notes</th>
+                    <th scope="col">Actions</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {inspections.map((inspection) => (
-                    <tr key={inspection.id}>
-                      <td>
-                        <div className="inspection-name">
-                          {inspection.inspection_type}
-                        </div>
+                  {inspections.map((inspection) => {
+                    const isUpdating =
+                      updatingInspectionId === inspection.id;
 
-                        <div
-                          className="inspection-id"
-                          title={inspection.id}
-                        >
-                          {inspection.id.slice(0, 8)}
-                        </div>
-                      </td>
+                    return (
+                      <tr key={inspection.id}>
+                        <td>
+                          <div className="inspection-name">
+                            {inspection.inspection_type}
+                          </div>
 
-                      <td>
-                        <span
-                          className="inspection-uuid"
-                          title={inspection.aircraft_id}
-                        >
-                          {inspection.aircraft_id.slice(0, 8)}
-                        </span>
-                      </td>
+                          <div
+                            className="inspection-id"
+                            title={inspection.id}
+                          >
+                            {inspection.id.slice(0, 8)}
+                          </div>
+                        </td>
 
-                      <td>{formatDate(inspection.due_date)}</td>
+                        <td>
+                          <span
+                            className="inspection-uuid"
+                            title={inspection.aircraft_id}
+                          >
+                            {inspection.aircraft_id.slice(0, 8)}
+                          </span>
+                        </td>
 
-                      <td>
-                        <span
-                          className={`inspection-status status-${inspection.status.toLowerCase()}`}
-                        >
-                          {formatStatus(inspection.status)}
-                        </span>
-                      </td>
+                        <td>{formatDate(inspection.due_date)}</td>
 
-                      <td>{formatDate(inspection.completed_at)}</td>
+                        <td>
+                          <span
+                            className={`inspection-status status-${inspection.status.toLowerCase()}`}
+                          >
+                            {formatStatus(inspection.status)}
+                          </span>
+                        </td>
 
-                      <td>
-                        <span className="inspection-notes">
-                          {inspection.notes || "—"}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                        <td>
+                          {formatDate(inspection.completed_at)}
+                        </td>
+
+                        <td>
+                          <span className="inspection-notes">
+                            {inspection.notes || "—"}
+                          </span>
+                        </td>
+
+                        <td>
+                          {inspection.status === "Scheduled" ? (
+                            <div className="inspection-row-actions">
+                              <button
+                                type="button"
+                                className="inspection-action-complete"
+                                disabled={Boolean(updatingInspectionId)}
+                                onClick={() =>
+                                  void handleUpdateStatus(
+                                    inspection,
+                                    "Completed",
+                                  )
+                                }
+                              >
+                                {isUpdating
+                                  ? "Saving..."
+                                  : "Complete"}
+                              </button>
+
+                              <button
+                                type="button"
+                                className="inspection-action-cancel"
+                                disabled={Boolean(updatingInspectionId)}
+                                onClick={() =>
+                                  void handleUpdateStatus(
+                                    inspection,
+                                    "Cancelled",
+                                  )
+                                }
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="inspection-no-actions">
+                              No actions
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

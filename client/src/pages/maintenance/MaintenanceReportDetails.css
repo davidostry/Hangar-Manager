@@ -1,189 +1,602 @@
-.maintenance-detail-page {
-  width: 100%;
+/*
+ * HangarManager — Maintenance Report Details
+ * Destination: client/src/pages/maintenance/MaintenanceReportDetails.css
+ * Aviation operations styling: clear white surfaces, deep navy typography,
+ * electric blue / cyan accents, meaningful status colours, purposeful motion.
+ */
+
+:root {
+  --hm-detail-navy: #102a47;
+  --hm-detail-ink: #243f59;
+  --hm-detail-muted: #687f97;
+  --hm-detail-blue: #2376e5;
+  --hm-detail-cyan: #17b7c7;
+  --hm-detail-border: #dbe7f2;
+  --hm-detail-shadow: 0 14px 34px rgba(16, 52, 86, 0.08);
 }
 
-.maintenance-back-link {
+.maintenance-detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+  color: var(--hm-detail-ink);
+  animation: hm-maintenance-detail-enter 580ms cubic-bezier(0.2, 0.72, 0.28, 1) both;
+}
+
+/* Back navigation */
+.maintenance-detail-page .maintenance-back-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-
-  margin-bottom: 24px;
-  color: var(--blue);
-
-  font-size: 12px;
-  font-weight: 750;
-
-  transition:
-    color 180ms ease,
-    transform 180ms ease;
+  gap: 9px;
+  width: fit-content;
+  padding: 8px 0;
+  color: #1768b8;
+  font-size: 0.9rem;
+  font-weight: 850;
+  text-decoration: none;
+  transition: color 180ms ease, gap 180ms ease;
 }
 
-.maintenance-back-link:hover {
+.maintenance-detail-page .maintenance-back-link::before {
+  content: "←";
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #d3e7fa;
+  border-radius: 10px;
+  color: #147dbb;
+  background: linear-gradient(145deg, #fff, #edf7ff);
+  box-shadow: 0 3px 8px rgba(28, 91, 146, 0.06);
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.maintenance-detail-page .maintenance-back-link:hover {
+  gap: 13px;
+  color: #087f91;
+}
+
+.maintenance-detail-page .maintenance-back-link:hover::before {
   transform: translateX(-3px);
-  color: #079eb6;
+  border-color: #8adce5;
+  background: #e8fbfd;
 }
 
-.maintenance-back-link:focus-visible {
-  outline: 2px solid var(--cyan);
-  outline-offset: 4px;
+/* Heading */
+.maintenance-detail-heading,
+.maintenance-detail-page .page-heading {
+  position: relative;
+  margin: 0;
+  padding: 3px 0 7px;
 }
 
-.maintenance-detail-heading {
-  margin-bottom: 24px;
-}
-
-.maintenance-detail-summary {
+.maintenance-detail-heading .page-eyebrow,
+.maintenance-detail-page .page-eyebrow {
   display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-bottom: 23px;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 10px;
+  color: #078da4;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.maintenance-detail-heading .page-eyebrow::before,
+.maintenance-detail-page .page-eyebrow::before {
+  content: "";
+  width: 25px;
+  height: 3px;
+  flex: 0 0 auto;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #2379ed, #19c2ce);
+  box-shadow: 0 0 13px rgba(25, 194, 206, 0.22);
+  transform-origin: left center;
+  animation: hm-maintenance-detail-line 600ms 130ms both;
+}
+
+.maintenance-detail-heading h1,
+.maintenance-detail-page .page-heading h1 {
+  margin: 0;
+  color: var(--hm-detail-navy);
+  font-size: clamp(2rem, 4vw, 3.15rem);
+  font-weight: 950;
+  line-height: 1.08;
+  letter-spacing: -0.06em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.maintenance-detail-heading .page-description,
+.maintenance-detail-page .page-description {
+  max-width: 740px;
+  margin: 11px 0 0;
+  color: #637a93;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* Priority and status summary */
+.maintenance-detail-summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  animation: hm-maintenance-detail-panel-enter 560ms 80ms both;
 }
 
 .maintenance-detail-summary > div {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 13px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+  padding: 19px 21px;
+  overflow: hidden;
+  border: 1px solid #d9e7f3;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #fff, #f4f9fe);
+  box-shadow: 0 8px 22px rgba(20, 62, 99, 0.055);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
 
-  min-width: 190px;
-  padding: 15px 19px;
-
-  border: 1px solid var(--border);
-  border-radius: 12px;
-
-  background: linear-gradient(135deg, #ffffff, #f5f8ff);
-  box-shadow: var(--shadow-soft);
-
-  transition:
-    transform 220ms ease,
-    box-shadow 220ms ease,
-    border-color 220ms ease;
+.maintenance-detail-summary > div::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--hm-detail-blue), var(--hm-detail-cyan));
+  transform: scaleY(0.35);
+  transform-origin: center;
+  opacity: 0.72;
+  transition: transform 220ms ease, opacity 220ms ease;
 }
 
 .maintenance-detail-summary > div:hover {
   transform: translateY(-3px);
-  border-color: #d0ddff;
-  box-shadow: var(--shadow-hover);
+  border-color: #bedbee;
+  box-shadow: 0 13px 26px rgba(20, 82, 136, 0.09);
+}
+
+.maintenance-detail-summary > div:hover::before {
+  transform: scaleY(1);
+  opacity: 1;
 }
 
 .maintenance-detail-label {
-  color: #8190aa;
-  font-size: 10px;
-  font-weight: 850;
-  letter-spacing: 0.7px;
+  color: #71869a;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-.maintenance-detail-card {
-  margin-bottom: 22px;
-  padding: 27px;
-  border-top: 3px solid var(--blue);
-
-  animation: hangar-rise-in 550ms ease both;
+/* Status / priority badges */
+.maintenance-status,
+.maintenance-priority {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 31px;
+  padding: 6px 12px;
+  border: 1px solid #d2e3f3;
+  border-radius: 999px;
+  color: #1b68ad;
+  background: #eff7ff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
-.maintenance-detail-card:nth-of-type(2) {
-  animation-delay: 80ms;
+.maintenance-status::before,
+.maintenance-priority::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.maintenance-status.status-open,
+.maintenance-status--open,
+.maintenance-status.open {
+  border-color: #f4ddb2;
+  color: #9b5b0d;
+  background: #fff7e8;
+}
+
+.maintenance-status.status-inprogress,
+.maintenance-status.status-in-progress,
+.maintenance-status--in-progress,
+.maintenance-status.in-progress,
+.maintenance-status.inprogress {
+  border-color: #bcdcff;
+  color: #155ba7;
+  background: #eaf4ff;
+}
+
+.maintenance-status.status-resolved,
+.maintenance-status--resolved,
+.maintenance-status.resolved {
+  border-color: #bcebd9;
+  color: #117b59;
+  background: #eafaf3;
+}
+
+.maintenance-status.status-cancelled,
+.maintenance-status--cancelled,
+.maintenance-status.cancelled {
+  border-color: #e0e5eb;
+  color: #64748b;
+  background: #f3f5f8;
+}
+
+.maintenance-priority.priority-low,
+.maintenance-priority--low,
+.maintenance-priority.low {
+  border-color: #cfe4f5;
+  color: #246a9e;
+  background: #eff8ff;
+}
+
+.maintenance-priority.priority-medium,
+.maintenance-priority--medium,
+.maintenance-priority.medium {
+  border-color: #d5d9fb;
+  color: #5e5ab0;
+  background: #f1f1ff;
+}
+
+.maintenance-priority.priority-high,
+.maintenance-priority--high,
+.maintenance-priority.high {
+  border-color: #f5d6a3;
+  color: #a45e0c;
+  background: #fff6e5;
+}
+
+.maintenance-priority.priority-critical,
+.maintenance-priority--critical,
+.maintenance-priority.critical {
+  border-color: #f1c4cb;
+  color: #b42f47;
+  background: #fff0f2;
+}
+
+/* Detail information cards */
+.maintenance-detail-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  padding: clamp(21px, 3vw, 30px);
+  border: 1px solid #d7e6f3;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(33, 151, 221, 0.06), transparent 40%),
+    linear-gradient(145deg, #fff, #f8fbff);
+  box-shadow: var(--hm-detail-shadow);
+  animation: hm-maintenance-detail-panel-enter 620ms 120ms both;
+  transition: border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.maintenance-detail-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #2376e5, #17b7c7, #8671ed, #2376e5);
+  background-size: 220% 100%;
+  animation: hm-maintenance-detail-light 8s linear infinite;
+}
+
+.maintenance-detail-card:hover {
+  border-color: #c1daee;
+  box-shadow: 0 18px 40px rgba(16, 52, 86, 0.105);
 }
 
 .maintenance-detail-card h2 {
-  margin: 0 0 22px;
-  color: var(--navy-light);
-  font-size: 19px;
-  font-weight: 850;
-  letter-spacing: -0.3px;
+  margin: 0 0 19px;
+  color: var(--hm-detail-navy);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
 }
 
 .maintenance-detail-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
   margin: 0;
 }
 
 .maintenance-detail-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
+  position: relative;
   min-width: 0;
-  padding: 15px;
-
-  border: 1px solid #edf1f8;
-  border-radius: 11px;
-
-  background: linear-gradient(140deg, #ffffff, #f7faff);
-
-  transition:
-    transform 200ms ease,
-    border-color 200ms ease,
-    box-shadow 200ms ease;
+  padding: 16px 15px 17px;
+  border: 1px solid #e1ebf4;
+  border-radius: 14px;
+  background: linear-gradient(150deg, #fff, #f5f9fe);
+  animation: hm-maintenance-detail-field-enter 480ms both;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
 }
 
+.maintenance-detail-field:nth-child(1) { animation-delay: 100ms; }
+.maintenance-detail-field:nth-child(2) { animation-delay: 145ms; }
+.maintenance-detail-field:nth-child(3) { animation-delay: 190ms; }
+.maintenance-detail-field:nth-child(4) { animation-delay: 235ms; }
+.maintenance-detail-field:nth-child(5) { animation-delay: 280ms; }
+.maintenance-detail-field:nth-child(6) { animation-delay: 325ms; }
+
 .maintenance-detail-field:hover {
-  transform: translateY(-2px);
-  border-color: #d1ddff;
-  box-shadow: 0 6px 16px rgb(49 92 245 / 6%);
+  transform: translateY(-3px);
+  border-color: #c3def2;
+  background: linear-gradient(150deg, #fff, #eef8ff);
+  box-shadow: 0 8px 18px rgba(27, 91, 143, 0.075);
 }
 
 .maintenance-detail-field dt {
-  color: #8190aa;
-  font-size: 10px;
-  font-weight: 850;
-  letter-spacing: 0.8px;
+  margin: 0 0 9px;
+  color: #70869b;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
 .maintenance-detail-field dd {
   margin: 0;
-  color: #1e3157;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.7;
+  color: #183b5a;
+  font-size: 0.93rem;
+  font-weight: 750;
+  line-height: 1.55;
   overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
 }
 
 .maintenance-detail-field .maintenance-detail-uuid {
-  color: #52627d;
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 10px;
+  color: #57728c;
+  font-size: 0.77rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .maintenance-detail-description {
   margin: 0;
-  padding: 17px;
-
-  border: 1px solid #edf1f8;
-  border-radius: 11px;
-
-  background: linear-gradient(140deg, #ffffff, #f7faff);
-  color: #52627d;
-
-  font-size: 13px;
-  line-height: 1.9;
-  overflow-wrap: anywhere;
+  padding: 17px 18px;
+  border: 1px solid #deebf5;
+  border-radius: 14px;
+  color: #3e5c76;
+  background: linear-gradient(145deg, #f9fcff, #eff7fd);
+  font-size: 0.96rem;
+  line-height: 1.85;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
+/* If the local version includes status editing, these controls are styled too. */
+.maintenance-detail-page form,
+.maintenance-status-form,
+.maintenance-detail-status-form {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+}
+
+.maintenance-status-form label,
+.maintenance-detail-status-form label,
+.maintenance-detail-page form label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #294a68;
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.maintenance-detail-page select,
+.maintenance-detail-page input,
+.maintenance-detail-page textarea,
+.maintenance-status-form select,
+.maintenance-detail-status-form select {
+  min-width: min(100%, 210px);
+  min-height: 43px;
+  padding: 10px 12px;
+  border: 1px solid #d2e1ef;
+  border-radius: 11px;
+  outline: none;
+  color: #183b5a;
+  background: #fff;
+  font: inherit;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.maintenance-detail-page select:focus,
+.maintenance-detail-page input:focus,
+.maintenance-detail-page textarea:focus,
+.maintenance-status-form select:focus,
+.maintenance-detail-status-form select:focus {
+  border-color: #4098f5;
+  box-shadow: 0 0 0 4px rgba(40, 135, 235, 0.12);
+}
+
+.maintenance-detail-page button,
+.maintenance-detail-page .maintenance-button,
+.maintenance-status-form button,
+.maintenance-detail-status-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 11px;
+  color: #fff;
+  background: linear-gradient(110deg, #176bd8, #247fe9 50%, #078fa8);
+  background-size: 200% 100%;
+  box-shadow: 0 7px 17px rgba(35, 118, 229, 0.18);
+  font: inherit;
+  font-size: 0.87rem;
+  font-weight: 850;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-position 300ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+
+.maintenance-detail-page button:hover,
+.maintenance-detail-page .maintenance-button:hover,
+.maintenance-status-form button:hover,
+.maintenance-detail-status-form button:hover {
+  color: #fff;
+  background-position: 100% 50%;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 23px rgba(35, 118, 229, 0.25);
+}
+
+.maintenance-detail-page button:active,
+.maintenance-detail-page .maintenance-button:active,
+.maintenance-status-form button:active,
+.maintenance-detail-status-form button:active {
+  transform: translateY(0) scale(0.985);
+}
+
+/* Loading, not-found and error states */
 .maintenance-detail-state {
-  margin-top: 10px;
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  min-height: 190px;
+  padding: 30px;
+  border: 1px dashed #c4d9ec;
+  border-radius: 18px;
+  color: #657e96;
+  background: linear-gradient(145deg, #fff, #f1f8fe);
+  text-align: center;
+  animation: hm-maintenance-detail-panel-enter 460ms ease both;
 }
 
-@media (max-width: 600px) {
-  .maintenance-detail-summary {
-    flex-direction: column;
+.maintenance-detail-state h1,
+.maintenance-detail-state h2 {
+  margin: 0;
+  color: var(--hm-detail-navy);
+}
+
+.maintenance-detail-state p {
+  max-width: 700px;
+  margin: 0;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.maintenance-detail-state.maintenance-state-error {
+  border-color: #efc4cc;
+  color: #a93147;
+  background: linear-gradient(145deg, #fff, #fff2f4);
+}
+
+.maintenance-detail-state.maintenance-state-error h1,
+.maintenance-detail-state.maintenance-state-error h2 {
+  color: #a93147;
+}
+
+.maintenance-detail-page a:focus-visible,
+.maintenance-detail-page button:focus-visible,
+.maintenance-detail-page select:focus-visible {
+  outline: 3px solid rgba(23, 183, 199, 0.5);
+  outline-offset: 3px;
+}
+
+/* Motion */
+@keyframes hm-maintenance-detail-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hm-maintenance-detail-panel-enter {
+  from { opacity: 0; transform: translateY(15px) scale(0.992); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes hm-maintenance-detail-field-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hm-maintenance-detail-line {
+  from { opacity: 0.2; transform: scaleX(0); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes hm-maintenance-detail-light {
+  from { background-position: 100% 50%; }
+  to { background-position: -120% 50%; }
+}
+
+@media (max-width: 900px) {
+  .maintenance-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .maintenance-detail-page {
+    gap: 17px;
   }
 
-  .maintenance-detail-summary > div {
-    justify-content: space-between;
-    width: 100%;
-  }
-
+  .maintenance-detail-summary,
   .maintenance-detail-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
   }
 
   .maintenance-detail-card {
-    padding: 19px;
+    padding: 19px 15px;
+    border-radius: 16px;
+  }
+
+  .maintenance-detail-field {
+    padding: 14px;
+  }
+
+  .maintenance-detail-page form,
+  .maintenance-status-form,
+  .maintenance-detail-status-form {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .maintenance-detail-page form label,
+  .maintenance-status-form label,
+  .maintenance-detail-status-form label,
+  .maintenance-detail-page select,
+  .maintenance-detail-page input,
+  .maintenance-detail-page textarea,
+  .maintenance-status-form select,
+  .maintenance-detail-status-form select,
+  .maintenance-detail-page button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maintenance-detail-page *,
+  .maintenance-detail-page *::before,
+  .maintenance-detail-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
