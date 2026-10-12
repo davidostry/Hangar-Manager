@@ -1,0 +1,272 @@
+
+.inspections-page,
+.inspection-page {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  animation: inspections-enter 450ms ease both;
+}
+
+.inspections-toolbar,
+.inspections-filters,
+.inspection-filters,
+.inspections-filter-bar {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 17px;
+  padding: 21px;
+  border: 1px solid rgba(126, 184, 255, 0.2);
+  border-radius: 17px;
+  background: linear-gradient(
+    145deg,
+    rgba(19, 43, 72, 0.88),
+    rgba(9, 24, 43, 0.92)
+  );
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+}
+
+.inspections-filter-field,
+.inspection-filter-field {
+  display: flex;
+  flex: 1 1 160px;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 140px;
+}
+
+.inspections-toolbar label,
+.inspections-filters label,
+.inspection-filters label,
+.inspections-filter-bar label {
+  color: #cce6ff;
+  font-size: 0.85rem;
+  font-weight: 750;
+}
+
+.inspections-filter-field input,
+.inspections-filter-field select,
+.inspection-filter-field input,
+.inspection-filter-field select {
+  margin: 0;
+}
+
+.inspections-filter-check,
+.inspection-overdue-filter {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  gap: 10px;
+  min-height: 44px;
+  color: #c9def4;
+  font-size: 0.87rem;
+  font-weight: 650;
+}
+
+.inspections-filter-check input,
+.inspection-overdue-filter input {
+  width: 17px;
+  min-height: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--cyan);
+  cursor: pointer;
+}
+
+.inspections-table-wrapper,
+.inspection-table-wrapper,
+.inspections-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid rgba(126, 184, 255, 0.2);
+  border-radius: 16px;
+  background: rgba(9, 24, 43, 0.77);
+  box-shadow: 0 17px 38px rgba(0, 0, 0, 0.18);
+}
+
+.inspections-table,
+.inspection-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.inspections-table thead th,
+.inspection-table thead th {
+  padding: 15px;
+  border-bottom: 1px solid rgba(53, 230, 255, 0.2);
+  color: #8feeff;
+  background: linear-gradient(
+    100deg,
+    rgba(32, 71, 112, 0.9),
+    rgba(25, 45, 81, 0.92)
+  );
+  text-align: left;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+  white-space: nowrap;
+}
+
+.inspections-table tbody td,
+.inspection-table tbody td {
+  padding: 15px;
+  border-bottom: 1px solid rgba(126, 184, 255, 0.1);
+  color: #ccdbed;
+  font-size: 0.88rem;
+  vertical-align: middle;
+}
+
+.inspections-table tbody tr,
+.inspection-table tbody tr {
+  transition: background 180ms ease;
+}
+
+.inspections-table tbody tr:nth-child(even),
+.inspection-table tbody tr:nth-child(even) {
+  background: rgba(104, 155, 220, 0.025);
+}
+
+.inspections-table tbody tr:hover,
+.inspection-table tbody tr:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(53, 230, 255, 0.075),
+    rgba(57, 132, 255, 0.06)
+  );
+}
+
+.inspections-table tbody tr:hover td,
+.inspection-table tbody tr:hover td {
+  color: #fff;
+}
+
+.inspections-table tbody tr:last-child td,
+.inspection-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.inspection-status-badge,
+.inspections-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  padding: 5px 10px;
+  border: 1px solid rgba(126, 184, 255, 0.23);
+  border-radius: 999px;
+  color: #bfeeff;
+  background: rgba(53, 230, 255, 0.07);
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.inspection-status-badge.status-scheduled,
+.inspections-status-badge.status-scheduled {
+  border-color: rgba(53, 230, 255, 0.32);
+  color: #8feeff;
+  background: rgba(53, 230, 255, 0.08);
+}
+
+.inspection-status-badge.status-completed,
+.inspections-status-badge.status-completed {
+  border-color: rgba(67, 230, 176, 0.32);
+  color: #8af4cb;
+  background: rgba(67, 230, 176, 0.09);
+}
+
+.inspection-status-badge.status-cancelled,
+.inspections-status-badge.status-cancelled {
+  border-color: rgba(155, 178, 206, 0.27);
+  color: #adbed3;
+  background: rgba(155, 178, 206, 0.08);
+}
+
+.inspection-overdue-badge,
+.overdue-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 26px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 93, 120, 0.4);
+  border-radius: 999px;
+  color: #ff9cac;
+  background: rgba(255, 93, 120, 0.12);
+  font-size: 0.75rem;
+  font-weight: 850;
+  white-space: nowrap;
+  box-shadow: 0 0 13px rgba(255, 93, 120, 0.05);
+}
+
+.inspection-due-date,
+.inspections-due-date {
+  color: #e6f4ff;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.inspection-aircraft-link {
+  color: #8feeff;
+  font-weight: 800;
+}
+
+.inspection-aircraft-link:hover {
+  color: white;
+  text-shadow: 0 0 13px rgba(53, 230, 255, 0.3);
+}
+
+.inspections-results-count {
+  margin: 12px 0 0;
+  color: #8fa9c5;
+  font-size: 0.84rem;
+  text-align: right;
+}
+
+.inspections-page .aircraft-state,
+.inspection-page .aircraft-state {
+  margin-top: 5px;
+}
+
+@keyframes inspections-enter {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 750px) {
+  .inspections-toolbar,
+  .inspections-filters,
+  .inspection-filters,
+  .inspections-filter-bar {
+    align-items: stretch;
+    padding: 16px;
+  }
+
+  .inspections-filter-field,
+  .inspection-filter-field {
+    flex-basis: 100%;
+  }
+
+  .inspections-filter-check,
+  .inspection-overdue-filter {
+    align-self: flex-start;
+  }
+
+  .inspections-table thead th,
+  .inspections-table tbody td,
+  .inspection-table thead th,
+  .inspection-table tbody td {
+    padding: 12px 10px;
+    font-size: 0.81rem;
+  }
+}

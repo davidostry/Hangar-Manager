@@ -1,0 +1,232 @@
+
+.maintenance-report-details-page,
+.maintenance-details-page {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  animation: maintenance-details-enter 450ms ease both;
+}
+
+.maintenance-details-header,
+.maintenance-report-details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.maintenance-details-actions,
+.maintenance-report-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.maintenance-details-card,
+.maintenance-report-details-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(22px, 4vw, 34px);
+  border: 1px solid rgba(126, 184, 255, 0.21);
+  border-radius: 20px;
+  background: linear-gradient(
+    145deg,
+    rgba(19, 43, 72, 0.92),
+    rgba(8, 23, 42, 0.96)
+  );
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+  transition: border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.maintenance-details-card::before,
+.maintenance-report-details-card::before {
+  content: "";
+  position: absolute;
+  top: -90px;
+  right: -80px;
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(168, 121, 255, 0.13),
+    rgba(53, 230, 255, 0.045) 48%,
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+.maintenance-details-card:hover,
+.maintenance-report-details-card:hover {
+  border-color: rgba(53, 230, 255, 0.32);
+  box-shadow:
+    0 22px 47px rgba(0, 0, 0, 0.25),
+    0 0 25px rgba(53, 230, 255, 0.05);
+}
+
+.maintenance-details-card h2,
+.maintenance-report-details-card h2 {
+  position: relative;
+  margin-top: 0;
+  color: #eff9ff;
+}
+
+.maintenance-details-subtitle {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.maintenance-details-grid,
+.maintenance-report-details-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 23px;
+}
+
+.maintenance-details-grid > div,
+.maintenance-report-details-grid > div,
+.maintenance-detail-item {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid rgba(126, 184, 255, 0.15);
+  border-radius: 13px;
+  background: rgba(4, 18, 34, 0.57);
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease;
+}
+
+.maintenance-details-grid > div:hover,
+.maintenance-report-details-grid > div:hover,
+.maintenance-detail-item:hover {
+  transform: translateY(-3px);
+  border-color: rgba(53, 230, 255, 0.32);
+  background: rgba(16, 43, 68, 0.68);
+}
+
+.maintenance-detail-label,
+.maintenance-details-grid dt,
+.maintenance-report-details-grid dt {
+  display: block;
+  margin: 0 0 8px;
+  color: #8faecb;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+
+.maintenance-detail-value,
+.maintenance-details-grid dd,
+.maintenance-report-details-grid dd {
+  display: block;
+  margin: 0;
+  color: #e9f5ff;
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.maintenance-details-grid dl,
+.maintenance-report-details-grid dl {
+  margin: 0;
+}
+
+.maintenance-description,
+.maintenance-report-description-full {
+  position: relative;
+  margin-top: 22px;
+  padding: 20px;
+  border: 1px solid rgba(126, 184, 255, 0.15);
+  border-radius: 14px;
+  background: rgba(4, 18, 34, 0.55);
+}
+
+.maintenance-description h3,
+.maintenance-report-description-full h3 {
+  margin-top: 0;
+  color: #b7eaff;
+}
+
+.maintenance-description p,
+.maintenance-report-description-full p {
+  margin-bottom: 0;
+  color: #cadced;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.maintenance-report-aircraft-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cyan);
+  font-weight: 800;
+}
+
+.maintenance-report-aircraft-link:hover {
+  color: white;
+  text-shadow: 0 0 14px rgba(53, 230, 255, 0.28);
+}
+
+.maintenance-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  color: var(--cyan);
+  font-weight: 750;
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+.maintenance-back-link:hover {
+  transform: translateX(-3px);
+  color: #c1faff;
+}
+
+.maintenance-report-details-page .maintenance-status-badge,
+.maintenance-report-details-page .maintenance-priority-badge,
+.maintenance-details-page .maintenance-status-badge,
+.maintenance-details-page .maintenance-priority-badge {
+  width: fit-content;
+}
+
+@keyframes maintenance-details-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 650px) {
+  .maintenance-details-grid,
+  .maintenance-report-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .maintenance-details-card,
+  .maintenance-report-details-card {
+    padding: 18px;
+  }
+
+  .maintenance-details-actions,
+  .maintenance-report-actions {
+    width: 100%;
+  }
+
+  .maintenance-details-actions > *,
+  .maintenance-report-actions > * {
+    flex: 1;
+  }
+}
