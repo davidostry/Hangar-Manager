@@ -1,457 +1,602 @@
+/*
+ * HangarManager — Maintenance Report Details
+ * Destination: client/src/pages/maintenance/MaintenanceReportDetails.css
+ * Aviation operations styling: clear white surfaces, deep navy typography,
+ * electric blue / cyan accents, meaningful status colours, purposeful motion.
+ */
+
+:root {
+  --hm-detail-navy: #102a47;
+  --hm-detail-ink: #243f59;
+  --hm-detail-muted: #687f97;
+  --hm-detail-blue: #2376e5;
+  --hm-detail-cyan: #17b7c7;
+  --hm-detail-border: #dbe7f2;
+  --hm-detail-shadow: 0 14px 34px rgba(16, 52, 86, 0.08);
+}
 
 .maintenance-detail-page {
   display: flex;
   flex-direction: column;
-  gap: 23px;
-  animation: maintenance-detail-enter 450ms ease both;
+  gap: 22px;
+  min-width: 0;
+  color: var(--hm-detail-ink);
+  animation: hm-maintenance-detail-enter 580ms cubic-bezier(0.2, 0.72, 0.28, 1) both;
 }
 
-.maintenance-back-link {
+/* Back navigation */
+.maintenance-detail-page .maintenance-back-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   width: fit-content;
-  color: var(--cyan);
+  padding: 8px 0;
+  color: #1768b8;
   font-size: 0.9rem;
-  font-weight: 750;
-  transition: transform 180ms ease, color 180ms ease;
+  font-weight: 850;
+  text-decoration: none;
+  transition: color 180ms ease, gap 180ms ease;
 }
 
-.maintenance-back-link:hover {
-  color: #c1faff;
+.maintenance-detail-page .maintenance-back-link::before {
+  content: "←";
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #d3e7fa;
+  border-radius: 10px;
+  color: #147dbb;
+  background: linear-gradient(145deg, #fff, #edf7ff);
+  box-shadow: 0 3px 8px rgba(28, 91, 146, 0.06);
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.maintenance-detail-page .maintenance-back-link:hover {
+  gap: 13px;
+  color: #087f91;
+}
+
+.maintenance-detail-page .maintenance-back-link:hover::before {
   transform: translateX(-3px);
+  border-color: #8adce5;
+  background: #e8fbfd;
 }
 
-.maintenance-detail-heading {
-  margin-bottom: 0;
+/* Heading */
+.maintenance-detail-heading,
+.maintenance-detail-page .page-heading {
+  position: relative;
+  margin: 0;
+  padding: 3px 0 7px;
 }
 
-.maintenance-detail-heading h1 {
-  overflow-wrap: anywhere;
-}
-
-.maintenance-detail-state {
+.maintenance-detail-heading .page-eyebrow,
+.maintenance-detail-page .page-eyebrow {
   display: flex;
   align-items: center;
-  flex-direction: column;
-  gap: 13px;
-  padding: 38px 22px;
-  border: 1px solid rgba(126, 184, 255, 0.19);
-  border-radius: 18px;
-  color: var(--muted);
-  background: rgba(13, 31, 53, 0.82);
-  text-align: center;
+  gap: 9px;
+  margin: 0 0 10px;
+  color: #078da4;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
-.maintenance-detail-state h1 {
-  margin: 0;
-  color: #eff9ff;
+.maintenance-detail-heading .page-eyebrow::before,
+.maintenance-detail-page .page-eyebrow::before {
+  content: "";
+  width: 25px;
+  height: 3px;
+  flex: 0 0 auto;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #2379ed, #19c2ce);
+  box-shadow: 0 0 13px rgba(25, 194, 206, 0.22);
+  transform-origin: left center;
+  animation: hm-maintenance-detail-line 600ms 130ms both;
 }
 
-.maintenance-detail-state p {
-  max-width: 650px;
+.maintenance-detail-heading h1,
+.maintenance-detail-page .page-heading h1 {
   margin: 0;
+  color: var(--hm-detail-navy);
+  font-size: clamp(2rem, 4vw, 3.15rem);
+  font-weight: 950;
+  line-height: 1.08;
+  letter-spacing: -0.06em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.maintenance-detail-heading .page-description,
+.maintenance-detail-page .page-description {
+  max-width: 740px;
+  margin: 11px 0 0;
+  color: #637a93;
+  font-size: 1rem;
   line-height: 1.7;
 }
 
-.maintenance-state-error {
-  border-color: rgba(255, 93, 120, 0.35);
-  background: rgba(55, 20, 36, 0.38);
-}
-
-.maintenance-state-error h1 {
-  color: #ff9cac;
-}
-
-.maintenance-spinner {
-  width: 38px;
-  height: 38px;
-  border: 3px solid rgba(53, 230, 255, 0.14);
-  border-top-color: var(--cyan);
-  border-right-color: var(--violet);
-  border-radius: 50%;
-  animation: maintenance-detail-spin 750ms linear infinite;
-}
-
+/* Priority and status summary */
 .maintenance-detail-summary {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 15px;
+  animation: hm-maintenance-detail-panel-enter 560ms 80ms both;
 }
 
 .maintenance-detail-summary > div {
+  position: relative;
   display: flex;
-  align-items: flex-start;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
-  border: 1px solid rgba(126, 184, 255, 0.2);
-  border-radius: 16px;
-  background: linear-gradient(
-    145deg,
-    rgba(19, 43, 72, 0.9),
-    rgba(9, 24, 43, 0.94)
-  );
-  box-shadow: 0 13px 30px rgba(0, 0, 0, 0.15);
-  transition:
-    transform 220ms ease,
-    border-color 220ms ease,
-    box-shadow 220ms ease;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+  padding: 19px 21px;
+  overflow: hidden;
+  border: 1px solid #d9e7f3;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #fff, #f4f9fe);
+  box-shadow: 0 8px 22px rgba(20, 62, 99, 0.055);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.maintenance-detail-summary > div::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--hm-detail-blue), var(--hm-detail-cyan));
+  transform: scaleY(0.35);
+  transform-origin: center;
+  opacity: 0.72;
+  transition: transform 220ms ease, opacity 220ms ease;
 }
 
 .maintenance-detail-summary > div:hover {
   transform: translateY(-3px);
-  border-color: rgba(53, 230, 255, 0.33);
-  box-shadow: 0 17px 34px rgba(0, 0, 0, 0.2);
+  border-color: #bedbee;
+  box-shadow: 0 13px 26px rgba(20, 82, 136, 0.09);
+}
+
+.maintenance-detail-summary > div:hover::before {
+  transform: scaleY(1);
+  opacity: 1;
 }
 
 .maintenance-detail-label {
-  color: #8faecb;
-  font-size: 0.79rem;
-  font-weight: 800;
+  color: #71869a;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
-.maintenance-priority,
-.maintenance-status {
+/* Status / priority badges */
+.maintenance-status,
+.maintenance-priority {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 28px;
-  padding: 6px 11px;
-  border: 1px solid rgba(126, 184, 255, 0.25);
+  gap: 7px;
+  min-height: 31px;
+  padding: 6px 12px;
+  border: 1px solid #d2e3f3;
   border-radius: 999px;
-  color: #bfeeff;
-  background: rgba(53, 230, 255, 0.08);
+  color: #1b68ad;
+  background: #eff7ff;
   font-size: 0.78rem;
-  font-weight: 850;
+  font-weight: 900;
+  line-height: 1.25;
   white-space: nowrap;
 }
 
-.maintenance-priority.priority-low {
-  border-color: rgba(67, 230, 176, 0.3);
-  color: #8af4cb;
-  background: rgba(67, 230, 176, 0.08);
+.maintenance-status::before,
+.maintenance-priority::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
 }
 
-.maintenance-priority.priority-medium {
-  border-color: rgba(53, 230, 255, 0.32);
-  color: #8feeff;
-  background: rgba(53, 230, 255, 0.08);
+.maintenance-status.status-open,
+.maintenance-status--open,
+.maintenance-status.open {
+  border-color: #f4ddb2;
+  color: #9b5b0d;
+  background: #fff7e8;
 }
 
-.maintenance-priority.priority-high {
-  border-color: rgba(255, 173, 91, 0.38);
-  color: #ffd09d;
-  background: rgba(255, 173, 91, 0.1);
+.maintenance-status.status-inprogress,
+.maintenance-status.status-in-progress,
+.maintenance-status--in-progress,
+.maintenance-status.in-progress,
+.maintenance-status.inprogress {
+  border-color: #bcdcff;
+  color: #155ba7;
+  background: #eaf4ff;
 }
 
-.maintenance-priority.priority-critical {
-  border-color: rgba(255, 93, 120, 0.4);
-  color: #ff9cac;
-  background: rgba(255, 93, 120, 0.12);
-  box-shadow: 0 0 14px rgba(255, 93, 120, 0.06);
+.maintenance-status.status-resolved,
+.maintenance-status--resolved,
+.maintenance-status.resolved {
+  border-color: #bcebd9;
+  color: #117b59;
+  background: #eafaf3;
 }
 
-.maintenance-status.status-open {
-  border-color: rgba(255, 173, 91, 0.35);
-  color: #ffd09d;
-  background: rgba(255, 173, 91, 0.1);
+.maintenance-status.status-cancelled,
+.maintenance-status--cancelled,
+.maintenance-status.cancelled {
+  border-color: #e0e5eb;
+  color: #64748b;
+  background: #f3f5f8;
 }
 
-.maintenance-status.status-inprogress {
-  border-color: rgba(53, 230, 255, 0.34);
-  color: #8feeff;
-  background: rgba(53, 230, 255, 0.08);
+.maintenance-priority.priority-low,
+.maintenance-priority--low,
+.maintenance-priority.low {
+  border-color: #cfe4f5;
+  color: #246a9e;
+  background: #eff8ff;
 }
 
-.maintenance-status.status-resolved {
-  border-color: rgba(67, 230, 176, 0.32);
-  color: #8af4cb;
-  background: rgba(67, 230, 176, 0.09);
+.maintenance-priority.priority-medium,
+.maintenance-priority--medium,
+.maintenance-priority.medium {
+  border-color: #d5d9fb;
+  color: #5e5ab0;
+  background: #f1f1ff;
 }
 
-.maintenance-status.status-cancelled {
-  border-color: rgba(155, 178, 206, 0.27);
-  color: #adbed3;
-  background: rgba(155, 178, 206, 0.08);
+.maintenance-priority.priority-high,
+.maintenance-priority--high,
+.maintenance-priority.high {
+  border-color: #f5d6a3;
+  color: #a45e0c;
+  background: #fff6e5;
 }
 
-/* Details cards */
+.maintenance-priority.priority-critical,
+.maintenance-priority--critical,
+.maintenance-priority.critical {
+  border-color: #f1c4cb;
+  color: #b42f47;
+  background: #fff0f2;
+}
 
+/* Detail information cards */
 .maintenance-detail-card {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
-  padding: clamp(22px, 3.5vw, 30px);
-  border: 1px solid rgba(126, 184, 255, 0.2);
-  border-radius: 19px;
-  background: linear-gradient(
-    145deg,
-    rgba(19, 43, 72, 0.9),
-    rgba(8, 23, 42, 0.95)
-  );
-  box-shadow:
-    0 16px 37px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
-  transition:
-    border-color 220ms ease,
-    box-shadow 220ms ease;
+  min-width: 0;
+  padding: clamp(21px, 3vw, 30px);
+  border: 1px solid #d7e6f3;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(33, 151, 221, 0.06), transparent 40%),
+    linear-gradient(145deg, #fff, #f8fbff);
+  box-shadow: var(--hm-detail-shadow);
+  animation: hm-maintenance-detail-panel-enter 620ms 120ms both;
+  transition: border-color 220ms ease, box-shadow 220ms ease;
 }
 
 .maintenance-detail-card::before {
   content: "";
   position: absolute;
-  top: -95px;
-  right: -85px;
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(53, 230, 255, 0.1),
-    rgba(168, 121, 255, 0.035) 48%,
-    transparent 72%
-  );
-  pointer-events: none;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #2376e5, #17b7c7, #8671ed, #2376e5);
+  background-size: 220% 100%;
+  animation: hm-maintenance-detail-light 8s linear infinite;
 }
 
 .maintenance-detail-card:hover {
-  border-color: rgba(53, 230, 255, 0.3);
-  box-shadow:
-    0 20px 43px rgba(0, 0, 0, 0.22),
-    0 0 22px rgba(53, 230, 255, 0.04);
+  border-color: #c1daee;
+  box-shadow: 0 18px 40px rgba(16, 52, 86, 0.105);
 }
 
 .maintenance-detail-card h2 {
-  position: relative;
-  margin: 0 0 20px;
-  color: #eff9ff;
-  font-size: 1.25rem;
-  letter-spacing: -0.025em;
+  margin: 0 0 19px;
+  color: var(--hm-detail-navy);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
 }
 
 .maintenance-detail-grid {
-  position: relative;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
   margin: 0;
 }
 
 .maintenance-detail-field {
+  position: relative;
   min-width: 0;
-  padding: 16px;
-  border: 1px solid rgba(126, 184, 255, 0.14);
-  border-radius: 12px;
-  background: rgba(4, 18, 34, 0.55);
-  transition:
-    transform 180ms ease,
-    border-color 180ms ease,
-    background 180ms ease;
+  padding: 16px 15px 17px;
+  border: 1px solid #e1ebf4;
+  border-radius: 14px;
+  background: linear-gradient(150deg, #fff, #f5f9fe);
+  animation: hm-maintenance-detail-field-enter 480ms both;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
 }
 
+.maintenance-detail-field:nth-child(1) { animation-delay: 100ms; }
+.maintenance-detail-field:nth-child(2) { animation-delay: 145ms; }
+.maintenance-detail-field:nth-child(3) { animation-delay: 190ms; }
+.maintenance-detail-field:nth-child(4) { animation-delay: 235ms; }
+.maintenance-detail-field:nth-child(5) { animation-delay: 280ms; }
+.maintenance-detail-field:nth-child(6) { animation-delay: 325ms; }
+
 .maintenance-detail-field:hover {
-  transform: translateY(-2px);
-  border-color: rgba(53, 230, 255, 0.27);
-  background: rgba(16, 43, 68, 0.68);
+  transform: translateY(-3px);
+  border-color: #c3def2;
+  background: linear-gradient(150deg, #fff, #eef8ff);
+  box-shadow: 0 8px 18px rgba(27, 91, 143, 0.075);
 }
 
 .maintenance-detail-field dt {
-  margin: 0 0 8px;
-  color: #8faecb;
-  font-size: 0.77rem;
-  font-weight: 800;
+  margin: 0 0 9px;
+  color: #70869b;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .maintenance-detail-field dd {
   margin: 0;
-  color: #e9f5ff;
-  font-size: 0.94rem;
-  font-weight: 700;
-  line-height: 1.65;
+  color: #183b5a;
+  font-size: 0.93rem;
+  font-weight: 750;
+  line-height: 1.55;
   overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
 }
 
-.maintenance-detail-uuid {
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 0.8rem !important;
+.maintenance-detail-field .maintenance-detail-uuid {
+  color: #57728c;
+  font-size: 0.77rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .maintenance-detail-description {
-  position: relative;
   margin: 0;
-  padding: 18px;
-  border: 1px solid rgba(126, 184, 255, 0.14);
-  border-radius: 13px;
-  color: #cadced;
-  background: rgba(4, 18, 34, 0.55);
+  padding: 17px 18px;
+  border: 1px solid #deebf5;
+  border-radius: 14px;
+  color: #3e5c76;
+  background: linear-gradient(145deg, #f9fcff, #eff7fd);
+  font-size: 0.96rem;
   line-height: 1.85;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-/* Status update form */
-
-.maintenance-status-heading {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.maintenance-status-heading h2 {
-  margin-bottom: 7px;
-}
-
-.maintenance-status-heading p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.87rem;
-  line-height: 1.65;
-}
-
-.maintenance-status-form {
-  position: relative;
+/* If the local version includes status editing, these controls are styled too. */
+.maintenance-detail-page form,
+.maintenance-status-form,
+.maintenance-detail-status-form {
   display: flex;
   align-items: flex-end;
   flex-wrap: wrap;
-  gap: 14px;
-}
-
-.maintenance-status-control {
-  display: flex;
-  flex: 1 1 240px;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
-.maintenance-status-control label {
-  color: #d9eaff;
-  font-size: 0.88rem;
-  font-weight: 750;
-}
-
-.maintenance-status-control select {
-  width: 100%;
-  min-height: 46px;
+  gap: 12px;
   margin: 0;
 }
 
-.maintenance-button {
+.maintenance-status-form label,
+.maintenance-detail-status-form label,
+.maintenance-detail-page form label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #294a68;
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.maintenance-detail-page select,
+.maintenance-detail-page input,
+.maintenance-detail-page textarea,
+.maintenance-status-form select,
+.maintenance-detail-status-form select {
+  min-width: min(100%, 210px);
+  min-height: 43px;
+  padding: 10px 12px;
+  border: 1px solid #d2e1ef;
+  border-radius: 11px;
+  outline: none;
+  color: #183b5a;
+  background: #fff;
+  font: inherit;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.maintenance-detail-page select:focus,
+.maintenance-detail-page input:focus,
+.maintenance-detail-page textarea:focus,
+.maintenance-status-form select:focus,
+.maintenance-detail-status-form select:focus {
+  border-color: #4098f5;
+  box-shadow: 0 0 0 4px rgba(40, 135, 235, 0.12);
+}
+
+.maintenance-detail-page button,
+.maintenance-detail-page .maintenance-button,
+.maintenance-status-form button,
+.maintenance-detail-status-form button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
-  padding: 11px 20px;
-  border: 1px solid rgba(103, 220, 255, 0.42);
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 11px;
-  color: #061426;
-  background: linear-gradient(
-    115deg,
-    #55edff,
-    #60a4ff 57%,
-    #b99aff
-  );
-  box-shadow: 0 8px 19px rgba(42, 143, 255, 0.18);
-  font-size: 0.88rem;
-  font-weight: 850;
-  white-space: nowrap;
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    filter 180ms ease;
-}
-
-.maintenance-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  filter: brightness(1.07);
-  box-shadow:
-    0 12px 25px rgba(42, 143, 255, 0.27),
-    0 0 20px rgba(53, 230, 255, 0.12);
-}
-
-.maintenance-button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.maintenance-status-message {
-  position: relative;
-  margin: 16px 0 0;
-  padding: 12px 15px;
-  border: 1px solid;
-  border-radius: 11px;
+  color: #fff;
+  background: linear-gradient(110deg, #176bd8, #247fe9 50%, #078fa8);
+  background-size: 200% 100%;
+  box-shadow: 0 7px 17px rgba(35, 118, 229, 0.18);
+  font: inherit;
   font-size: 0.87rem;
-  line-height: 1.6;
+  font-weight: 850;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-position 300ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
 
-.maintenance-status-message-error {
-  border-color: rgba(255, 93, 120, 0.35);
-  color: #ffabb7;
-  background: rgba(255, 93, 120, 0.08);
+.maintenance-detail-page button:hover,
+.maintenance-detail-page .maintenance-button:hover,
+.maintenance-status-form button:hover,
+.maintenance-detail-status-form button:hover {
+  color: #fff;
+  background-position: 100% 50%;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 23px rgba(35, 118, 229, 0.25);
 }
 
-.maintenance-status-message-success {
-  border-color: rgba(67, 230, 176, 0.3);
-  color: #8af4cb;
-  background: rgba(67, 230, 176, 0.08);
+.maintenance-detail-page button:active,
+.maintenance-detail-page .maintenance-button:active,
+.maintenance-status-form button:active,
+.maintenance-detail-status-form button:active {
+  transform: translateY(0) scale(0.985);
 }
 
-@keyframes maintenance-detail-enter {
-  from {
-    opacity: 0;
-    transform: translateY(9px);
+/* Loading, not-found and error states */
+.maintenance-detail-state {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  min-height: 190px;
+  padding: 30px;
+  border: 1px dashed #c4d9ec;
+  border-radius: 18px;
+  color: #657e96;
+  background: linear-gradient(145deg, #fff, #f1f8fe);
+  text-align: center;
+  animation: hm-maintenance-detail-panel-enter 460ms ease both;
+}
+
+.maintenance-detail-state h1,
+.maintenance-detail-state h2 {
+  margin: 0;
+  color: var(--hm-detail-navy);
+}
+
+.maintenance-detail-state p {
+  max-width: 700px;
+  margin: 0;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.maintenance-detail-state.maintenance-state-error {
+  border-color: #efc4cc;
+  color: #a93147;
+  background: linear-gradient(145deg, #fff, #fff2f4);
+}
+
+.maintenance-detail-state.maintenance-state-error h1,
+.maintenance-detail-state.maintenance-state-error h2 {
+  color: #a93147;
+}
+
+.maintenance-detail-page a:focus-visible,
+.maintenance-detail-page button:focus-visible,
+.maintenance-detail-page select:focus-visible {
+  outline: 3px solid rgba(23, 183, 199, 0.5);
+  outline-offset: 3px;
+}
+
+/* Motion */
+@keyframes hm-maintenance-detail-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hm-maintenance-detail-panel-enter {
+  from { opacity: 0; transform: translateY(15px) scale(0.992); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes hm-maintenance-detail-field-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hm-maintenance-detail-line {
+  from { opacity: 0.2; transform: scaleX(0); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes hm-maintenance-detail-light {
+  from { background-position: 100% 50%; }
+  to { background-position: -120% 50%; }
+}
+
+@media (max-width: 900px) {
+  .maintenance-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .maintenance-detail-page {
+    gap: 17px;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes maintenance-detail-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (max-width: 650px) {
   .maintenance-detail-summary,
   .maintenance-detail-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .maintenance-detail-card {
-    padding: 18px;
+    padding: 19px 15px;
+    border-radius: 16px;
   }
 
-  .maintenance-status-form {
+  .maintenance-detail-field {
+    padding: 14px;
+  }
+
+  .maintenance-detail-page form,
+  .maintenance-status-form,
+  .maintenance-detail-status-form {
     align-items: stretch;
     flex-direction: column;
   }
 
-  .maintenance-status-control {
-    flex-basis: auto;
-    width: 100%;
-  }
-
-  .maintenance-status-form .maintenance-button {
+  .maintenance-detail-page form label,
+  .maintenance-status-form label,
+  .maintenance-detail-status-form label,
+  .maintenance-detail-page select,
+  .maintenance-detail-page input,
+  .maintenance-detail-page textarea,
+  .maintenance-status-form select,
+  .maintenance-detail-status-form select,
+  .maintenance-detail-page button {
     width: 100%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .maintenance-detail-page,
-  .maintenance-spinner {
-    animation: none;
-  }
-
-  .maintenance-detail-summary > div,
-  .maintenance-detail-field,
-  .maintenance-button {
-    transition: none;
+  .maintenance-detail-page *,
+  .maintenance-detail-page *::before,
+  .maintenance-detail-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
