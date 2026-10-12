@@ -1,7 +1,10 @@
 from fastapi import HTTPException
 
 from schemas.user_schema import RoleUpdate
-from services.user_service import update_user_role_service
+from services.user_service import (
+    update_user_role_service,
+    get_all_users_service,
+)
 
 
 def update_user_role_controller(
@@ -19,3 +22,6 @@ def update_user_role_controller(
             status_code=404,
             detail=str(error)
         )
+
+def get_all_users_controller():
+    return get_all_users_service()    

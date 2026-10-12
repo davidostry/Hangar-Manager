@@ -1,6 +1,18 @@
 from db.supabase_client import supabase
 
 
+def get_all_users():
+    response = (
+        supabase
+        .table("users")
+        .select("id, display_name, email, role")
+        .order("display_name")
+        .execute()
+    )
+
+    return response.data
+
+
 def get_user_by_email(email: str):
     response = (
         supabase

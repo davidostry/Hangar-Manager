@@ -1,4 +1,10 @@
-from dal.user_dal import get_user_by_id, update_user_role
+
+from dal.user_dal import (
+    get_user_by_id,
+    update_user_role,
+    get_all_users,
+)
+
 from schemas.user_schema import RoleUpdate
 
 
@@ -19,3 +25,6 @@ def update_user_role_service(user_id: str, data: RoleUpdate):
         "display_name": updated_user["display_name"],
         "role": updated_user["role"],
     }
+
+def get_all_users_service():
+    return get_all_users()
