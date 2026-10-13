@@ -4,129 +4,137 @@ import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import BrandLogo from "../BrandLogo";
 
+import type { UserRole } from "../../types/auth";
+
+import "./Header.css";
+
+const ROLE_LABELS: Record<UserRole, string> = {
+  admin: "Admin",
+  hangar_manager: "Hangar Manager",
+  team_lead: "Team Lead",
+  technician: "Technician",
+};
+
 function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Determine who can access Users Management
+  // These roles are allowed to access the Users page.
   const canViewUsers =
     user?.role === "admin" ||
     user?.role === "hangar_manager" ||
     user?.role === "team_lead";
 
-  function handleLogout(): void {
-    logout();
+  // React Router automatically marks the active link.
+  function navClass({ isActive }: { isActive: boolean }) {
+    return isActive
+      ? "hm-nav-link hm-nav-link-active"
+      : "hm-nav-link";
+  }
+
+  async function handleLogout() {
+    await logout();
     navigate("/login", { replace: true });
   }
 
-  function navLinkClass({
-    isActive,
-  }: {
-    isActive: boolean;
-  }): string {
-    return isActive
-      ? "nav-link active"
-      : "nav-link";
-  }
-
   return (
-    <header className="app-header">
+    <header className="hm-header">
+      <div className="hm-header-inner">
 
-      {/* ========================================
-          BRAND
-      ======================================== */}
-
-      <NavLink
-        to="/app/dashboard"
-        className="app-brand"
-        aria-label="HangarManager Dashboard"
-      >
-        <span className="brand-icon brand-icon--logo">
-          <BrandLogo />
-        </span>
-
-        <span className="brand-text">
-          <strong>HangarManager</strong>
-          <small>Aircraft Fleet Management</small>
-        </span>
-      </NavLink>
-
-      {/* ========================================
-          MAIN NAVIGATION
-      ======================================== */}
-
-      <nav
-        className="main-navigation"
-        aria-label="Main navigation"
-      >
+        {/* BRAND */}
         <NavLink
           to="/app/dashboard"
-          end
-          className={navLinkClass}
+          className="hm-brand"
+          aria-label="HangarManager home"
         >
-          Dashboard
+          <span className="hm-brand-logo">
+            <BrandLogo />
+          </span>
+
+          <span className="hm-brand-name">
+            HangarManager
+          </span>
         </NavLink>
 
-        <NavLink
-          to="/app/aircraft"
-          className={navLinkClass}
-        >
-          Aircraft
-        </NavLink>
+        {/* NAVIGATION */}
+        <nav className="hm-navigation" aria-label="Main navigation">
 
-        <NavLink
-          to="/app/maintenance"
-          className={navLinkClass}
-        >
-          Maintenance
-        </NavLink>
-
-        <NavLink
-          to="/app/inspections"
-          className={navLinkClass}
-        >
-          Inspections
-        </NavLink>
-
-        {/* Only authorized roles can view Users */}
-        {canViewUsers && (
           <NavLink
-            to="/app/users"
-            className={navLinkClass}
+            to="/app/dashboard"
+            className={navClass}
           >
-            Users
+            Dashboard
           </NavLink>
-        )}
-      </nav>
 
-      {/* ========================================
-          ACCOUNT INFORMATION
-      ======================================== */}
+          <NavLink
+            to="/app/aircraft"
+            className={navClass}
+          >
+            Aircraft
+          </NavLink>
 
-      <div className="header-account">
-        <div className="account-information">
+          <NavLink
+            to="/app/maintenance"
+            className={navClass}
+          >
+            Maintenance
+          </NavLink>
 
-          <span className="account-name">
-            {user?.display_name || user?.email}
-          </span>
+          <NavLink
+            to="/app/inspections"
+            className={navClass}
+          >
+            Inspections
+          </NavLink>
 
-          <span className="account-role">
-            {user?.role}
-          </span>
+          {/* Users: Admin, Hangar Manager, Team Lead */}
+          {canViewUsers && (
+            <NavLink
+              to="/app/users"
+              className={navClass}
+            >
+              Users
+            </NavLink>
+          )}
+
+          {/* Profile: ALL authenticated users */}
+          <NavLink
+            to="/app/profile"
+            className={navClass}
+          >
+            My Profile
+          </NavLink>
+
+        </nav>
+
+        {/* ACCOUNT */}
+        <div className="hm-account">
+
+          {user && (
+            <div className="hm-account-details">
+              <span className="hm-account-name">
+                {user.display_name || user.email}
+              </span>
+
+              <span className="hm-account-role">
+                {ROLE_LABELS[user.role]}
+              </span>
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="hm-logout"
+            onClick={() => void handleLogout()}
+          >
+            Logout
+          </button>
 
         </div>
-
-        <button
-          type="button"
-          className="logout-button"
-          onClick={handleLogout}
-        >
-          Log out
-        </button>
       </div>
-
     </header>
   );
 }
 
+export { Header };
 export default Header;

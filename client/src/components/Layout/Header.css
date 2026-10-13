@@ -1,0 +1,133 @@
+
+.hm-header {
+  width: 100%;
+  background: #102c48;
+  color: #ffffff;
+  border-bottom: 1px solid #274560;
+}
+
+.hm-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 15px 28px;
+}
+
+.hm-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.hm-brand-logo {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hm-brand-logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+.hm-navigation {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.hm-nav-link {
+  color: #c9d8e6;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 7px;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.hm-nav-link:hover {
+  background: #204764;
+  color: #ffffff;
+}
+
+.hm-nav-link-active {
+  background: #285777;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.hm-account {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.hm-account-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
+.hm-account-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.hm-account-role {
+  font-size: 12px;
+  color: #a9c5db;
+}
+
+.hm-logout {
+  padding: 9px 15px;
+  border: 1px solid #54728b;
+  border-radius: 7px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.hm-logout:hover {
+  background: #204764;
+}
+
+@media (max-width: 900px) {
+  .hm-header-inner {
+    padding: 15px;
+  }
+
+  .hm-navigation {
+    order: 3;
+    width: 100%;
+  }
+
+  .hm-account {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 500px) {
+  .hm-account-details {
+    display: none;
+  }
+
+  .hm-nav-link {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .hm-brand-name {
+    font-size: 17px;
+  }
+}

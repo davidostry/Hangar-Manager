@@ -1,0 +1,90 @@
+
+.profile-page {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-heading {
+  margin-bottom: 28px;
+}
+
+.profile-heading h1 {
+  margin: 6px 0 10px;
+  font-size: 30px;
+}
+
+.profile-heading p {
+  color: #64748b;
+}
+
+.profile-eyebrow {
+  color: #2563eb !important;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.profile-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 32px;
+  color: #0f172a;
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 50%;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.profile-card h2 {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+
+.profile-email {
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.profile-fields {
+  border-top: 1px solid #e2e8f0;
+}
+
+.profile-fields > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.profile-fields span {
+  color: #64748b;
+}
+
+.profile-fields strong {
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .profile-card {
+    padding: 20px;
+  }
+
+  .profile-fields > div {
+    flex-direction: column;
+    gap: 6px;
+  }
+}

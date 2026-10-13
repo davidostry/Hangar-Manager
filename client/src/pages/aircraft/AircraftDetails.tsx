@@ -1,31 +1,36 @@
-
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { isAxiosError } from "axios";
 import { Link, useParams } from "react-router";
+import {
+  ArrowLeft,
+  Plane,
+  Pencil,
+  Factory,
+  Wrench,
+  Hash,
+  CalendarDays,
+  Clock3,
+  ShieldCheck,
+  RefreshCw,
+  AlertCircle,
+  Info,
+} from "lucide-react";
 
+import { useAuth } from "../../context/AuthContext";
 import { getAircraftById } from "../../services/aircraftService";
-
-import type {
-  Aircraft,
-  AircraftStatus,
-} from "../../types/aircraft";
-
+import type { Aircraft, AircraftStatus } from "../../types/aircraft";
 import "./AircraftDetails.css";
 
-// ========================================
-// DATE FORMATTING
-// ========================================
+// ----------------------------------------
+// Helpers
+// ----------------------------------------
 
-function formatDate(value: string | null): string {
-  if (!value) {
-    return "Not available";
-  }
+function formatDate(value: string | null | undefined): string {
+  if (!value) return "Not available";
 
   const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return "Invalid date";
-  }
+  if (Number.isNaN(date.getTime())) return "Invalid date";
 
   return new Intl.DateTimeFormat("en-GB", {
     dateStyle: "medium",
@@ -33,32 +38,12 @@ function formatDate(value: string | null): string {
   }).format(date);
 }
 
-// ========================================
-// AIRCRAFT STATUS
-// ========================================
-
-function formatStatus(status: AircraftStatus): string {
-  switch (status) {
-    case "Available":
-      return "Available";
-
-    case "Maintenance":
-      return "Maintenance";
-
-    case "Inspection":
-      return "Inspection";
-
-    case "Grounded":
-      return "Grounded";
-
-    default:
-      return status;
+function displayText(value: string | number | null | undefined): string {
+  if (value === null || value === undefined || value === "") {
+    return "Not available";
   }
+  return String(value);
 }
-
-// ========================================
-// ERROR HANDLING
-// ========================================
 
 function getErrorMessage(error: unknown): string {
   if (isAxiosError(error)) {
@@ -66,63 +51,134 @@ function getErrorMessage(error: unknown): string {
       return "Cannot connect to the Backend. Check that the server is running.";
     }
 
-    const data = error.response.data as
-      | { detail?: unknown }
-      | undefined;
+    const data: unknown = error.response.data;
 
-    if (
-      typeof data?.detail === "string" &&
-      data.detail.trim()
-    ) {
-      return data.detail;
-    }
+    if (typeof data === "object" && data !== null && "detail" in data) {
+      const detail = data.detail;
 
-    if (Array.isArray(data?.detail)) {
-      const messages = data.detail
-        .filter(
-          (item): item is { msg: string } =>
-            typeof item === "object" &&
-            item !== null &&
-            "msg" in item &&
-            typeof item.msg === "string",
-        )
-        .map((item) => item.msg);
+      if (typeof detail === "string" && detail.trim()) {
+        return detail;
+      }
 
-      if (messages.length > 0) {
-        return messages.join(" ");
+      if (Array.isArray(detail)) {
+        const messages = detail
+          .filter(
+            (item): item is { msg: string } =>
+              typeof item === "object" &&
+              item !== null &&
+              "msg" in item &&
+              typeof item.msg === "string",
+          )
+          .map((item) => item.msg);
+
+        if (messages.length > 0) return messages.join(" ");
       }
     }
 
-    return `Failed to load aircraft. HTTP status: ${error.response.status}.`;
+    return `Failed to load aircraft. HTTP ${error.response.status}.`;
   }
 
-  if (error instanceof Error) {
-    return error.message;
-  }
-
+  if (error instanceof Error) return error.message;
   return "An unexpected error occurred.";
 }
 
-// ========================================
-// AIRCRAFT DETAILS PAGE
-// ========================================
+type StatusInfo = {
+  label: string;
+  description: string;
+  cssName: string;
+};
+
+const STATUS_CONFIG: Record<AircraftStatus, StatusInfo> = {
+  Available: {
+    label: "Available",
+    description: "Ready for operation",
+    cssName: "available",
+  },
+  Maintenance: {
+    label: "Maintenance",
+    description: "Under maintenance",
+    cssName: "maintenance",
+  },
+  Inspection: {
+    label: "Inspection",
+    description: "Under inspection",
+    cssName: "inspection",
+  },
+  Grounded: {
+    label: "Grounded",
+    description: "Not available for operation",
+    cssName: "grounded",
+  },
+};
+
+// Backend data is checked at runtime: TypeScript types do not validate API values.
+function getStatusInfo(value: unknown): StatusInfo {
+  if (
+    typeof value === "string" &&
+    Object.prototype.hasOwnProperty.call(STATUS_CONFIG, value)
+  ) {
+    return STATUS_CONFIG[value as AircraftStatus];
+  }
+
+  return {
+    label: typeof value === "string" && value.trim() ? value : "Unknown",
+    description: "Operational status is unavailable",
+    cssName: "unknown",
+  };
+}
+
+function isAircraftRecord(value: unknown): value is Aircraft {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "tail_number" in value &&
+    typeof value.tail_number === "string"
+  );
+}
+
+interface DetailFieldProps {
+  icon: ReactNode;
+  label: string;
+  value: ReactNode;
+}
+
+function DetailField({ icon, label, value }: DetailFieldProps) {
+  return (
+    <div className="ad-field">
+      <dt className="ad-field-label">
+        <span className="ad-field-icon" aria-hidden="true">
+          {icon}
+        </span>
+        {label}
+      </dt>
+      <dd className="ad-field-value">{value}</dd>
+    </div>
+  );
+}
+
+function BackToAircraft() {
+  return (
+    <Link to="/app/aircraft" className="ad-back-link">
+      <ArrowLeft size={17} aria-hidden="true" />
+      Back to Aircraft
+    </Link>
+  );
+}
+
+// ----------------------------------------
+// Page
+// ----------------------------------------
 
 function AircraftDetails() {
-  // Aircraft UUID from the URL
-  // Used for API requests, not displayed to the user
   const { aircraftId } = useParams();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
 
   const [aircraft, setAircraft] = useState<Aircraft | null>(null);
-
   const [isLoading, setIsLoading] = useState(true);
   const [isNotFound, setIsNotFound] = useState(false);
-
   const [errorMessage, setErrorMessage] = useState("");
   const [retryCount, setRetryCount] = useState(0);
-
-  // ========================================
-  // LOAD AIRCRAFT
-  // ========================================
 
   useEffect(() => {
     let isActive = true;
@@ -140,121 +196,82 @@ function AircraftDetails() {
       }
 
       try {
-        const result = await getAircraftById(aircraftId);
+        const result: unknown = await getAircraftById(aircraftId);
+        if (!isActive) return;
 
-        if (!isActive) {
+        if (result === null || result === undefined) {
+          setIsNotFound(true);
           return;
         }
 
-        if (!result) {
-          setIsNotFound(true);
+        if (!isAircraftRecord(result)) {
+          setErrorMessage("The server returned an invalid aircraft record.");
           return;
         }
 
         setAircraft(result);
       } catch (error: unknown) {
-        if (!isActive) {
-          return;
-        }
+        if (!isActive) return;
 
-        if (
-          isAxiosError(error) &&
-          error.response?.status === 404
-        ) {
+        if (isAxiosError(error) && error.response?.status === 404) {
           setIsNotFound(true);
         } else {
           setErrorMessage(getErrorMessage(error));
         }
       } finally {
-        if (isActive) {
-          setIsLoading(false);
-        }
+        if (isActive) setIsLoading(false);
       }
     }
 
     void loadAircraft();
-
     return () => {
       isActive = false;
     };
   }, [aircraftId, retryCount]);
 
-  // ========================================
-  // LOADING
-  // ========================================
+  function handleRetry(): void {
+    setRetryCount((current) => current + 1);
+  }
 
   if (isLoading) {
     return (
-      <section className="aircraft-details-page">
-        <div
-          className="aircraft-details-state"
-          role="status"
-        >
-          <span
-            className="aircraft-spinner"
-            aria-hidden="true"
-          />
-
-          <p>Loading aircraft details...</p>
+      <section className="ad-page">
+        <div className="ad-state" role="status">
+          <span className="ad-spinner" aria-hidden="true" />
+          <h2>Loading aircraft</h2>
+          <p>Retrieving aircraft information...</p>
         </div>
       </section>
     );
   }
-
-  // ========================================
-  // NOT FOUND
-  // ========================================
 
   if (isNotFound) {
     return (
-      <section className="aircraft-details-page">
-        <Link
-          className="aircraft-back-link"
-          to="/app/aircraft"
-        >
-          Back to Aircraft
-        </Link>
-
-        <div className="aircraft-details-state">
+      <section className="ad-page">
+        <BackToAircraft />
+        <div className="ad-state">
+          <AlertCircle size={38} className="ad-state-icon" aria-hidden="true" />
           <h1>Aircraft not found</h1>
-
-          <p>
-            The requested aircraft does not exist
-            or is no longer available.
-          </p>
+          <p>This aircraft does not exist or is no longer available.</p>
         </div>
       </section>
     );
   }
 
-  // ========================================
-  // ERROR
-  // ========================================
-
-  if (!aircraft || errorMessage) {
+  if (errorMessage || !aircraft) {
     return (
-      <section className="aircraft-details-page">
-        <Link
-          className="aircraft-back-link"
-          to="/app/aircraft"
-        >
-          Back to Aircraft
-        </Link>
-
-        <div className="aircraft-details-state aircraft-state-error">
+      <section className="ad-page">
+        <BackToAircraft />
+        <div className="ad-state ad-state-error">
+          <AlertCircle size={38} aria-hidden="true" />
           <h1>Unable to load aircraft</h1>
-
-          <p role="alert">
-            {errorMessage || "An unexpected error occurred."}
-          </p>
-
+          <p role="alert">{errorMessage || "An unexpected error occurred."}</p>
           <button
             type="button"
-            className="aircraft-button"
-            onClick={() =>
-              setRetryCount((current) => current + 1)
-            }
+            className="ad-button ad-button-primary"
+            onClick={handleRetry}
           >
+            <RefreshCw size={17} aria-hidden="true" />
             Try again
           </button>
         </div>
@@ -262,86 +279,142 @@ function AircraftDetails() {
     );
   }
 
-  // ========================================
-  // AIRCRAFT INFORMATION
-  // ========================================
+  const statusInfo = getStatusInfo(aircraft.status);
+  const statusClass = `ad-status ad-status--${statusInfo.cssName}`;
 
   return (
-    <section className="aircraft-details-page">
-      <Link
-        className="aircraft-back-link"
-        to="/app/aircraft"
-      >
-        Back to Aircraft
-      </Link>
+    <section className="ad-page">
+      <BackToAircraft />
 
-      {/* PAGE HEADER */}
-      <div className="page-heading">
-        <p className="page-eyebrow">
-          Fleet Management
-        </p>
+      <header className="ad-hero">
+        <Plane
+          className="ad-hero-watermark"
+          size={180}
+          strokeWidth={1}
+          aria-hidden="true"
+        />
 
-        {/* Display tail number instead of UUID */}
-        <h1>{aircraft.tail_number}</h1>
+        <div className="ad-hero-content">
+          <p className="ad-hero-eyebrow">
+            FLEET MANAGEMENT / AIRCRAFT DETAILS
+          </p>
 
-        <p className="page-description">
-          {aircraft.manufacturer} {aircraft.model}
-        </p>
-      </div>
-
-      {/* AIRCRAFT DETAILS CARD */}
-      <section className="aircraft-details-card">
-        <div className="aircraft-details-card-heading">
-          <div>
-            <h2>Aircraft Information</h2>
-
-            <p>
-              Current aircraft details and operational status.
-            </p>
+          <div className="ad-hero-title-row">
+            <span className="ad-hero-plane-icon" aria-hidden="true">
+              <Plane size={27} strokeWidth={1.9} />
+            </span>
+            <div>
+              <h1>{displayText(aircraft.tail_number)}</h1>
+              <p className="ad-hero-subtitle">
+                {displayText(aircraft.manufacturer)} {displayText(aircraft.model)}
+              </p>
+            </div>
           </div>
 
-          <span
-            className={`aircraft-status-badge status-${aircraft.status.toLowerCase()}`}
-          >
-            {formatStatus(aircraft.status)}
-          </span>
+          <div className="ad-hero-meta">
+            <span className={statusClass}>
+              <span className="ad-status-dot" aria-hidden="true" />
+              {statusInfo.label}
+            </span>
+            <span className="ad-hero-description">{statusInfo.description}</span>
+          </div>
         </div>
 
-        <dl className="aircraft-details-grid">
-          <div className="aircraft-detail-field">
-            <dt>Tail Number</dt>
-            <dd>{aircraft.tail_number}</dd>
-          </div>
+        {isAdmin && aircraftId && (
+          <Link
+            to={`/app/aircraft/${aircraftId}/edit`}
+            className="ad-button ad-button-edit"
+          >
+            <Pencil size={17} aria-hidden="true" />
+            Edit Aircraft
+          </Link>
+        )}
+      </header>
 
-          <div className="aircraft-detail-field">
-            <dt>Manufacturer</dt>
-            <dd>{aircraft.manufacturer}</dd>
+      <section className="ad-card" aria-labelledby="aircraft-information-heading">
+        <div className="ad-card-heading">
+          <div className="ad-card-heading-copy">
+            <div className="ad-section-icon">
+              <Info size={21} aria-hidden="true" />
+            </div>
+            <div>
+              <h2 id="aircraft-information-heading">Aircraft Information</h2>
+              <p>Technical specifications and registration details.</p>
+            </div>
           </div>
+          <span className="ad-card-caption">AIRCRAFT RECORD</span>
+        </div>
 
-          <div className="aircraft-detail-field">
-            <dt>Model</dt>
-            <dd>{aircraft.model}</dd>
-          </div>
+        <dl className="ad-fields-grid">
+          <DetailField
+            icon={<Plane size={19} />}
+            label="Tail Number"
+            value={
+              <span className="ad-value-highlight">
+                {displayText(aircraft.tail_number)}
+              </span>
+            }
+          />
+          <DetailField
+            icon={<Factory size={19} />}
+            label="Manufacturer"
+            value={displayText(aircraft.manufacturer)}
+          />
+          <DetailField
+            icon={<Wrench size={19} />}
+            label="Model"
+            value={displayText(aircraft.model)}
+          />
+          <DetailField
+            icon={<Hash size={19} />}
+            label="Serial Number"
+            value={displayText(aircraft.serial_number)}
+          />
+          <DetailField
+            icon={<CalendarDays size={19} />}
+            label="Manufacture Year"
+            value={displayText(aircraft.manufacture_year)}
+          />
+          <DetailField
+            icon={<ShieldCheck size={19} />}
+            label="Operational Status"
+            value={
+              <span className={statusClass}>
+                <span className="ad-status-dot" aria-hidden="true" />
+                {statusInfo.label}
+              </span>
+            }
+          />
+        </dl>
+      </section>
 
-          <div className="aircraft-detail-field">
-            <dt>Serial Number</dt>
-            <dd>{aircraft.serial_number}</dd>
+      <section
+        className="ad-card ad-history-card"
+        aria-labelledby="aircraft-history-heading"
+      >
+        <div className="ad-card-heading">
+          <div className="ad-card-heading-copy">
+            <div className="ad-section-icon">
+              <Clock3 size={21} aria-hidden="true" />
+            </div>
+            <div>
+              <h2 id="aircraft-history-heading">Record History</h2>
+              <p>When this aircraft was added and last updated.</p>
+            </div>
           </div>
+        </div>
 
-          <div className="aircraft-detail-field">
-            <dt>Manufacture Year</dt>
-            <dd>{aircraft.manufacture_year}</dd>
-          </div>
-
-          <div className="aircraft-detail-field">
-            <dt>Created At</dt>
-            <dd>{formatDate(aircraft.created_at)}</dd>
-          </div>
-
-          <div className="aircraft-detail-field">
-            <dt>Last Updated</dt>
-            <dd>{formatDate(aircraft.updated_at)}</dd>
-          </div>
+        <dl className="ad-fields-grid ad-history-grid">
+          <DetailField
+            icon={<CalendarDays size={19} />}
+            label="Created At"
+            value={formatDate(aircraft.created_at)}
+          />
+          <DetailField
+            icon={<Clock3 size={19} />}
+            label="Last Updated"
+            value={formatDate(aircraft.updated_at)}
+          />
         </dl>
       </section>
     </section>

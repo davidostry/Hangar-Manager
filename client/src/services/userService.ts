@@ -2,7 +2,12 @@
 import api from "./api";
 
 import type { UserRole } from "../types/auth";
-import type { UserListItem } from "../types/users";
+
+import type {
+  UserListItem,
+  UserCreateRequest,
+  UserRoleUpdateRequest,
+} from "../types/users";
 
 // ========================================
 // VALIDATION HELPERS
@@ -31,38 +36,27 @@ function parseUser(value: unknown): UserListItem {
   if (
     !isRecord(value) ||
     typeof value.id !== "string" ||
-    typeof value.email !== "string" ||
     typeof value.display_name !== "string" ||
-    !isUserRole(value.role)
+    typeof value.email !== "string" ||
+    !isUserRole(value.role) ||
+    typeof value.is_active !== "boolean"
   ) {
     throw new Error(
       "Invalid user data received from the Backend.",
     );
   }
 
-  if (
-    value.is_active !== undefined &&
-    value.is_active !== null &&
-    typeof value.is_active !== "boolean"
-  ) {
-    throw new Error(
-      "Invalid user status received from the Backend.",
-    );
-  }
-
   return {
     id: value.id,
-    email: value.email,
     display_name: value.display_name,
+    email: value.email,
     role: value.role,
-    ...(typeof value.is_active === "boolean"
-      ? { is_active: value.is_active }
-      : {}),
+    is_active: value.is_active,
   };
 }
 
 // ========================================
-// GET USERS
+// GET ALL USERS
 // ========================================
 
 export async function getUsers(): Promise<UserListItem[]> {
@@ -70,7 +64,6 @@ export async function getUsers(): Promise<UserListItem[]> {
 
   const data = response.data;
 
-  // Supports a direct array or a paginated items array
   const users = Array.isArray(data)
     ? data
     : isRecord(data) && Array.isArray(data.items)
@@ -79,9 +72,66 @@ export async function getUsers(): Promise<UserListItem[]> {
 
   if (!users) {
     throw new Error(
-      "Invalid users response: expected a users array.",
+      "Invalid users response: expected an array.",
     );
   }
 
   return users.map(parseUser);
+}
+
+// ========================================
+// CREATE USER - ADMIN ONLY
+// ========================================
+
+export async function createUser(
+  payload: UserCreateRequest,
+): Promise<void> {
+  await api.post("/users", {
+    display_name: payload.display_name.trim(),
+    email: payload.email.trim().toLowerCase(),
+    password: payload.password,
+    role: payload.role,
+  });
+}
+
+// ========================================
+// UPDATE USER ROLE - ADMIN ONLY
+// ========================================
+
+export async function updateUserRole(
+  userId: string,
+  role: UserRole,
+): Promise<void> {
+  const payload: UserRoleUpdateRequest = {
+    role,
+  };
+
+  await api.patch(
+    `/users/${encodeURIComponent(userId)}/role`,
+    payload,
+  );
+}
+
+// ========================================
+// DEACTIVATE USER - ADMIN ONLY
+// ========================================
+
+export async function deactivateUser(
+  userId: string,
+): Promise<void> {
+  await api.patch(
+    `/users/${encodeURIComponent(userId)}/deactivate`,
+  );
+}
+
+// ========================================
+// REACTIVATE USER - ADMIN ONLY
+// ========================================
+
+export async function reactivateUser(
+  userId: string,
+): Promise<void> {
+  await api.patch(
+    `/users/${encodeURIComponent(userId)}/reactivate`,
+  );
 }

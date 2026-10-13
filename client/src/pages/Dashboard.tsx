@@ -1,5 +1,15 @@
+
 import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
+import { Link } from "react-router";
+
+import {
+  Plane,
+  Wrench,
+  ClipboardCheck,
+  ArrowUpRight,
+  RefreshCw,
+} from "lucide-react";
 
 import { getDashboardSummary } from "../services/dashboardService";
 
@@ -7,6 +17,10 @@ import type { DashboardSummary } from "../types/dashboard";
 import type { AircraftStatus } from "../types/aircraft";
 
 import "./Dashboard.css";
+
+// ========================================
+// CONSTANTS
+// ========================================
 
 const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
 
@@ -36,6 +50,10 @@ const AIRCRAFT_STATUSES: {
     description: "Not available for operation",
   },
 ];
+
+// ========================================
+// HELPERS
+// ========================================
 
 function formatNumber(value: number): string {
   return NUMBER_FORMATTER.format(value);
@@ -84,13 +102,23 @@ function getErrorMessage(error: unknown): string {
   return "An unexpected error occurred while loading the dashboard.";
 }
 
+// ========================================
+// DASHBOARD COMPONENT
+// ========================================
+
 function Dashboard() {
   const [summary, setSummary] =
     useState<DashboardSummary | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
+
   const [errorMessage, setErrorMessage] = useState("");
+
   const [retryCount, setRetryCount] = useState(0);
+
+  // ========================================
+  // LOAD DASHBOARD DATA
+  // ========================================
 
   useEffect(() => {
     let isActive = true;
@@ -128,21 +156,38 @@ function Dashboard() {
     };
   }, [retryCount]);
 
+  function handleRetry(): void {
+    setRetryCount((current) => current + 1);
+  }
+
+  // ========================================
+  // RENDER
+  // ========================================
+
   return (
     <section className="dashboard-page">
-      <div className="page-heading">
-        <p className="page-eyebrow">Fleet Management</p>
+      {/* PAGE HEADER */}
+      <div className="page-heading dashboard-page-heading">
+        <div>
+          <p className="page-eyebrow">
+            Fleet Management
+          </p>
 
-        <h1>Dashboard</h1>
+          <h1>Dashboard</h1>
 
-        <p className="page-description">
-          Monitor your aircraft fleet, maintenance activity,
-          and inspection status from one place.
-        </p>
+          <p className="page-description">
+            Monitor your aircraft fleet, maintenance activity,
+            and inspection status from one place.
+          </p>
+        </div>
       </div>
 
+      {/* LOADING STATE */}
       {isLoading && (
-        <div className="dashboard-state" role="status">
+        <div
+          className="dashboard-state"
+          role="status"
+        >
           <span
             className="dashboard-spinner"
             aria-hidden="true"
@@ -152,27 +197,35 @@ function Dashboard() {
         </div>
       )}
 
+      {/* ERROR STATE */}
       {!isLoading && errorMessage && (
         <div className="dashboard-state dashboard-state-error">
           <h2>Unable to load dashboard</h2>
 
-          <p role="alert">{errorMessage}</p>
+          <p role="alert">
+            {errorMessage}
+          </p>
 
           <button
             type="button"
             className="dashboard-button"
-            onClick={() =>
-              setRetryCount((current) => current + 1)
-            }
+            onClick={handleRetry}
           >
+            <RefreshCw size={17} aria-hidden="true" />
             Try again
           </button>
         </div>
       )}
 
+      {/* DASHBOARD CONTENT */}
       {!isLoading && !errorMessage && summary && (
         <>
+          {/* ========================================
+              OVERVIEW STATISTICS
+          ======================================== */}
+
           <div className="dashboard-overview-grid">
+            {/* TOTAL AIRCRAFT */}
             <article className="dashboard-overview-card dashboard-overview-primary">
               <div className="dashboard-card-heading">
                 <span className="dashboard-card-label">
@@ -183,7 +236,7 @@ function Dashboard() {
                   className="dashboard-card-icon"
                   aria-hidden="true"
                 >
-                  A
+                  <Plane size={24} strokeWidth={2} />
                 </span>
               </div>
 
@@ -196,7 +249,8 @@ function Dashboard() {
               </p>
             </article>
 
-            <article className="dashboard-overview-card">
+            {/* OPEN MAINTENANCE */}
+            <article className="dashboard-overview-card dashboard-overview-maintenance">
               <div className="dashboard-card-heading">
                 <span className="dashboard-card-label">
                   Open Maintenance Reports
@@ -206,12 +260,14 @@ function Dashboard() {
                   className="dashboard-card-icon dashboard-icon-warning"
                   aria-hidden="true"
                 >
-                  M
+                  <Wrench size={23} strokeWidth={2} />
                 </span>
               </div>
 
               <strong className="dashboard-card-value">
-                {formatNumber(summary.open_maintenance_reports)}
+                {formatNumber(
+                  summary.open_maintenance_reports
+                )}
               </strong>
 
               <p className="dashboard-card-description">
@@ -219,7 +275,8 @@ function Dashboard() {
               </p>
             </article>
 
-            <article className="dashboard-overview-card">
+            {/* OVERDUE INSPECTIONS */}
+            <article className="dashboard-overview-card dashboard-overview-inspections">
               <div className="dashboard-card-heading">
                 <span className="dashboard-card-label">
                   Overdue Inspections
@@ -229,12 +286,14 @@ function Dashboard() {
                   className="dashboard-card-icon dashboard-icon-danger"
                   aria-hidden="true"
                 >
-                  !
+                  <ClipboardCheck size={23} strokeWidth={2} />
                 </span>
               </div>
 
               <strong className="dashboard-card-value">
-                {formatNumber(summary.overdue_inspections)}
+                {formatNumber(
+                  summary.overdue_inspections
+                )}
               </strong>
 
               <p className="dashboard-card-description">
@@ -243,35 +302,62 @@ function Dashboard() {
             </article>
           </div>
 
-          <section className="dashboard-status-section">
+          {/* ========================================
+              FLEET STATUS
+          ======================================== */}
+
+          <section
+            className="dashboard-status-section"
+            aria-labelledby="fleet-status-heading"
+          >
             <div className="dashboard-section-heading">
               <div>
-                <h2>Fleet Status</h2>
+                <h2 id="fleet-status-heading">
+                  Fleet Status
+                </h2>
 
                 <p>
-                  Aircraft grouped by their current operational status.
+                  Aircraft grouped by their current
+                  operational status.
                 </p>
               </div>
 
               <span className="dashboard-total-badge">
+                <Plane
+                  size={15}
+                  aria-hidden="true"
+                />
+
                 {formatNumber(summary.total_aircraft)} aircraft
               </span>
             </div>
 
+            {/* STATUS CARDS */}
             <div className="dashboard-status-grid">
               {AIRCRAFT_STATUSES.map((item) => {
                 const count =
-                  summary.aircraft_by_status[item.status];
+                  summary.aircraft_by_status[item.status] ?? 0;
 
                 return (
-                  <article
+                  <Link
                     key={item.status}
+                    to="/app/aircraft"
                     className={`dashboard-status-card dashboard-status-${item.status.toLowerCase()}`}
+                    aria-label={`Open aircraft list. ${item.label}: ${formatNumber(count)} aircraft`}
                   >
                     <div className="dashboard-status-card-heading">
-                      <span className="dashboard-status-indicator" />
+                      <span
+                        className="dashboard-status-indicator"
+                        aria-hidden="true"
+                      />
 
                       <h3>{item.label}</h3>
+
+                      <ArrowUpRight
+                        className="dashboard-status-arrow"
+                        size={18}
+                        aria-hidden="true"
+                      />
                     </div>
 
                     <strong className="dashboard-status-count">
@@ -279,7 +365,7 @@ function Dashboard() {
                     </strong>
 
                     <p>{item.description}</p>
-                  </article>
+                  </Link>
                 );
               })}
             </div>
