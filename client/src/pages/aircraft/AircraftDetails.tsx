@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
 import { Link, useParams } from "react-router";
@@ -11,7 +12,15 @@ import type {
 
 import "./AircraftDetails.css";
 
-function formatDate(value: string): string {
+// ========================================
+// DATE FORMATTING
+// ========================================
+
+function formatDate(value: string | null): string {
+  if (!value) {
+    return "Not available";
+  }
+
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
@@ -24,18 +33,32 @@ function formatDate(value: string): string {
   }).format(date);
 }
 
+// ========================================
+// AIRCRAFT STATUS
+// ========================================
+
 function formatStatus(status: AircraftStatus): string {
   switch (status) {
     case "Available":
       return "Available";
+
     case "Maintenance":
       return "Maintenance";
+
     case "Inspection":
       return "Inspection";
+
     case "Grounded":
       return "Grounded";
+
+    default:
+      return status;
   }
 }
+
+// ========================================
+// ERROR HANDLING
+// ========================================
 
 function getErrorMessage(error: unknown): string {
   if (isAxiosError(error)) {
@@ -80,14 +103,26 @@ function getErrorMessage(error: unknown): string {
   return "An unexpected error occurred.";
 }
 
+// ========================================
+// AIRCRAFT DETAILS PAGE
+// ========================================
+
 function AircraftDetails() {
+  // Aircraft UUID from the URL
+  // Used for API requests, not displayed to the user
   const { aircraftId } = useParams();
 
   const [aircraft, setAircraft] = useState<Aircraft | null>(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isNotFound, setIsNotFound] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [retryCount, setRetryCount] = useState(0);
+
+  // ========================================
+  // LOAD AIRCRAFT
+  // ========================================
 
   useEffect(() => {
     let isActive = true;
@@ -144,16 +179,31 @@ function AircraftDetails() {
     };
   }, [aircraftId, retryCount]);
 
+  // ========================================
+  // LOADING
+  // ========================================
+
   if (isLoading) {
     return (
       <section className="aircraft-details-page">
-        <div className="aircraft-details-state" role="status">
-          <span className="aircraft-spinner" aria-hidden="true" />
+        <div
+          className="aircraft-details-state"
+          role="status"
+        >
+          <span
+            className="aircraft-spinner"
+            aria-hidden="true"
+          />
+
           <p>Loading aircraft details...</p>
         </div>
       </section>
     );
   }
+
+  // ========================================
+  // NOT FOUND
+  // ========================================
 
   if (isNotFound) {
     return (
@@ -169,12 +219,17 @@ function AircraftDetails() {
           <h1>Aircraft not found</h1>
 
           <p>
-            The requested aircraft does not exist or is no longer available.
+            The requested aircraft does not exist
+            or is no longer available.
           </p>
         </div>
       </section>
     );
   }
+
+  // ========================================
+  // ERROR
+  // ========================================
 
   if (!aircraft || errorMessage) {
     return (
@@ -196,7 +251,9 @@ function AircraftDetails() {
           <button
             type="button"
             className="aircraft-button"
-            onClick={() => setRetryCount((current) => current + 1)}
+            onClick={() =>
+              setRetryCount((current) => current + 1)
+            }
           >
             Try again
           </button>
@@ -204,6 +261,10 @@ function AircraftDetails() {
       </section>
     );
   }
+
+  // ========================================
+  // AIRCRAFT INFORMATION
+  // ========================================
 
   return (
     <section className="aircraft-details-page">
@@ -214,9 +275,13 @@ function AircraftDetails() {
         Back to Aircraft
       </Link>
 
+      {/* PAGE HEADER */}
       <div className="page-heading">
-        <p className="page-eyebrow">Fleet Management</p>
+        <p className="page-eyebrow">
+          Fleet Management
+        </p>
 
+        {/* Display tail number instead of UUID */}
         <h1>{aircraft.tail_number}</h1>
 
         <p className="page-description">
@@ -224,6 +289,7 @@ function AircraftDetails() {
         </p>
       </div>
 
+      {/* AIRCRAFT DETAILS CARD */}
       <section className="aircraft-details-card">
         <div className="aircraft-details-card-heading">
           <div>
@@ -265,13 +331,6 @@ function AircraftDetails() {
           <div className="aircraft-detail-field">
             <dt>Manufacture Year</dt>
             <dd>{aircraft.manufacture_year}</dd>
-          </div>
-
-          <div className="aircraft-detail-field">
-            <dt>Aircraft ID</dt>
-            <dd className="aircraft-detail-uuid">
-              {aircraft.id}
-            </dd>
           </div>
 
           <div className="aircraft-detail-field">
