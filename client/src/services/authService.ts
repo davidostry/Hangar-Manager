@@ -1,3 +1,4 @@
+
 import api from "./api";
 
 import type {
@@ -12,65 +13,15 @@ import {
   saveAccessToken,
 } from "./tokenStorage";
 
-const USE_MOCK_AUTH =
-  import.meta.env.DEV &&
-  import.meta.env.VITE_USE_MOCK_AUTH === "true";
-
-interface MockAccount {
-  email: string;
-  password: string;
-  token: string;
-  user: AuthUser;
-}
-
-const MOCK_ACCOUNTS: MockAccount[] = [
-  {
-    email: "admin@hangarmanager.test",
-    password: "Admin123!",
-    token: "mock-token-admin",
-    user: {
-      id: "11111111-1111-4111-8111-111111111111",
-      email: "admin@hangarmanager.test",
-      display_name: "Demo Admin",
-      role: "admin",
-    },
-  },
-  {
-    email: "technician@hangarmanager.test",
-    password: "Technician123!",
-    token: "mock-token-technician",
-    user: {
-      id: "22222222-2222-4222-8222-222222222222",
-      email: "technician@hangarmanager.test",
-      display_name: "Demo Technician",
-      role: "technician",
-    },
-  },
-];
+// ========================================
+// LOGIN
+// ========================================
 
 export async function login(
   credentials: LoginRequest,
 ): Promise<AuthUser> {
-  if (USE_MOCK_AUTH) {
-    const email = credentials.email.trim().toLowerCase();
 
-    const account = MOCK_ACCOUNTS.find(
-      (mockAccount) =>
-        mockAccount.email === email &&
-        mockAccount.password === credentials.password,
-    );
-
-    if (!account) {
-      throw new Error(
-        "Invalid demo credentials. Check the test accounts.",
-      );
-    }
-
-    saveAccessToken(account.token);
-
-    return account.user;
-  }
-
+  // Send credentials to the Backend
   const response = await api.post<LoginResponse>(
     "/auth/login",
     credentials,
@@ -78,6 +29,7 @@ export async function login(
 
   const data = response.data;
 
+  // Validate the login response
   if (
     !data.access_token ||
     data.token_type !== "bearer" ||
@@ -88,36 +40,45 @@ export async function login(
     );
   }
 
+  // Save JWT token for future authenticated requests
   saveAccessToken(data.access_token);
 
+  // Return the authenticated user
   return data.user;
 }
 
+// ========================================
+// GET CURRENT USER
+// ========================================
+
 export async function getCurrentUser(): Promise<AuthUser> {
-  if (USE_MOCK_AUTH) {
-    const token = getAccessToken();
 
-    const account = MOCK_ACCOUNTS.find(
-      (mockAccount) => mockAccount.token === token,
-    );
-
-    if (!account) {
-      clearAccessToken();
-      throw new Error("No valid demo session.");
-    }
-
-    return account.user;
-  }
-
-  const response = await api.get<AuthUser>("/auth/me");
+  // Request current user using the saved token
+  // The API service is responsible for adding
+  // the Authorization header
+  const response = await api.get<AuthUser>(
+    "/auth/me",
+  );
 
   return response.data;
 }
 
+// ========================================
+// LOGOUT
+// ========================================
+
 export function logout(): void {
+
+  // Remove the stored JWT token
   clearAccessToken();
 }
 
+// ========================================
+// CHECK ACCESS TOKEN
+// ========================================
+
 export function hasAccessToken(): boolean {
+
+  // Check whether a token exists in storage
   return Boolean(getAccessToken());
 }
