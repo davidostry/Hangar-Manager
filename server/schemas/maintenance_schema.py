@@ -52,3 +52,6 @@ class MaintenanceResponse(BaseModel):
     reported_at: datetime
     completed_at: datetime | None = None
     resolution_notes: str | None = None
+    reported_by_name: str | None = None
+    assigned_to_name: str | None = None
+    aircraft_tail_number: str | None = None

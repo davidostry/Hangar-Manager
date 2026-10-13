@@ -12,23 +12,39 @@ from dal.user_dal import (
 from schemas.user_schema import RoleUpdate, UserRole, UserCreate
 from utils.password import hash_password
 
+
 def update_user_role_service(user_id: str, data: RoleUpdate):
     user = get_user_by_id(user_id)
 
     if not user:
         raise ValueError("User not found")
 
+    if (
+        user["role"] == UserRole.ADMIN.value
+        and user["is_active"]
+        and data.role != UserRole.ADMIN
+        and count_active_admins() <= 1
+    ):
+        raise PermissionError(
+            "Cannot change role of the last active admin"
+        )
+
     updated_user = update_user_role(
         user_id,
         data.role.value
     )
+
+    if not updated_user:
+        raise ValueError("User not found")
 
     return {
         "id": updated_user["id"],
         "email": updated_user["email"],
         "display_name": updated_user["display_name"],
         "role": updated_user["role"],
+        "is_active": updated_user["is_active"],
     }
+
 
 
 def get_all_users_service(user_role: str):

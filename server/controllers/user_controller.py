@@ -24,6 +24,13 @@ def update_user_role_controller(
             status_code=404,
             detail=str(error)
         )
+    
+    except PermissionError as error:
+        raise HTTPException(
+            status_code=409,
+            detail=str(error)
+        )
+
 
 
 def get_all_users_controller(user_role: str):
