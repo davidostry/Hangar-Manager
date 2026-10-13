@@ -1,6 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel
-
+from pydantic import BaseModel, EmailStr, Field
 from uuid import UUID
 from pydantic import EmailStr
 
@@ -20,4 +19,11 @@ class UserResponse(BaseModel):
     id: UUID
     display_name: str
     email: EmailStr
+    role: UserRole
+    is_active: bool
+
+class UserCreate(BaseModel):
+    display_name: str = Field(min_length=1)
+    email: EmailStr
+    password: str = Field(min_length=8)
     role: UserRole

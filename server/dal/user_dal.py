@@ -1,11 +1,19 @@
 from db.supabase_client import supabase
 
 
-def get_all_users():
-    response = (
+
+def get_all_users(role: str | None = None):
+    query = (
         supabase
         .table("users")
-        .select("id, display_name, email, role")
+        .select("id, display_name, email, role, is_active")
+    )
+
+    if role is not None:
+        query = query.eq("role", role)
+
+    response = (
+        query
         .order("display_name")
         .execute()
     )
@@ -56,3 +64,28 @@ def update_user_role(user_id: str, role: str):
     )
 
     return response.data[0] if response.data else None
+
+
+def update_user_active(user_id: str, is_active: bool):
+    response = (
+        supabase
+        .table("users")
+        .update({"is_active": is_active})
+        .eq("id", user_id)
+        .execute()
+    )
+
+    return response.data[0] if response.data else None
+
+
+def count_active_admins():
+    response = (
+        supabase
+        .table("users")
+        .select("id")
+        .eq("role", "admin")
+        .eq("is_active", True)
+        .execute()
+    )
+
+    return len(response.data or [])

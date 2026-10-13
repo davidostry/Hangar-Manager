@@ -4,7 +4,7 @@ import jwt
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-
+from dal.user_dal import get_user_by_id
 
 load_dotenv()
 
@@ -15,6 +15,7 @@ if not JWT_SECRET:
 
 
 security = HTTPBearer(auto_error=False)
+
 
 
 def get_current_user(
@@ -35,10 +36,30 @@ def get_current_user(
             algorithms=["HS256"]
         )
 
-        return payload
-
     except jwt.PyJWTError:
         raise HTTPException(
             status_code=401,
             detail="Invalid or expired token"
         )
+
+    user_id = payload.get("id")
+
+    if not user_id:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token payload"
+        )
+
+    user = get_user_by_id(user_id)
+
+    if not user or not user.get("is_active", False):
+        raise HTTPException(
+            status_code=401,
+            detail="User not found or inactive"
+        )
+
+    return {
+        **payload,
+        "id": str(user["id"]),
+        "role": user["role"],
+    }
