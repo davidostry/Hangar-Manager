@@ -1,0 +1,459 @@
+/* HangarManager — premium inspection creation form.
+   Scoped selectors: no dependence on or side effects from Inspections.css.
+   Uses hm-inspection-form prefix to avoid collisions with other pages.
+*/
+
+.hm-inspection-form-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  gap: 23px;
+  color: #16324f;
+  animation: hm-inspection-form-enter 450ms ease both;
+}
+
+/* Back navigation */
+.hm-inspection-form-back {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 10px;
+  padding: 11px 16px;
+  border: 1px solid #cfe1f2;
+  border-radius: 12px;
+  color: #1766b2;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 5px 15px rgba(20, 62, 100, 0.06);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.hm-inspection-form-back:hover {
+  color: #078b9c;
+  border-color: #92d7e4;
+  transform: translateX(-2px);
+}
+
+/* Compact hero, consistent with Maintenance/ Aircraft */
+.hm-inspection-form-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 236px;
+  padding: clamp(25px, 3.5vw, 43px);
+  border: 1px solid rgba(74, 163, 221, 0.2);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 92% 13%, rgba(42, 204, 215, 0.15), transparent 35%),
+    linear-gradient(116deg, #07192d 0%, #0d2949 61%, #176281 100%);
+  box-shadow: 0 23px 48px rgba(8, 39, 69, 0.18);
+  color: #f8fcff;
+}
+.hm-inspection-form-hero::before {
+  content: "";
+  position: absolute;
+  top: -180px;
+  right: -105px;
+  width: 415px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(101, 205, 239, 0.15);
+  border-radius: 50%;
+  box-shadow: 0 0 0 43px rgba(95, 209, 240, 0.035), 0 0 0 96px rgba(95, 209, 240, 0.025);
+  pointer-events: none;
+}
+.hm-inspection-form-hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: clamp(25px, 3.5vw, 43px);
+  width: 176px;
+  height: 4px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(90deg, #338fff, #2ce0ce);
+}
+.hm-inspection-form-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+}
+.hm-inspection-form-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0 0 15px;
+  color: #83ebee;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.15em;
+}
+.hm-inspection-form-pulse {
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2bdecd;
+  box-shadow: 0 0 0 5px rgba(43, 222, 205, 0.11);
+}
+.hm-inspection-form-kicker {
+  margin: 0 0 8px;
+  color: #a1bdd7;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+.hm-inspection-form-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.15rem, 4.1vw, 3.65rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.054em;
+  text-wrap: balance;
+}
+.hm-inspection-form-hero-description {
+  max-width: 780px;
+  margin: 12px 0 0;
+  color: #bdd2e5;
+  font-size: 0.99rem;
+  line-height: 1.65;
+}
+.hm-inspection-form-hero-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 23px;
+}
+.hm-inspection-form-hero-caption,
+.hm-inspection-form-hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #a9c8df;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+.hm-inspection-form-hero-caption svg { color: #3cdbd6; }
+.hm-inspection-form-hero-chip {
+  padding: 8px 13px;
+  border: 1px solid rgba(119, 208, 241, 0.25);
+  border-radius: 999px;
+  color: #9ff1f0;
+  background: rgba(28, 199, 210, 0.07);
+  font-size: 0.71rem;
+  letter-spacing: 0.04em;
+}
+.hm-inspection-form-hero-art {
+  position: absolute;
+  top: -47px;
+  right: 12px;
+  color: rgba(119, 211, 247, 0.12);
+  transform: rotate(-13deg);
+  pointer-events: none;
+}
+
+/* Section cards */
+.hm-inspection-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+.hm-inspection-form-panel {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid #d6e6f4;
+  border-radius: 23px;
+  background: linear-gradient(145deg, #ffffff 0%, #fcfdff 60%, #f5faff 100%);
+  box-shadow: 0 15px 33px rgba(16, 52, 85, 0.075);
+  animation: hm-inspection-form-panel-enter 520ms both;
+}
+.hm-inspection-form-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #2b84e8, #18cdd0, #8b77f0);
+}
+.hm-inspection-form-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 19px;
+  margin-bottom: 24px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e0eaf3;
+}
+.hm-inspection-form-section-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 60px;
+  height: 60px;
+  border: 1px solid #cce6fc;
+  border-radius: 17px;
+  color: #2081e2;
+  background: #ebf6ff;
+}
+.hm-inspection-form-section-icon--teal {
+  color: #0a9aa5;
+  border-color: #c7eeed;
+  background: #eafaf9;
+}
+.hm-inspection-form-section-eyebrow {
+  margin: 0 0 6px;
+  color: #008fa7;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+.hm-inspection-form-panel-heading h2 {
+  margin: 0;
+  color: #102d4a;
+  font-size: clamp(1.3rem, 2.25vw, 1.85rem);
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+.hm-inspection-form-section-description {
+  margin: 6px 0 0;
+  color: #7a90a8;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.hm-inspection-form-grid,
+.hm-inspection-form-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 23px;
+}
+.hm-inspection-form-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 9px;
+}
+.hm-inspection-form-field--full { grid-column: 1 / -1; }
+.hm-inspection-form-field label {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #2b4b68;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+.hm-inspection-form-field label svg { color: #248add; }
+.hm-inspection-form-required { color: #d83c60; }
+.hm-inspection-form-optional {
+  margin-left: 3px;
+  color: #839bb0;
+  font-size: 0.73rem;
+  font-weight: 650;
+}
+.hm-inspection-form-field input,
+.hm-inspection-form-field select,
+.hm-inspection-form-field textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 53px;
+  padding: 12px 15px;
+  border: 1px solid #cfe0ef;
+  border-radius: 13px;
+  outline: none;
+  color: #173a57;
+  background: #fff;
+  box-shadow: 0 2px 7px rgba(18, 61, 95, 0.025);
+  font: inherit;
+  font-size: 0.96rem;
+  transition: border-color 190ms ease, box-shadow 190ms ease, background-color 190ms ease;
+}
+.hm-inspection-form-field input::placeholder,
+.hm-inspection-form-field textarea::placeholder { color: #9aadc0; }
+.hm-inspection-form-field textarea {
+  min-height: 128px;
+  line-height: 1.65;
+  resize: vertical;
+}
+.hm-inspection-form-field input:focus,
+.hm-inspection-form-field select:focus,
+.hm-inspection-form-field textarea:focus {
+  border-color: #318ff1;
+  box-shadow: 0 0 0 4px rgba(49, 143, 241, 0.12), 0 7px 20px rgba(22, 82, 143, 0.055);
+}
+.hm-inspection-form-field input:disabled,
+.hm-inspection-form-field select:disabled,
+.hm-inspection-form-field textarea:disabled {
+  color: #8198ad;
+  background: #f2f6fa;
+  cursor: not-allowed;
+}
+.hm-inspection-form-field small,
+.hm-inspection-form-notes-bottom {
+  color: #8195a9;
+  font-size: 0.79rem;
+  line-height: 1.6;
+}
+.hm-inspection-form-notes-bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.hm-inspection-form-counter {
+  flex-shrink: 0;
+  color: #58718c;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Informational note and actions */
+.hm-inspection-form-note {
+  display: flex;
+  align-self: start;
+  gap: 13px;
+  padding: 18px 20px;
+  border: 1px solid #cde8f7;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #f1faff, #edfcfc);
+  color: #466982;
+  line-height: 1.65;
+}
+.hm-inspection-form-note > svg { flex-shrink: 0; margin-top: 2px; color: #158bbc; }
+.hm-inspection-form-note strong { display: block; margin-bottom: 4px; color: #15446d; font-size: 0.9rem; }
+.hm-inspection-form-note p { margin: 0; font-size: 0.85rem; }
+.hm-inspection-form-note b { color: #156db8; }
+.hm-inspection-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 18px 0 8px;
+}
+.hm-inspection-form-actions-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #7290a9;
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+.hm-inspection-form-actions-note svg { color: #11b9ae; }
+.hm-inspection-form-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hm-inspection-form-cancel,
+.hm-inspection-form-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 19px;
+  border: 1px solid #cfdfef;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 850;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+.hm-inspection-form-cancel {
+  color: #496b88;
+  background: #fff;
+}
+.hm-inspection-form-cancel:hover {
+  color: #135c98;
+  border-color: #9bc6e6;
+  background: #f4faff;
+  transform: translateY(-2px);
+}
+.hm-inspection-form-submit {
+  border-color: #2079d5;
+  color: #fff;
+  background: linear-gradient(110deg, #176fdb, #248df0 60%, #14a7c2);
+  box-shadow: 0 9px 19px rgba(25, 112, 218, 0.21);
+}
+.hm-inspection-form-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(25, 112, 218, 0.27);
+}
+.hm-inspection-form-submit:disabled { opacity: 0.63; cursor: not-allowed; box-shadow: none; }
+.hm-inspection-form-spinner { animation: hm-inspection-form-spin 800ms linear infinite; }
+.hm-inspection-form-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 17px;
+  border: 1px solid #f0c4ce;
+  border-radius: 13px;
+  background: #fff1f3;
+  color: #a73149;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.hm-inspection-form-alert svg { flex-shrink: 0; margin-top: 2px; }
+.hm-inspection-form-page a:focus-visible,
+.hm-inspection-form-page button:focus-visible {
+  outline: 3px solid #35bdd5;
+  outline-offset: 3px;
+}
+
+@keyframes hm-inspection-form-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes hm-inspection-form-panel-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes hm-inspection-form-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 900px) {
+  .hm-inspection-form-hero-art { opacity: 0.35; right: -40px; }
+  .hm-inspection-form-hero-content { max-width: 100%; }
+}
+@media (max-width: 740px) {
+  .hm-inspection-form-page { gap: 18px; }
+  .hm-inspection-form-hero { min-height: 0; padding: 29px 23px; border-radius: 20px; }
+  .hm-inspection-form-hero::after { left: 23px; }
+  .hm-inspection-form-hero h1 { font-size: clamp(2rem, 7vw, 3rem); }
+  .hm-inspection-form-hero-art { display: none; }
+  .hm-inspection-form-grid,
+  .hm-inspection-form-schedule-grid { grid-template-columns: minmax(0, 1fr); gap: 19px; }
+  .hm-inspection-form-field--full { grid-column: auto; }
+  .hm-inspection-form-panel { padding: 22px 19px; border-radius: 19px; }
+  .hm-inspection-form-panel-heading { gap: 13px; }
+  .hm-inspection-form-section-icon { flex-basis: 48px; height: 48px; border-radius: 14px; }
+  .hm-inspection-form-hero-chip { display: none; }
+  .hm-inspection-form-actions { align-items: stretch; }
+  .hm-inspection-form-action-buttons { width: 100%; }
+  .hm-inspection-form-cancel,
+  .hm-inspection-form-submit { flex: 1; }
+}
+@media (max-width: 480px) {
+  .hm-inspection-form-panel-heading { align-items: flex-start; }
+  .hm-inspection-form-action-buttons { flex-direction: column-reverse; }
+  .hm-inspection-form-cancel,
+  .hm-inspection-form-submit { width: 100%; flex: auto; }
+  .hm-inspection-form-hero-caption { font-size: 0.76rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hm-inspection-form-page,
+  .hm-inspection-form-panel,
+  .hm-inspection-form-spinner { animation: none !important; }
+  .hm-inspection-form-page *,
+  .hm-inspection-form-page *::before,
+  .hm-inspection-form-page *::after { transition: none !important; }
+}

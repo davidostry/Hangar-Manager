@@ -1,20 +1,28 @@
+
 import { Outlet } from "react-router";
-import Header from "./Header";
+import Sidebar from "./Sidebar";
+
 import "./layout.css";
+import "./sidebar.css";
 
 function Layout() {
   return (
-    <div className="app-shell">
-      <Header />
+    <div className="app-shell app-shell--sidebar">
+      <Sidebar />
 
-      <main className="app-main">
-        <Outlet />
-      </main>
+      <div className="app-workspace">
+        <main className="app-main">
+          <Outlet />
+        </main>
 
-      <footer className="app-footer">
-        <p>HangarManager</p>
-        <span>Aircraft Fleet Management System · © 2026 HangarManager. All rights reserved.</span>
-      </footer>
+        <footer className="app-footer">
+          <p>HangarManager</p>
+          <span>
+            Aircraft Fleet Management System · © 2026
+            HangarManager. All rights reserved.
+          </span>
+        </footer>
+      </div>
     </div>
   );
 }

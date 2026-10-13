@@ -1,854 +1,602 @@
-/*
- * HangarManager — Maintenance Reports
- * Destination: client/src/pages/maintenance/MaintenanceReports.css
- * Premium maintenance operations UI: clear white surfaces, aviation navy,
- * electric blue + cyan accents, meaningful status colours and restrained motion.
- */
+/* ==========================================================
+   HangarManager — Maintenance Reports / Premium Aviation UI
+   Scoped to this page to protect the rest of the application.
+   ========================================================== */
 
-:root {
-  --hm-maintenance-navy: #102a47;
-  --hm-maintenance-ink: #203a55;
-  --hm-maintenance-muted: #687f97;
-  --hm-maintenance-blue: #2376e5;
-  --hm-maintenance-cyan: #17b7c7;
-  --hm-maintenance-border: #dbe7f2;
-  --hm-maintenance-surface: #ffffff;
-  --hm-maintenance-canvas: #f5f9fd;
-  --hm-maintenance-shadow: 0 12px 30px rgba(16, 52, 86, 0.075);
-}
-
-/* Main page aliases — keeps styling scoped to the maintenance screen. */
-.maintenance-page,
-.maintenance-reports-page,
-.maintenance-list-page,
-.maintenance-reports-container,
-.maintenance-reports {
+.hm-maintenance-list {
+  --mx-ink: #112c49;
+  --mx-muted: #6d849d;
+  --mx-border: #d9e6f3;
+  --mx-blue: #217de9;
+  --mx-cyan: #1ac7d3;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
   min-width: 0;
-  color: var(--hm-maintenance-ink);
-  animation: hm-maintenance-page-enter 580ms cubic-bezier(0.2, 0.72, 0.28, 1) both;
+  color: var(--mx-ink);
+  animation: hm-mx-enter 480ms ease both;
 }
 
-/* Heading / toolbar */
-.maintenance-page-top,
-.maintenance-page-header,
-.maintenance-header,
-.maintenance-reports-header,
-.maintenance-list-header {
+/* ---------------- Page header ---------------- */
+.hm-maintenance-hero {
   position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 18px;
-  margin: 0 0 24px;
-}
-
-.maintenance-page-top h1,
-.maintenance-page-header h1,
-.maintenance-header h1,
-.maintenance-reports-header h1,
-.maintenance-list-header h1,
-.maintenance-page h1,
-.maintenance-reports-page h1,
-.maintenance-list-page h1 {
-  margin: 0;
-  color: var(--hm-maintenance-navy);
-  font-size: clamp(1.9rem, 3.8vw, 2.8rem);
-  font-weight: 900;
-  line-height: 1.08;
-  letter-spacing: -0.055em;
-  text-wrap: balance;
-}
-
-.maintenance-page-top p,
-.maintenance-page-header p,
-.maintenance-header p,
-.maintenance-reports-header p,
-.maintenance-list-header p {
-  max-width: 720px;
-  margin: 10px 0 0;
-  color: var(--hm-maintenance-muted);
-  line-height: 1.7;
-}
-
-.maintenance-page-top h1::after,
-.maintenance-page-header h1::after,
-.maintenance-header h1::after {
-  content: "";
-  display: block;
-  width: 76px;
-  height: 4px;
-  margin-top: 13px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--hm-maintenance-blue), var(--hm-maintenance-cyan));
-  transform-origin: left center;
-  animation: hm-maintenance-title-line 600ms 140ms both;
-}
-
-/* New report / primary actions */
-.maintenance-page a.button,
-.maintenance-page button.button,
-.maintenance-reports-page a.button,
-.maintenance-reports-page button.button,
-.maintenance-page-top > a,
-.maintenance-page-top > button,
-.maintenance-page-header > a,
-.maintenance-page-header > button,
-.maintenance-header > a,
-.maintenance-header > button,
-.maintenance-new-report,
-.maintenance-primary-button,
-.maintenance-submit-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  min-height: 44px;
-  padding: 11px 17px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 12px;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(27px, 3.4vw, 43px) clamp(25px, 3.8vw, 50px);
+  border: 1px solid rgba(82, 155, 221, .27);
+  border-radius: 27px;
   color: #fff;
-  background: linear-gradient(110deg, #1769d1, #267fec 52%, #078fa8);
-  background-size: 200% 100%;
-  box-shadow: 0 8px 19px rgba(35, 118, 229, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  font: inherit;
-  font-size: 0.9rem;
-  font-weight: 850;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform 200ms ease, box-shadow 200ms ease, background-position 320ms ease, filter 200ms ease;
+  background:
+    radial-gradient(circle at 90% 4%, rgba(23, 196, 208, .18), transparent 38%),
+    linear-gradient(112deg, #07182c 0%, #0e2c4f 66%, #155b7d 100%);
+  box-shadow: 0 21px 48px rgba(8, 31, 60, .18);
 }
 
-.maintenance-page a.button:hover,
-.maintenance-page button.button:hover,
-.maintenance-reports-page a.button:hover,
-.maintenance-reports-page button.button:hover,
-.maintenance-page-top > a:hover,
-.maintenance-page-top > button:hover,
-.maintenance-page-header > a:hover,
-.maintenance-page-header > button:hover,
-.maintenance-header > a:hover,
-.maintenance-header > button:hover,
-.maintenance-new-report:hover,
-.maintenance-primary-button:hover,
-.maintenance-submit-button:hover {
-  color: #fff;
-  background-position: 100% 50%;
-  transform: translateY(-2px);
-  box-shadow: 0 13px 25px rgba(35, 118, 229, 0.27), 0 0 0 3px rgba(23, 183, 199, 0.1);
-  filter: saturate(1.12);
-}
-
-.maintenance-page a.button:active,
-.maintenance-page button.button:active,
-.maintenance-page-top > a:active,
-.maintenance-page-top > button:active,
-.maintenance-new-report:active,
-.maintenance-primary-button:active,
-.maintenance-submit-button:active {
-  transform: translateY(0) scale(0.985);
-}
-
-/* Search and filters */
-.maintenance-toolbar,
-.maintenance-filters,
-.maintenance-filter-bar,
-.maintenance-search-filters,
-.maintenance-controls {
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 19px;
-  padding: 16px;
-  border: 1px solid rgba(209, 225, 239, 0.95);
-  border-radius: 17px;
-  background: linear-gradient(125deg, rgba(255, 255, 255, 0.98), rgba(242, 249, 255, 0.97));
-  box-shadow: 0 7px 21px rgba(20, 56, 91, 0.05), inset 0 1px 0 #fff;
-  animation: hm-maintenance-panel-enter 540ms 60ms both;
-}
-
-.maintenance-toolbar form,
-.maintenance-filters form,
-.maintenance-filter-bar form,
-.maintenance-search-form {
-  display: flex;
-  align-items: center;
-  flex: 1 1 290px;
-  flex-wrap: wrap;
-  gap: 10px;
-  min-width: min(100%, 230px);
-}
-
-.maintenance-page input,
-.maintenance-page select,
-.maintenance-page textarea,
-.maintenance-reports-page input,
-.maintenance-reports-page select,
-.maintenance-reports-page textarea,
-.maintenance-form-page input,
-.maintenance-form-page select,
-.maintenance-form-page textarea,
-.maintenance-toolbar input,
-.maintenance-toolbar select,
-.maintenance-filters input,
-.maintenance-filters select,
-.maintenance-filter-bar input,
-.maintenance-filter-bar select {
-  min-width: 0;
-  min-height: 42px;
-  padding: 10px 13px;
-  border: 1px solid #d2e0ed;
-  border-radius: 10px;
-  outline: none;
-  color: #1b3b5a;
-  background: #fff;
-  box-shadow: inset 0 1px 2px rgba(16, 42, 71, 0.025);
-  font: inherit;
-  font-size: 0.9rem;
-  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
-}
-
-.maintenance-toolbar input,
-.maintenance-toolbar select,
-.maintenance-filters input,
-.maintenance-filters select,
-.maintenance-filter-bar input,
-.maintenance-filter-bar select {
-  flex: 1 1 155px;
-}
-
-.maintenance-page input::placeholder,
-.maintenance-reports-page input::placeholder,
-.maintenance-form-page input::placeholder,
-.maintenance-toolbar input::placeholder {
-  color: #90a2b4;
-}
-
-.maintenance-page input:focus,
-.maintenance-page select:focus,
-.maintenance-page textarea:focus,
-.maintenance-reports-page input:focus,
-.maintenance-reports-page select:focus,
-.maintenance-reports-page textarea:focus,
-.maintenance-form-page input:focus,
-.maintenance-form-page select:focus,
-.maintenance-form-page textarea:focus,
-.maintenance-toolbar input:focus,
-.maintenance-toolbar select:focus,
-.maintenance-filters input:focus,
-.maintenance-filters select:focus,
-.maintenance-filter-bar input:focus,
-.maintenance-filter-bar select:focus {
-  border-color: #4098f5;
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(40, 135, 235, 0.12), 0 5px 14px rgba(21, 96, 170, 0.06);
-}
-
-.maintenance-toolbar button,
-.maintenance-filters button,
-.maintenance-filter-bar button,
-.maintenance-controls button {
-  min-height: 42px;
-  padding: 10px 14px;
-  border: 1px solid #c8dcef;
-  border-radius: 10px;
-  color: #1b5d9f;
-  background: linear-gradient(180deg, #fbfdff, #eaf4ff);
-  font: inherit;
-  font-size: 0.88rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: transform 180ms ease, border-color 180ms ease, color 180ms ease, background 180ms ease;
-}
-
-.maintenance-toolbar button:hover,
-.maintenance-filters button:hover,
-.maintenance-filter-bar button:hover,
-.maintenance-controls button:hover {
-  transform: translateY(-1px);
-  border-color: #9dc9f3;
-  color: #104e8c;
-  background: #e2f2ff;
-}
-
-/* Data table */
-.maintenance-table-wrapper,
-.maintenance-reports-table-wrapper,
-.maintenance-table-container,
-.maintenance-table-scroll,
-.maintenance-page .table-wrapper {
-  position: relative;
-  max-width: 100%;
-  overflow: auto;
-  border: 1px solid var(--hm-maintenance-border);
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: var(--hm-maintenance-shadow);
-  animation: hm-maintenance-panel-enter 620ms 110ms both;
-  scrollbar-color: #a9c5df #f0f5fb;
-  scrollbar-width: thin;
-}
-
-.maintenance-table-wrapper::before,
-.maintenance-reports-table-wrapper::before,
-.maintenance-table-container::before,
-.maintenance-table-scroll::before,
-.maintenance-page .table-wrapper::before {
+.hm-maintenance-hero::before {
   content: "";
-  display: block;
   position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #2376e5, #17b7c7, #8b73f0, #2376e5);
-  background-size: 220% 100%;
-  animation: hm-maintenance-light-sweep 8s linear infinite;
+  z-index: -1;
+  width: 360px;
+  height: 360px;
+  top: -190px;
+  right: -88px;
+  border: 1px solid rgba(151, 215, 255, .16);
+  border-radius: 50%;
+  box-shadow: 0 0 0 48px rgba(91, 185, 245, .045),
+              0 0 0 102px rgba(91, 185, 245, .025);
   pointer-events: none;
 }
 
-.maintenance-table,
-.maintenance-reports-table,
-.maintenance-page table,
-.maintenance-reports-page table,
-.maintenance-list-page table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  color: #2a435d;
-  font-size: 0.9rem;
-  text-align: left;
+.hm-maintenance-hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: clamp(25px, 3.8vw, 50px);
+  width: 156px;
+  height: 4px;
+  border-radius: 5px 5px 0 0;
+  background: linear-gradient(90deg, #368dfc, #1be0cd);
 }
 
-.maintenance-table thead th,
-.maintenance-reports-table thead th,
-.maintenance-page thead th,
-.maintenance-reports-page thead th,
-.maintenance-list-page thead th {
-  position: sticky;
-  top: 0;
+.hm-maintenance-hero-copy {
+  position: relative;
   z-index: 1;
-  padding: 15px 16px;
-  border-bottom: 1px solid #dbe8f4;
-  color: #5e7590;
-  background: linear-gradient(180deg, #f3f8fe, #ebf3fb);
-  font-size: 0.71rem;
+}
+
+.hm-maintenance-overline {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #77e7e6;
+  font-size: .74rem;
+  font-weight: 850;
+  letter-spacing: .14em;
+}
+
+.hm-maintenance-pulse {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2ce5d3;
+  box-shadow: 0 0 0 5px rgba(44, 229, 211, .12);
+}
+
+.hm-maintenance-kicker {
+  margin: 23px 0 7px;
+  color: #94b8d8;
+  font-size: .69rem;
+  font-weight: 850;
+  letter-spacing: .2em;
+}
+
+.hm-maintenance-hero h1 {
+  margin: 0;
+  max-width: 960px;
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 850;
+  letter-spacing: -.055em;
+  line-height: 1.08;
+}
+
+.hm-maintenance-hero-description {
+  max-width: 650px;
+  margin: 15px 0 0;
+  color: #bbcee3;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.hm-maintenance-hero-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 27px;
+}
+
+.hm-maintenance-hero-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #9fbdd8;
+  font-size: .81rem;
+  font-weight: 700;
+}
+
+.hm-maintenance-hero-caption svg { color: #68dcd8; }
+
+.hm-maintenance-hero-watermark {
+  position: absolute;
+  top: 20px;
+  right: 44px;
+  width: clamp(130px, 21vw, 238px);
+  height: auto;
+  color: rgba(155, 224, 249, .13);
+  transform: rotate(-21deg);
+  pointer-events: none;
+}
+
+.hm-maintenance-create {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 19px;
+  border: 1px solid rgba(164, 236, 255, .33);
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(115deg, #1974e8, #248df1 62%, #1199b7);
+  box-shadow: 0 9px 24px rgba(0, 67, 146, .32), inset 0 1px 0 rgba(255, 255, 255, .22);
+  font-size: .91rem;
+  font-weight: 850;
+  white-space: nowrap;
+  transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+}
+
+.hm-maintenance-create:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  filter: brightness(1.07);
+  box-shadow: 0 14px 27px rgba(0, 67, 146, .39);
+}
+
+/* ---------------- Filters ---------------- */
+.hm-maintenance-filters {
+  display: grid;
+  grid-template-columns: minmax(245px, 1fr) minmax(155px, 190px) minmax(155px, 190px) auto;
+  align-items: end;
+  gap: 15px;
+  padding: 23px;
+  border: 1px solid #d9e6f3;
+  border-radius: 23px;
+  background: linear-gradient(130deg, #fff, #f5faff);
+  box-shadow: 0 10px 30px rgba(14, 53, 92, .07);
+}
+
+.hm-maintenance-filter { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.hm-maintenance-filter label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #395672;
+  font-size: .84rem;
+  font-weight: 800;
+}
+.hm-maintenance-filter label svg { color: #2387e8; }
+
+.hm-maintenance-filter input,
+.hm-maintenance-filter select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 11px 14px;
+  border: 1px solid #cddfec;
+  border-radius: 12px;
+  color: #244460;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(11, 49, 84, .02);
+  font-size: .89rem;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.hm-maintenance-filter input:focus,
+.hm-maintenance-filter select:focus {
+  outline: none;
+  border-color: #368de9;
+  box-shadow: 0 0 0 4px rgba(33, 125, 233, .12);
+}
+
+.hm-maintenance-input-wrap { position: relative; }
+.hm-maintenance-input-wrap > svg {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  color: #8ba5c0;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.hm-maintenance-input-wrap input { padding-left: 45px; }
+.hm-maintenance-input-wrap input::placeholder { color: #95a9bd; }
+
+.hm-maintenance-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 11px 15px;
+  border: 1px solid #cfe1f0;
+  border-radius: 12px;
+  color: #255b90;
+  background: #f3f9ff;
+  font-size: .85rem;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: background 180ms ease, transform 180ms ease, border-color 180ms ease;
+}
+.hm-maintenance-clear:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: #9dc9f0;
+  background: #e6f3ff;
+}
+.hm-maintenance-clear:disabled { opacity: .55; cursor: not-allowed; }
+
+/* ---------------- Register title ---------------- */
+.hm-maintenance-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 4px 0 -5px;
+}
+.hm-maintenance-section-kicker {
+  margin: 0 0 8px;
+  color: #118fa7;
+  font-size: .69rem;
   font-weight: 900;
-  letter-spacing: 0.065em;
+  letter-spacing: .16em;
+}
+.hm-maintenance-section-heading h2 {
+  margin: 0;
+  color: #102b48;
+  font-size: clamp(1.4rem, 2.1vw, 1.65rem);
+  font-weight: 850;
+  letter-spacing: -.045em;
+}
+.hm-maintenance-section-heading p:not(.hm-maintenance-section-kicker) {
+  margin: 8px 0 0;
+  color: #738aa2;
+  font-size: .9rem;
+}
+.hm-maintenance-total {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 35px;
+  padding: 8px 14px;
+  border: 1px solid #c9dff8;
+  border-radius: 999px;
+  color: #1767ba;
+  background: #eef6ff;
+  font-size: .8rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* ---------------- Report data table ---------------- */
+.hm-maintenance-table-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  border: 1px solid var(--mx-border);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 15px 36px rgba(13, 49, 84, .09);
+  scrollbar-width: thin;
+  scrollbar-color: #9fbdd9 #eef5fc;
+}
+.hm-maintenance-table-wrap::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 3px;
+  background: linear-gradient(90deg, #298aff, #19cfcd, #298aff);
+  pointer-events: none;
+}
+.hm-maintenance-table {
+  width: 100%;
+  min-width: 890px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+  font-size: .89rem;
+}
+.hm-maintenance-list .hm-maintenance-table thead th {
+  padding: 19px 17px;
+  border-bottom: 1px solid #d9e6f3;
+  color: #58728e;
+  background: #edf4fb;
+  font-size: .71rem;
+  font-weight: 900;
+  letter-spacing: .085em;
   text-transform: uppercase;
   white-space: nowrap;
 }
-
-.maintenance-table tbody tr,
-.maintenance-reports-table tbody tr,
-.maintenance-page tbody tr,
-.maintenance-reports-page tbody tr,
-.maintenance-list-page tbody tr {
+.hm-maintenance-list .hm-maintenance-table thead th:first-child { width: 34%; padding-left: 24px; }
+.hm-maintenance-list .hm-maintenance-table thead th:last-child { padding-right: 24px; }
+.hm-maintenance-list .hm-maintenance-table tbody tr {
   background: #fff;
   transition: background 180ms ease, box-shadow 180ms ease;
-  animation: hm-maintenance-row-enter 430ms both;
 }
-
-.maintenance-table tbody tr:nth-child(even),
-.maintenance-reports-table tbody tr:nth-child(even),
-.maintenance-page tbody tr:nth-child(even),
-.maintenance-reports-page tbody tr:nth-child(even),
-.maintenance-list-page tbody tr:nth-child(even) {
-  background: #f9fbfe;
-}
-
-.maintenance-table tbody tr:hover,
-.maintenance-reports-table tbody tr:hover,
-.maintenance-page tbody tr:hover,
-.maintenance-reports-page tbody tr:hover,
-.maintenance-list-page tbody tr:hover {
+.hm-maintenance-list .hm-maintenance-table tbody tr:nth-child(even) { background: #f8fbfe; }
+.hm-maintenance-list .hm-maintenance-table tbody tr:hover {
   background: #eff8ff;
-  box-shadow: inset 3px 0 0 #21a8cf;
+  box-shadow: inset 3px 0 0 #20a7d6;
 }
-
-.maintenance-table td,
-.maintenance-reports-table td,
-.maintenance-page td,
-.maintenance-reports-page td,
-.maintenance-list-page td {
-  padding: 14px 16px;
-  border-bottom: 1px solid #e8eff6;
+.hm-maintenance-list .hm-maintenance-table tbody td {
+  padding: 20px 17px;
+  border-bottom: 1px solid #e6eef6;
+  color: #3d5975;
   vertical-align: middle;
 }
+.hm-maintenance-list .hm-maintenance-table tbody td:first-child { padding-left: 24px; }
+.hm-maintenance-list .hm-maintenance-table tbody td:last-child { padding-right: 24px; }
+.hm-maintenance-list .hm-maintenance-table tbody tr:last-child td { border-bottom: 0; }
 
-.maintenance-table tbody tr:last-child td,
-.maintenance-reports-table tbody tr:last-child td,
-.maintenance-page tbody tr:last-child td,
-.maintenance-reports-page tbody tr:last-child td,
-.maintenance-list-page tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-/* Report titles, IDs and action links */
-.maintenance-report-title,
-.maintenance-title-cell,
-.maintenance-table-title {
-  color: #183b5a;
-  font-weight: 850;
-}
-
-.maintenance-report-id,
-.maintenance-id,
-.maintenance-report-reference {
-  color: #6e849a;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.8rem;
-}
-
-.maintenance-actions,
-.maintenance-row-actions,
-.maintenance-table-actions {
-  display: flex;
+.hm-maintenance-report-link {
+  display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
+  max-width: 100%;
+  color: #175fa9;
+  font-size: .88rem;
+  font-weight: 850;
+  line-height: 1.45;
+}
+.hm-maintenance-report-link span { min-width: 0; overflow-wrap: anywhere; }
+.hm-maintenance-report-link svg { flex-shrink: 0; opacity: .65; transition: transform 180ms ease; }
+.hm-maintenance-report-link:hover { color: #0a8b9b; }
+.hm-maintenance-report-link:hover svg { transform: translate(2px, -2px); }
+.hm-maintenance-report-description {
+  display: -webkit-box;
+  max-width: 470px;
+  margin: 8px 0 0;
+  overflow: hidden;
+  color: #7b8da0;
+  font-size: .79rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  /* -webkit-line-clamp: 2; */
+}
+.hm-maintenance-aircraft,
+.hm-maintenance-muted-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #42617e;
+  font-size: .84rem;
   white-space: nowrap;
 }
+.hm-maintenance-aircraft { color: #1764a5; font-weight: 800; }
+.hm-maintenance-aircraft svg { color: #0da0b4; flex-shrink: 0; }
+.hm-maintenance-muted-cell svg { color: #8ca7bf; flex-shrink: 0; }
+.hm-maintenance-assignee { white-space: normal; }
 
-.maintenance-actions a,
-.maintenance-actions button,
-.maintenance-row-actions a,
-.maintenance-row-actions button,
-.maintenance-table-actions a,
-.maintenance-table-actions button,
-.maintenance-page td a,
-.maintenance-reports-page td a {
+/* Status colors carry meaning, with text as a second cue. */
+.hm-maintenance-chip {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 32px;
-  padding: 7px 10px;
-  border: 1px solid #d2e3f3;
-  border-radius: 9px;
-  color: #1d65a6;
-  background: #f6fbff;
-  font: inherit;
-  font-size: 0.79rem;
-  font-weight: 800;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform 180ms ease, color 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
-}
-
-.maintenance-actions a:hover,
-.maintenance-actions button:hover,
-.maintenance-row-actions a:hover,
-.maintenance-row-actions button:hover,
-.maintenance-table-actions a:hover,
-.maintenance-table-actions button:hover,
-.maintenance-page td a:hover,
-.maintenance-reports-page td a:hover {
-  transform: translateY(-1px);
-  border-color: #9dcaf2;
-  color: #104e8c;
-  background: #e7f4ff;
-  box-shadow: 0 4px 10px rgba(25, 103, 174, 0.09);
-}
-
-/* Status & priority chips */
-.maintenance-status,
-.maintenance-status-badge,
-.maintenance-priority,
-.maintenance-priority-badge,
-.maintenance-page [class*="status-badge"],
-.maintenance-reports-page [class*="status-badge"],
-.maintenance-page [class*="priority-badge"],
-.maintenance-reports-page [class*="priority-badge"] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 26px;
-  padding: 5px 10px;
-  border: 1px solid #d2e4f6;
+  gap: 7px;
+  min-height: 29px;
+  padding: 6px 11px;
+  border: 1px solid #cadff3;
   border-radius: 999px;
-  color: #1c6caf;
-  background: #eff7ff;
-  font-size: 0.74rem;
+  color: #1a6bae;
+  background: #edf6ff;
+  font-size: .76rem;
   font-weight: 850;
   line-height: 1.2;
   white-space: nowrap;
 }
-
-.maintenance-status--open,
-.maintenance-status.open,
-.status-open,
-.maintenance-status-badge.open {
-  border-color: #f4ddb2;
-  color: #9b5b0d;
-  background: #fff7e8;
-}
-
-.maintenance-status--in-progress,
-.maintenance-status.in-progress,
-.maintenance-status.inprogress,
-.status-in-progress,
-.status-inprogress {
-  border-color: #bcdcff;
-  color: #155ba7;
-  background: #eaf4ff;
-}
-
-.maintenance-status--resolved,
-.maintenance-status.resolved,
-.status-resolved {
-  border-color: #bcebd9;
-  color: #117b59;
-  background: #eafaf3;
-}
-
-.maintenance-status--cancelled,
-.maintenance-status.cancelled,
-.status-cancelled {
-  border-color: #e0e5eb;
-  color: #64748b;
-  background: #f3f5f8;
-}
-
-.maintenance-priority--low,
-.maintenance-priority.low,
-.priority-low {
-  border-color: #cfe4f5;
-  color: #246a9e;
-  background: #eff8ff;
-}
-
-.maintenance-priority--medium,
-.maintenance-priority.medium,
-.priority-medium {
-  border-color: #d5d9fb;
-  color: #5e5ab0;
-  background: #f1f1ff;
-}
-
-.maintenance-priority--high,
-.maintenance-priority.high,
-.priority-high {
-  border-color: #f5d6a3;
-  color: #a45e0c;
-  background: #fff6e5;
-}
-
-.maintenance-priority--critical,
-.maintenance-priority.critical,
-.priority-critical {
-  border-color: #f1c4cb;
-  color: #b42f47;
-  background: #fff0f2;
-}
-
-/* Loading, empty, success and error states */
-.maintenance-loading,
-.maintenance-empty-state,
-.maintenance-error-state,
-.maintenance-state,
-.maintenance-page .empty-state,
-.maintenance-reports-page .empty-state,
-.maintenance-page .loading-state,
-.maintenance-reports-page .loading-state {
-  display: grid;
-  place-items: center;
-  gap: 10px;
-  min-height: 140px;
-  padding: 27px;
-  border: 1px dashed #bfd3e7;
-  border-radius: 17px;
-  color: #657e96;
-  background: linear-gradient(145deg, #fff, #f3f9ff);
-  text-align: center;
-  animation: hm-maintenance-panel-enter 460ms ease both;
-}
-
-.maintenance-error-state,
-.maintenance-page .error-message,
-.maintenance-reports-page .error-message {
-  border-color: #f0c6ce;
-  color: #a93147;
-  background: #fff3f5;
-}
-
-.maintenance-success-state,
-.maintenance-page .success-message,
-.maintenance-reports-page .success-message {
-  padding: 12px 15px;
-  border: 1px solid #bce8d8;
-  border-radius: 11px;
-  color: #126e53;
-  background: #ecfbf4;
-}
-
-.maintenance-spinner,
-.maintenance-loading-spinner {
-  width: 30px;
-  height: 30px;
-  border: 3px solid #d5eaff;
-  border-top-color: #2376e5;
-  border-right-color: #17b7c7;
+.hm-maintenance-chip-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
   border-radius: 50%;
-  animation: hm-maintenance-spin 800ms linear infinite;
+  background: currentColor;
 }
+.hm-maintenance-priority-low { color: #256b9a; background: #ecf7ff; border-color: #c8e3f8; }
+.hm-maintenance-priority-medium { color: #765db1; background: #f5f1ff; border-color: #e1d7fa; }
+.hm-maintenance-priority-high { color: #a66210; background: #fff5e5; border-color: #f5d9ac; }
+.hm-maintenance-priority-critical { color: #b52e49; background: #fff0f3; border-color: #f4c6cf; }
+.hm-maintenance-status-open { color: #af6511; background: #fff6e6; border-color: #f4deb6; }
+.hm-maintenance-status-inprogress { color: #146cb7; background: #eaf5ff; border-color: #c3dfff; }
+.hm-maintenance-status-resolved { color: #107e60; background: #e9f9f1; border-color: #bfead7; }
+.hm-maintenance-status-cancelled { color: #66788d; background: #f1f4f7; border-color: #dce3eb; }
 
-/* Pagination */
-.maintenance-pagination,
-.maintenance-pagination-controls,
-.maintenance-page-controls {
+/* ---------------- Pagination ---------------- */
+.hm-maintenance-list-footer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 9px;
-  margin-top: 19px;
-  color: #687f97;
-  font-size: 0.86rem;
+  gap: 16px;
+  margin-top: -5px;
 }
-
-.maintenance-pagination button,
-.maintenance-pagination-controls button,
-.maintenance-page-controls button {
-  min-width: 38px;
-  min-height: 36px;
-  padding: 7px 11px;
-  border: 1px solid #d2e3f3;
-  border-radius: 9px;
-  color: #1a5f9c;
+.hm-maintenance-results-count {
+  margin: 0;
+  color: #748aa1;
+  font-size: .83rem;
+}
+.hm-maintenance-results-count strong { color: #244766; }
+.hm-maintenance-pagination { display: flex; align-items: center; gap: 12px; color: #687f98; font-size: .85rem; }
+.hm-maintenance-pagination span strong { color: #174974; }
+.hm-maintenance-pagination button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 39px;
+  padding: 8px 12px;
+  border: 1px solid #cbdfef;
+  border-radius: 10px;
+  color: #185e9a;
   background: #fff;
-  font: inherit;
+  font-size: .81rem;
   font-weight: 800;
-  cursor: pointer;
-  transition: transform 180ms ease, border-color 180ms ease, color 180ms ease, background 180ms ease;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
 }
-
-.maintenance-pagination button:hover:not(:disabled),
-.maintenance-pagination-controls button:hover:not(:disabled),
-.maintenance-page-controls button:hover:not(:disabled) {
+.hm-maintenance-pagination button:hover:not(:disabled) {
   transform: translateY(-1px);
-  border-color: #93c4f2;
+  border-color: #95c9f2;
   background: #edf7ff;
 }
+.hm-maintenance-pagination button:disabled { opacity: .48; cursor: not-allowed; }
 
-.maintenance-pagination button:disabled,
-.maintenance-pagination-controls button:disabled,
-.maintenance-page-controls button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-/* Create/edit maintenance report form if this stylesheet is shared by the form page. */
-.maintenance-form-page,
-.maintenance-report-form-page {
+/* ---------------- Loading, empty and failure states ---------------- */
+.hm-maintenance-state {
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  min-width: 0;
-  color: var(--hm-maintenance-ink);
-  animation: hm-maintenance-page-enter 560ms cubic-bezier(0.2, 0.72, 0.28, 1) both;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 235px;
+  padding: 30px 20px;
+  border: 1px solid #dce9f5;
+  border-radius: 22px;
+  color: #6d8299;
+  background: linear-gradient(145deg, #fff, #f5faff);
+  box-shadow: 0 12px 30px rgba(14, 53, 92, .05);
+  text-align: center;
 }
-
-.maintenance-form-card,
-.maintenance-report-form-card,
-.maintenance-page .form-card {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  width: 100%;
-  max-width: 980px;
-  padding: clamp(22px, 3.3vw, 35px);
-  border: 1px solid #d7e6f3;
-  border-radius: 21px;
-  background: radial-gradient(ellipse at 100% 0%, rgba(33, 151, 221, 0.07), transparent 42%), linear-gradient(145deg, #fff, #f7fbff);
-  box-shadow: 0 17px 42px rgba(17, 56, 91, 0.08), inset 0 1px 0 #fff;
-  animation: hm-maintenance-panel-enter 680ms 80ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
-}
-
-.maintenance-form-card::before,
-.maintenance-report-form-card::before,
-.maintenance-page .form-card::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #2376e5, #17b7c7, #8b73f0, #2376e5);
-  background-size: 220% 100%;
-  animation: hm-maintenance-light-sweep 8s linear infinite;
-}
-
-.maintenance-form-card form,
-.maintenance-report-form-card form,
-.maintenance-form-page form {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 19px;
-}
-
-.maintenance-form-card label,
-.maintenance-report-form-card label,
-.maintenance-form-page label {
-  display: flex;
-  flex-direction: column;
+.hm-maintenance-state > svg { color: #2f90da; }
+.hm-maintenance-state h3 { margin: 2px 0 0; color: #143653; font-size: 1.15rem; }
+.hm-maintenance-state p { margin: 0; max-width: 510px; line-height: 1.65; }
+.hm-maintenance-state--error { color: #a63751; background: #fff5f7; border-color: #f2cbd2; }
+.hm-maintenance-state--error > svg,
+.hm-maintenance-state--error h3 { color: #aa2f49; }
+.hm-maintenance-spinner { animation: hm-mx-spin 900ms linear infinite; }
+.hm-maintenance-retry {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-  color: #294a68;
-  font-size: 0.87rem;
+  min-height: 41px;
+  margin-top: 7px;
+  padding: 9px 17px;
+  border: 1px solid #bbd9f4;
+  border-radius: 11px;
+  color: #175fa5;
+  background: #ecf7ff;
   font-weight: 800;
 }
+.hm-maintenance-retry:hover { background: #dcf0ff; }
 
-.maintenance-form-card textarea,
-.maintenance-report-form-card textarea,
-.maintenance-form-page textarea {
-  min-height: 118px;
-  resize: vertical;
+@keyframes hm-mx-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes hm-mx-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 1280px) {
+  .hm-maintenance-filters { grid-template-columns: minmax(240px, 1fr) repeat(2, minmax(145px, 190px)); }
+  .hm-maintenance-clear { grid-column: 1 / -1; justify-self: end; }
 }
 
-.maintenance-form-card .form-full-width,
-.maintenance-report-form-card .form-full-width,
-.maintenance-form-page .form-full-width {
-  grid-column: 1 / -1;
+@media (max-width: 980px) {
+  .hm-maintenance-filters { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .hm-maintenance-filter--search { grid-column: 1 / -1; }
+  .hm-maintenance-clear { grid-column: 1 / -1; }
 }
 
-.maintenance-form-card button[type="submit"],
-.maintenance-report-form-card button[type="submit"],
-.maintenance-form-page button[type="submit"] {
-  justify-self: start;
-  min-width: 150px;
-}
-
-/* Accessible keyboard focus */
-.maintenance-page a:focus-visible,
-.maintenance-page button:focus-visible,
-.maintenance-reports-page a:focus-visible,
-.maintenance-reports-page button:focus-visible,
-.maintenance-form-page a:focus-visible,
-.maintenance-form-page button:focus-visible {
-  outline: 3px solid rgba(23, 183, 199, 0.48);
-  outline-offset: 3px;
-}
-
-/* Motion */
-@keyframes hm-maintenance-page-enter {
-  from { opacity: 0; transform: translateY(11px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes hm-maintenance-panel-enter {
-  from { opacity: 0; transform: translateY(15px) scale(0.992); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes hm-maintenance-row-enter {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes hm-maintenance-title-line {
-  from { transform: scaleX(0); opacity: 0.25; }
-  to { transform: scaleX(1); opacity: 1; }
-}
-
-@keyframes hm-maintenance-light-sweep {
-  from { background-position: 100% 50%; }
-  to { background-position: -120% 50%; }
-}
-
-@keyframes hm-maintenance-spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Responsive layout */
 @media (max-width: 760px) {
-  .maintenance-page-top,
-  .maintenance-page-header,
-  .maintenance-header,
-  .maintenance-reports-header,
-  .maintenance-list-header {
-    align-items: stretch;
-    flex-direction: column;
-  }
+  .hm-maintenance-list { gap: 19px; }
+  .hm-maintenance-hero { padding: 28px 23px; border-radius: 21px; }
+  .hm-maintenance-hero::after { left: 23px; }
+  .hm-maintenance-hero-watermark { right: -34px; top: 35px; opacity: .5; }
+  .hm-maintenance-hero-description { font-size: .92rem; }
+  .hm-maintenance-filters { padding: 18px; border-radius: 18px; }
 
-  .maintenance-page-top > a,
-  .maintenance-page-top > button,
-  .maintenance-page-header > a,
-  .maintenance-page-header > button {
-    align-self: flex-start;
+  /* Stacked cards instead of a wide sideways-scrolling table */
+  .hm-maintenance-table-wrap { overflow: visible; border: 0; background: none; box-shadow: none; }
+  .hm-maintenance-table-wrap::before { display: none; }
+  .hm-maintenance-list .hm-maintenance-table { display: block; min-width: 0; }
+  .hm-maintenance-list .hm-maintenance-table thead { display: none; }
+  .hm-maintenance-list .hm-maintenance-table tbody { display: grid; gap: 14px; }
+  .hm-maintenance-list .hm-maintenance-table tbody tr,
+  .hm-maintenance-list .hm-maintenance-table tbody tr:nth-child(even) {
+    display: block;
+    padding: 9px 17px;
+    border: 1px solid #d9e6f3;
+    border-radius: 17px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(15, 49, 82, .06);
   }
-
-  .maintenance-form-card form,
-  .maintenance-report-form-card form,
-  .maintenance-form-page form {
-    grid-template-columns: minmax(0, 1fr);
+  .hm-maintenance-list .hm-maintenance-table tbody tr:hover { box-shadow: 0 12px 24px rgba(15, 49, 82, .1); }
+  .hm-maintenance-list .hm-maintenance-table tbody td,
+  .hm-maintenance-list .hm-maintenance-table tbody td:first-child,
+  .hm-maintenance-list .hm-maintenance-table tbody td:last-child {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    padding: 12px 0;
+    border-bottom: 1px solid #edf2f8;
+    font-size: .85rem;
+    text-align: right;
   }
-
-  .maintenance-form-card .form-full-width,
-  .maintenance-report-form-card .form-full-width,
-  .maintenance-form-page .form-full-width {
-    grid-column: auto;
+  .hm-maintenance-list .hm-maintenance-table tbody tr td:last-child { border-bottom: 0; }
+  .hm-maintenance-list .hm-maintenance-table tbody td::before {
+    content: attr(data-label);
+    flex: 0 0 83px;
+    color: #7187a0;
+    font-size: .74rem;
+    font-weight: 850;
+    text-align: left;
+    text-transform: uppercase;
   }
-
-  .maintenance-table,
-  .maintenance-reports-table,
-  .maintenance-page table,
-  .maintenance-reports-page table,
-  .maintenance-list-page table {
-    min-width: 720px;
+  .hm-maintenance-list .hm-maintenance-table tbody .hm-maintenance-report-cell {
+    display: block;
+    padding: 14px 0 16px;
+    text-align: left;
   }
+  .hm-maintenance-list .hm-maintenance-table tbody .hm-maintenance-report-cell::before {
+    display: block;
+    margin-bottom: 9px;
+  }
+  .hm-maintenance-report-description { max-width: none; }
+  .hm-maintenance-list-footer { flex-direction: column; align-items: stretch; text-align: center; }
+  .hm-maintenance-pagination { justify-content: center; flex-wrap: wrap; }
 }
 
-@media (max-width: 480px) {
-  .maintenance-toolbar,
-  .maintenance-filters,
-  .maintenance-filter-bar,
-  .maintenance-search-filters,
-  .maintenance-controls {
-    padding: 12px;
-    border-radius: 14px;
-  }
-
-  .maintenance-toolbar form,
-  .maintenance-filters form,
-  .maintenance-filter-bar form,
-  .maintenance-search-form {
-    flex-basis: 100%;
-  }
-
-  .maintenance-toolbar input,
-  .maintenance-toolbar select,
-  .maintenance-filters input,
-  .maintenance-filters select,
-  .maintenance-filter-bar input,
-  .maintenance-filter-bar select {
-    flex-basis: 100%;
-  }
-
-  .maintenance-form-card,
-  .maintenance-report-form-card,
-  .maintenance-page .form-card {
-    padding: 19px 15px;
-    border-radius: 16px;
-  }
+@media (max-width: 510px) {
+  .hm-maintenance-overline { font-size: .62rem; letter-spacing: .09em; }
+  .hm-maintenance-hero h1 { font-size: clamp(2rem, 8.5vw, 2.7rem); }
+  .hm-maintenance-hero-bottom { align-items: stretch; flex-direction: column; }
+  .hm-maintenance-create { width: 100%; }
+  .hm-maintenance-filters { grid-template-columns: 1fr; padding: 16px; }
+  .hm-maintenance-filter--search,
+  .hm-maintenance-clear { grid-column: auto; width: 100%; }
+  .hm-maintenance-section-heading { align-items: flex-start; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .maintenance-page *,
-  .maintenance-page *::before,
-  .maintenance-page *::after,
-  .maintenance-reports-page *,
-  .maintenance-reports-page *::before,
-  .maintenance-reports-page *::after,
-  .maintenance-form-page *,
-  .maintenance-form-page *::before,
-  .maintenance-form-page *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .hm-maintenance-list,
+  .hm-maintenance-list *,
+  .hm-maintenance-list *::before,
+  .hm-maintenance-list *::after {
+    animation: none !important;
+    transition: none !important;
     scroll-behavior: auto !important;
   }
 }

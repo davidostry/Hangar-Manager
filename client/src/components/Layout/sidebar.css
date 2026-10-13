@@ -1,0 +1,556 @@
+
+/* =========================================
+   HANGARMANAGER PREMIUM SIDEBAR
+   ========================================= */
+
+/* Application structure */
+
+.app-shell--sidebar {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.app-shell--sidebar .app-workspace {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.app-shell--sidebar .app-main {
+  width: min(1600px, 100%);
+  min-width: 0;
+  flex: 1;
+  margin-inline: auto;
+  padding: 36px clamp(20px, 3vw, 50px) 64px;
+}
+
+/* Sidebar base */
+
+.hm-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: 270px;
+  height: 100vh;
+  height: 100dvh;
+  padding: 28px 16px 20px;
+  overflow-y: auto;
+  color: #e9f3ff;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(28, 145, 219, 0.2),
+      transparent 45%
+    ),
+    linear-gradient(180deg, #0b1c32, #071425);
+  border-right: 1px solid rgba(118, 177, 230, 0.17);
+  box-shadow: 8px 0 35px rgba(3, 18, 39, 0.12);
+}
+
+.hm-sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    #2775e7,
+    #21ced0,
+    #5c83e9
+  );
+}
+
+/* Branding */
+
+.hm-sidebar-brand {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 6px 28px;
+  border-bottom: 1px solid rgba(184, 214, 245, 0.11);
+}
+
+.hm-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  color: #fff;
+}
+
+.hm-brand-link:hover {
+  color: #fff;
+}
+
+.hm-brand-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(75, 190, 241, 0.24);
+  border-radius: 14px;
+  background: rgba(45, 151, 224, 0.1);
+}
+
+.hm-brand-logo .brand-logo-svg {
+  width: 44px;
+  height: 44px;
+}
+
+.hm-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.hm-brand-text strong {
+  color: #f7fbff;
+  font-size: 1.08rem;
+  font-weight: 850;
+  letter-spacing: -0.045em;
+}
+
+.hm-brand-text small {
+  color: #7caccf;
+  font-size: 0.65rem;
+  font-weight: 750;
+  letter-spacing: 0.13em;
+}
+
+/* Navigation */
+
+.hm-sidebar-navigation {
+  padding-top: 30px;
+}
+
+.hm-nav-heading {
+  margin: 0 0 16px;
+  padding-left: 15px;
+  color: #6585a5;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.2em;
+}
+
+.hm-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.hm-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 49px;
+  padding: 12px 16px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #9fb7d0;
+  font-size: 0.91rem;
+  font-weight: 650;
+  transition:
+    color 200ms ease,
+    background 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease;
+}
+
+.hm-nav-link svg {
+  flex-shrink: 0;
+  color: #779cbe;
+  transition:
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+/* Hover */
+
+.hm-nav-link:hover {
+  color: #fff;
+  background: rgba(77, 145, 215, 0.12);
+  transform: translateX(3px);
+}
+
+.hm-nav-link:hover svg {
+  color: #6fd3f0;
+}
+
+/* Active route */
+
+.hm-nav-link.active {
+  color: #fff;
+  border-color: rgba(81, 165, 242, 0.23);
+  background: linear-gradient(
+    105deg,
+    rgba(33, 121, 232, 0.25),
+    rgba(18, 198, 215, 0.08)
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.hm-nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 3px;
+  border-radius: 0 4px 4px 0;
+  background: linear-gradient(#39aaff, #1de0d2);
+}
+
+.hm-nav-link.active svg {
+  color: #5cceec;
+}
+
+/* Bottom section */
+
+.hm-sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 35px;
+}
+
+.hm-system-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 10px;
+  color: #7097b9;
+  font-size: 0.73rem;
+}
+
+.hm-system-status svg {
+  color: #2ad6c3;
+}
+
+/* Logged-in user */
+
+.hm-user-card {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  padding: 15px 12px;
+  border: 1px solid rgba(114, 181, 230, 0.16);
+  border-radius: 14px;
+  background: rgba(122, 182, 241, 0.065);
+}
+
+.hm-user-avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  color: #8ce6ef;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 138, 225, 0.3),
+    rgba(25, 202, 207, 0.16)
+  );
+}
+
+.hm-user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.hm-user-details strong {
+  overflow: hidden;
+  color: #f1f7ff;
+  font-size: 0.81rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hm-user-details span {
+  color: #63d6df;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Logout */
+
+.hm-logout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  color: #e1a8b3;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.hm-logout:hover {
+  border-color: rgba(238, 103, 127, 0.2);
+  color: #ffc7d1;
+  background: rgba(212, 66, 91, 0.1);
+}
+
+/* Mobile elements hidden on desktop */
+
+.hm-mobile-bar,
+.hm-sidebar-backdrop,
+.hm-sidebar-close {
+  display: none;
+}
+
+/* =========================================
+   TABLET AND MOBILE
+   ========================================= */
+
+@media (max-width: 1000px) {
+  .app-shell--sidebar {
+    display: block;
+  }
+
+  .app-shell--sidebar .app-workspace {
+    padding-top: 66px;
+  }
+
+  .app-shell--sidebar .app-main {
+    padding: 28px 20px 48px;
+  }
+
+  /* Mobile top bar */
+
+  .hm-mobile-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 70;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 66px;
+    padding: 0 20px;
+    border-bottom: 1px solid rgba(98, 178, 230, 0.2);
+    background: #0b1c32;
+    box-shadow: 0 5px 24px rgba(7, 20, 38, 0.18);
+  }
+
+  .hm-mobile-title {
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 850;
+    letter-spacing: -0.04em;
+  }
+
+  .hm-mobile-toggle,
+  .hm-sidebar-close {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(137, 194, 241, 0.2);
+    border-radius: 10px;
+    color: #e6f4ff;
+    background: rgba(95, 166, 222, 0.12);
+  }
+
+  /* Slide-out sidebar */
+
+  .hm-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 90;
+    width: min(300px, 85vw);
+    height: 100vh;
+    height: 100dvh;
+    visibility: hidden;
+    transform: translateX(-105%);
+    transition:
+      transform 260ms ease,
+      visibility 260ms;
+  }
+
+  .hm-sidebar--open {
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .hm-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: block;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: rgba(3, 12, 25, 0.65);
+    backdrop-filter: blur(3px);
+  }
+
+  .hm-sidebar-backdrop:hover {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell--sidebar .app-main {
+    padding: 22px 14px 42px;
+  }
+
+  .hm-mobile-bar {
+    padding-inline: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-sidebar,
+  .hm-nav-link,
+  .hm-nav-link svg {
+    transition: none;
+  }
+}
+
+/* ========================================
+   SIDEBAR — FINAL PREMIUM DETAILS
+======================================== */
+
+/* Navigation refinements */
+
+.hm-nav-link {
+  letter-spacing: 0.005em;
+}
+
+.hm-nav-link:hover svg {
+  transform: scale(1.12);
+}
+
+.hm-nav-link.active {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 5px 18px rgba(18, 120, 225, 0.1);
+}
+
+/* User profile card */
+
+.hm-user-card {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 26px rgba(0, 8, 25, 0.15);
+}
+
+.hm-user-card::after {
+  content: "";
+  position: absolute;
+  top: -42px;
+  right: -42px;
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  background: rgba(40, 190, 230, 0.09);
+  pointer-events: none;
+}
+
+/* Sidebar scrollbar */
+
+.hm-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #355778 transparent;
+}
+
+/* Cleaner main workspace */
+
+.app-shell--sidebar .app-main {
+  padding-top: 28px;
+  padding-bottom: 48px;
+}
+
+/* Focus styles */
+
+.hm-nav-link:focus-visible,
+.hm-logout:focus-visible,
+.hm-mobile-toggle:focus-visible,
+.hm-sidebar-close:focus-visible {
+  outline: 2px solid #46d7ed;
+  outline-offset: 3px;
+}
+
+/* Tablet and mobile */
+
+@media (max-width: 1000px) {
+  .app-shell--sidebar .app-main {
+    padding-top: 28px;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell--sidebar .app-main {
+    padding-top: 22px;
+    padding-bottom: 42px;
+  }
+}
+
+/* ========================================
+   USER PROFILE LINK
+======================================== */
+
+.hm-sidebar .hm-user-card-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+
+  transition:
+    transform 220ms ease,
+    background 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.hm-sidebar .hm-user-card-link:hover {
+  transform: translateY(-2px);
+  background: rgba(50, 148, 221, 0.15);
+  border-color: rgba(75, 205, 234, 0.38);
+  box-shadow: 0 12px 28px rgba(0, 8, 25, 0.2);
+}
+
+.hm-sidebar .hm-user-card--active {
+  border-color: rgba(65, 209, 229, 0.45);
+  background: rgba(40, 150, 215, 0.16);
+}
+
+.hm-sidebar .hm-user-card-link:focus-visible {
+  outline: 2px solid #46d7ed;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-sidebar .hm-user-card-link {
+    transition: none;
+  }
+}
+
