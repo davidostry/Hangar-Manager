@@ -121,6 +121,9 @@ def assign_report_service(
     if not user:
         raise ValueError("User not found")
 
+    if not user.get("is_active", True):
+        raise ValueError("Cannot assign maintenance to an inactive user")
+
     allowed_roles = [
         "technician",
         "team_lead",

@@ -52,6 +52,7 @@ function MaintenanceReports() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -90,7 +91,7 @@ function MaintenanceReports() {
     return () => {
       cancelled = true;
     };
-  }, [search, status, priority, page]);
+  }, [search, status, priority, page, retryCount]);
 
   const totalPages = Math.max(
     1,
@@ -201,7 +202,7 @@ function MaintenanceReports() {
           <p>{error}</p>
           <button
             type="button"
-            onClick={() => setPage((current) => current)}
+            onClick={() => setRetryCount((current) => current + 1)}
           >
             Retry
           </button>
@@ -241,7 +242,7 @@ function MaintenanceReports() {
               <thead>
                 <tr>
                   <th>Report</th>
-                  <th>Aircraft ID</th>
+                  <th>Aircraft</th>
                   <th>Priority</th>
                   <th>Status</th>
                   <th>Reported</th>
@@ -265,9 +266,9 @@ function MaintenanceReports() {
                     <td>
                       <span
                         className="maintenance-aircraft-id"
-                        title={report.aircraft_id}
+                        title={report.aircraft_tail_number || "Aircraft unavailable"}
                       >
-                        {report.aircraft_id}
+                        {report.aircraft_tail_number || "Aircraft unavailable"}
                       </span>
                     </td>
 
@@ -296,7 +297,7 @@ function MaintenanceReports() {
                     <td>{formatDate(report.reported_at)}</td>
 
                     <td>
-                      {report.assigned_to || "Unassigned"}
+                      {report.assigned_to_name || (report.assigned_to ? "Name unavailable" : "Unassigned")}
                     </td>
                   </tr>
                 ))}

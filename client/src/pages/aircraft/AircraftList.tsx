@@ -60,7 +60,7 @@ function getErrorMessage(error: unknown): string {
 
 function AircraftList() {
   const { user } = useAuth();
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "admin" || user?.role === "hangar_manager";
 
   const [aircraft, setAircraft] = useState<Aircraft[]>([]);
   const [total, setTotal] = useState(0);

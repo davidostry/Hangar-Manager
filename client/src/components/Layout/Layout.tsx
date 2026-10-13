@@ -13,7 +13,7 @@ function Layout() {
 
       <footer className="app-footer">
         <p>HangarManager</p>
-        <span>Aircraft Fleet Management System</span>
+        <span>Aircraft Fleet Management System · © 2026 HangarManager. All rights reserved.</span>
       </footer>
     </div>
   );

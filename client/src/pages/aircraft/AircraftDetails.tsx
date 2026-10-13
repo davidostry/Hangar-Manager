@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 
-import { getAircraftById } from "../../services/aircraftService";
+import { deleteAircraft, getAircraftById } from "../../services/aircraftService";
 
 import type {
   Aircraft,
@@ -111,6 +112,12 @@ function AircraftDetails() {
   // Aircraft UUID from the URL
   // Used for API requests, not displayed to the user
   const { aircraftId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const canManageAircraft = user?.role === "admin" || user?.role === "hangar_manager";
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   const [aircraft, setAircraft] = useState<Aircraft | null>(null);
 
@@ -178,6 +185,30 @@ function AircraftDetails() {
       isActive = false;
     };
   }, [aircraftId, retryCount]);
+
+  // ========================================
+  // DELETE (MANAGERS ONLY)
+  // ========================================
+
+  async function handleDelete(): Promise<void> {
+    if (!canManageAircraft || !aircraft || isDeleting) return;
+
+    const confirmed = window.confirm(
+      `Delete aircraft ${aircraft.tail_number}? This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    setDeleteError("");
+    setIsDeleting(true);
+    try {
+      await deleteAircraft(aircraft.id);
+      navigate("/app/aircraft", { replace: true });
+    } catch (error: unknown) {
+      setDeleteError(getErrorMessage(error));
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   // ========================================
   // LOADING
@@ -287,6 +318,28 @@ function AircraftDetails() {
         <p className="page-description">
           {aircraft.manufacturer} {aircraft.model}
         </p>
+
+        {canManageAircraft && (
+          <div className="aircraft-row-actions">
+            <Link
+              to={`/app/aircraft/${aircraft.id}/edit`}
+              className="aircraft-button"
+            >
+              Edit Aircraft
+            </Link>
+            <button
+              type="button"
+              className="aircraft-button aircraft-button-secondary"
+              onClick={() => void handleDelete()}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete Aircraft"}
+            </button>
+          </div>
+        )}
+        {deleteError && (
+          <p role="alert">{deleteError}</p>
+        )}
       </div>
 
       {/* AIRCRAFT DETAILS CARD */}

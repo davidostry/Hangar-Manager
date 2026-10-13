@@ -81,7 +81,7 @@ function AppRoutes() {
           <Route
             path="aircraft/new"
             element={
-              <ProtectedRoute allowedRoles={["admin"]}>
+              <ProtectedRoute allowedRoles={["admin", "hangar_manager"]}>
                 <AircraftFormPage mode="create" />
               </ProtectedRoute>
             }
@@ -90,7 +90,7 @@ function AppRoutes() {
           <Route
             path="aircraft/:aircraftId/edit"
             element={
-              <ProtectedRoute allowedRoles={["admin"]}>
+              <ProtectedRoute allowedRoles={["admin", "hangar_manager"]}>
                 <AircraftFormPage mode="edit" />
               </ProtectedRoute>
             }
@@ -131,7 +131,11 @@ function AppRoutes() {
 
           <Route
             path="inspections/new"
-            element={<InspectionForm />}
+            element={
+              <ProtectedRoute allowedRoles={["admin", "hangar_manager"]}>
+                <InspectionForm />
+              </ProtectedRoute>
+            }
           />
 
           {/* ========================================

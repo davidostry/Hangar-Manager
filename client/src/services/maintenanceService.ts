@@ -65,6 +65,7 @@ export async function getMaintenanceReports(
           report.title,
           report.description,
           report.aircraft_id,
+          report.aircraft_tail_number || "",
         ].some((value) =>
           value.toLowerCase().includes(search),
         );
@@ -148,23 +149,43 @@ export async function createMaintenanceReport(
   return response.data;
 }
 
-// ========================================
-// UPDATE MAINTENANCE REPORT STATUS
-// ========================================
-
-export async function updateMaintenanceReportStatus(
+// Maintenance status transitions must use dedicated backend endpoints.
+export async function assignMaintenanceReport(
   reportId: string,
-  status: MaintenanceReport["status"],
+  assignedTo: string,
 ): Promise<MaintenanceReport> {
-
-  const encodedId = encodeURIComponent(reportId);
-
-  // Update status in the Backend
-  await api.patch(
-    `/maintenance/${encodedId}`,
-    { status },
+  const response = await api.patch<MaintenanceReport>(
+    `/maintenance/${encodeURIComponent(reportId)}/assign`,
+    { assigned_to: assignedTo },
   );
+  if (response.data.status !== "InProgress") {
+    throw new Error("Assignment did not update the report status.");
+  }
+  return response.data;
+}
 
-  // Fetch updated report from the Backend
-  return getMaintenanceReportById(reportId);
+export async function resolveMaintenanceReport(
+  reportId: string,
+  resolutionNotes: string,
+): Promise<MaintenanceReport> {
+  const response = await api.patch<MaintenanceReport>(
+    `/maintenance/${encodeURIComponent(reportId)}/resolve`,
+    { resolution_notes: resolutionNotes.trim() },
+  );
+  if (response.data.status !== "Resolved") {
+    throw new Error("Report was not resolved.");
+  }
+  return response.data;
+}
+
+export async function cancelMaintenanceReport(
+  reportId: string,
+): Promise<MaintenanceReport> {
+  const response = await api.patch<MaintenanceReport>(
+    `/maintenance/${encodeURIComponent(reportId)}/cancel`,
+  );
+  if (response.data.status !== "Cancelled") {
+    throw new Error("Report was not cancelled.");
+  }
+  return response.data;
 }

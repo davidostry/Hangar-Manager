@@ -131,3 +131,14 @@ export async function updateAircraft(
 
   return response.data;
 }
+
+// ========================================
+// DELETE AIRCRAFT
+// ========================================
+
+export async function deleteAircraft(aircraftId: string): Promise<Aircraft> {
+  const response = await api.delete<Aircraft>(
+    `/aircraft/${encodeURIComponent(aircraftId)}`,
+  );
+  return response.data;
+}

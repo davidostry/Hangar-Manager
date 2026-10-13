@@ -85,3 +85,34 @@ export async function getUsers(): Promise<UserListItem[]> {
 
   return users.map(parseUser);
 }
+
+export interface NewUserRequest {
+  display_name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+}
+
+export async function createUser(data: NewUserRequest): Promise<UserListItem> {
+  const response = await api.post<unknown>("/users", data);
+  return parseUser(response.data);
+}
+
+export async function updateUserRole(
+  userId: string, role: UserRole,
+): Promise<UserListItem> {
+  const response = await api.patch<unknown>(
+    `/users/${encodeURIComponent(userId)}/role`, { role },
+  );
+  return parseUser(response.data);
+}
+
+export async function setUserActive(
+  userId: string, isActive: boolean,
+): Promise<UserListItem> {
+  const action = isActive ? "reactivate" : "deactivate";
+  const response = await api.patch<unknown>(
+    `/users/${encodeURIComponent(userId)}/${action}`,
+  );
+  return parseUser(response.data);
+}

@@ -12,6 +12,7 @@ export interface Inspection {
   status: InspectionStatus;
   completed_at: string | null;
   notes: string | null;
+  aircraft_tail_number?: string | null;
 }
 
 export interface InspectionCreateRequest {

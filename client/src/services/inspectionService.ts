@@ -141,6 +141,7 @@ export async function createInspection(
 export async function updateInspectionStatus(
   inspectionId: string,
   status: InspectionStatus,
+  completionNotes?: string,
 ): Promise<Inspection> {
 
   const encodedId = encodeURIComponent(inspectionId);
@@ -149,6 +150,7 @@ export async function updateInspectionStatus(
   if (status === "Completed") {
     const response = await api.patch<Inspection>(
       `/inspections/${encodedId}/complete`,
+      { notes: completionNotes?.trim() || "" },
     );
 
     return response.data;

@@ -21,6 +21,10 @@ export interface MaintenanceReport {
   reported_by: string;
   assigned_to: string | null;
   completed_at: string | null;
+  resolution_notes?: string | null;
+  reported_by_name?: string | null;
+  assigned_to_name?: string | null;
+  aircraft_tail_number?: string | null;
 }
 
 export interface MaintenanceReportListParams {

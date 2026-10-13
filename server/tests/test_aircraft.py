@@ -79,3 +79,38 @@ def test_aircraft_year_earlier_than_1903_is_invalid():
 def test_aircraft_empty_tail_number_is_invalid():
     with pytest.raises(ValidationError):
         create_data(tail_number="")
+
+
+class _DatabaseError(Exception):
+    def __init__(self, code):
+        self.code = code
+        super().__init__("mock database failure")
+
+
+def test_create_duplicate_aircraft_returns_409(monkeypatch):
+    from fastapi import HTTPException
+    from controllers import aircraft_controller as ctrl
+
+    monkeypatch.setattr(ctrl, "create_aircraft_service", Mock(side_effect=_DatabaseError("23505")))
+    with pytest.raises(HTTPException) as raised:
+        ctrl.create_aircraft_controller(create_data())
+    assert raised.value.status_code == 409
+    assert "serial number" in raised.value.detail
+
+
+def test_delete_aircraft_with_related_records_returns_409(monkeypatch):
+    from fastapi import HTTPException
+    from controllers import aircraft_controller as ctrl
+
+    monkeypatch.setattr(ctrl, "delete_aircraft_service", Mock(side_effect=_DatabaseError("23503")))
+    with pytest.raises(HTTPException) as raised:
+        ctrl.delete_aircraft_controller("aircraft-1")
+    assert raised.value.status_code == 409
+
+
+def test_unexpected_aircraft_error_does_not_get_masked(monkeypatch):
+    from controllers import aircraft_controller as ctrl
+
+    monkeypatch.setattr(ctrl, "create_aircraft_service", Mock(side_effect=RuntimeError("Unexpected failure")))
+    with pytest.raises(RuntimeError, match="Unexpected failure"):
+        ctrl.create_aircraft_controller(create_data())

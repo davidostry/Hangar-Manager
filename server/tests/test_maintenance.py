@@ -220,3 +220,17 @@ def test_cannot_cancel_already_closed_report(monkeypatch):
     with pytest.raises(ValueError, match="already closed"):
         svc.cancel_report_service("report-1")
     update.assert_not_called()
+
+
+def test_inactive_user_cannot_be_assigned(monkeypatch):
+    monkeypatch.setattr(svc, "get_report_by_id", Mock(return_value=report()))
+    monkeypatch.setattr(svc, "get_user_by_id", Mock(return_value={
+        "role": "technician", "is_active": False,
+    }))
+    update = Mock()
+    monkeypatch.setattr(svc, "update_report", update)
+    with pytest.raises(ValueError, match="inactive user"):
+        svc.assign_report_service("report-1", MaintenanceAssign(
+            assigned_to=UUID(TECH_ID),
+        ))
+    update.assert_not_called()

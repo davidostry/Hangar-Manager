@@ -1,9 +1,14 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { isAxiosError } from "axios";
 
 import { useAuth } from "../../context/AuthContext";
-import { getUsers } from "../../services/userService";
+import {
+  getUsers,
+  createUser,
+  updateUserRole,
+  setUserActive,
+} from "../../services/userService";
 
 import type { UserRole } from "../../types/auth";
 import type { UserListItem } from "../../types/users";
@@ -44,7 +49,14 @@ function getErrorMessage(error: unknown): string {
       return "You do not have permission to view users.";
     }
 
-    return `Failed to load users. HTTP ${error.response.status}.`;
+    const detail: unknown = error.response.data;
+    if (detail && typeof detail === "object" && "detail" in detail) {
+      if (typeof detail.detail === "string") return detail.detail;
+      if (Array.isArray(detail.detail)) {
+        return detail.detail.map((item: { msg?: string }) => item.msg || "Invalid input").join("; ");
+      }
+    }
+    return `Request failed. HTTP ${error.response.status}.`;
   }
 
   if (error instanceof Error) {
@@ -72,6 +84,15 @@ function UsersPage() {
     useState<StatusFilter>("all");
 
   const [retryCount, setRetryCount] = useState(0);
+  const [showCreate, setShowCreate] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newRole, setNewRole] = useState<UserRole>("technician");
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [actionError, setActionError] = useState("");
+  const [actionSuccess, setActionSuccess] = useState("");
 
   // ========================================
   // LOAD USERS
@@ -169,6 +190,66 @@ function UsersPage() {
     setRetryCount((current) => current + 1);
   }
 
+  async function handleCreate(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    setIsCreating(true);
+    setActionError("");
+    setActionSuccess("");
+    try {
+      await createUser({
+        display_name: newName.trim(),
+        email: newEmail.trim(),
+        password: newPassword,
+        role: newRole,
+      });
+      setNewName("");
+      setNewEmail("");
+      setNewPassword("");
+      setNewRole("technician");
+      setShowCreate(false);
+      setActionSuccess("User created successfully.");
+      handleRefresh();
+    } catch (cause: unknown) {
+      setActionError(getErrorMessage(cause));
+    } finally {
+      setIsCreating(false);
+    }
+  }
+
+  async function handleRoleChange(item: UserListItem, role: UserRole): Promise<void> {
+    if (role === item.role) return;
+    if (!window.confirm(`Change ${item.display_name}'s role to ${ROLE_LABELS[role]}?`)) return;
+    setSavingId(item.id);
+    setActionError("");
+    setActionSuccess("");
+    try {
+      await updateUserRole(item.id, role);
+      setActionSuccess(`Role updated for ${item.display_name}.`);
+      handleRefresh();
+    } catch (cause: unknown) {
+      setActionError(getErrorMessage(cause));
+    } finally {
+      setSavingId(null);
+    }
+  }
+
+  async function handleActiveChange(item: UserListItem): Promise<void> {
+    const activate = item.is_active === false;
+    if (!window.confirm(`${activate ? "Reactivate" : "Deactivate"} ${item.display_name}?`)) return;
+    setSavingId(item.id);
+    setActionError("");
+    setActionSuccess("");
+    try {
+      await setUserActive(item.id, activate);
+      setActionSuccess(`${item.display_name} ${activate ? "reactivated" : "deactivated"}.`);
+      handleRefresh();
+    } catch (cause: unknown) {
+      setActionError(getErrorMessage(cause));
+    } finally {
+      setSavingId(null);
+    }
+  }
+
   // ========================================
   // RENDER
   // ========================================
@@ -191,15 +272,42 @@ function UsersPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          className="users-button"
-          onClick={handleRefresh}
-          disabled={isLoading}
-        >
-          Refresh
-        </button>
+        <div>
+          {isAdmin && (
+            <button type="button" className="users-button" onClick={() => setShowCreate(!showCreate)}>
+              {showCreate ? "Close Form" : "+ Add User"}
+            </button>
+          )}{" "}
+          <button type="button" className="users-button" onClick={handleRefresh} disabled={isLoading}>
+            Refresh
+          </button>
+        </div>
       </div>
+
+      {isAdmin && showCreate && (
+        <form onSubmit={(event) => void handleCreate(event)} className="users-state">
+          <h2>Create User</h2>
+          <div className="users-toolbar">
+            <div className="users-filter"><label htmlFor="new-user-name">Name</label>
+              <input id="new-user-name" value={newName} onChange={(event) => setNewName(event.target.value)} required minLength={1} />
+            </div>
+            <div className="users-filter"><label htmlFor="new-user-email">Email</label>
+              <input id="new-user-email" type="email" value={newEmail} onChange={(event) => setNewEmail(event.target.value)} required />
+            </div>
+            <div className="users-filter"><label htmlFor="new-user-password">Password (8+ characters)</label>
+              <input id="new-user-password" type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} minLength={8} required autoComplete="new-password" />
+            </div>
+            <div className="users-filter"><label htmlFor="new-user-role">Role</label>
+              <select id="new-user-role" value={newRole} onChange={(event) => setNewRole(event.target.value as UserRole)}>
+                {Object.entries(ROLE_LABELS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+              </select>
+            </div>
+          </div>
+          <button type="submit" className="users-button" disabled={isCreating}>{isCreating ? "Creating..." : "Create User"}</button>
+        </form>
+      )}
+      {actionError && <div className="users-state users-state-error" role="alert">{actionError}</div>}
+      {actionSuccess && <div className="users-state" role="status">{actionSuccess}</div>}
 
       {/* Search and filters */}
       <div className="users-toolbar">
@@ -332,10 +440,11 @@ function UsersPage() {
 
                 <thead>
                   <tr>
-                    <th scope="col">Display Name</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Role</th>
                     <th scope="col">Status</th>
+                    {isAdmin && <th scope="col">Actions</th>}
                   </tr>
                 </thead>
 
@@ -373,6 +482,28 @@ function UsersPage() {
                         </span>
                       </td>
 
+                      {isAdmin && (
+                        <td>
+                          <label htmlFor={`role-${item.id}`} className="users-name">Change role</label>
+                          <select
+                            id={`role-${item.id}`}
+                            aria-label={`Change role for ${item.display_name}`}
+                            value={item.role}
+                            disabled={savingId !== null}
+                            onChange={(event) => void handleRoleChange(item, event.target.value as UserRole)}
+                          >
+                            {Object.entries(ROLE_LABELS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+                          </select>{" "}
+                          <button
+                            type="button"
+                            className="users-button"
+                            disabled={savingId !== null || item.id === user?.id}
+                            onClick={() => void handleActiveChange(item)}
+                          >
+                            {savingId === item.id ? "Saving..." : item.is_active === false ? "Reactivate" : "Deactivate"}
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -385,15 +516,6 @@ function UsersPage() {
             </p>
           </>
         )}
-
-      {/* Admin actions will be added after API approval */}
-      {isAdmin && (
-        <p className="users-admin-note">
-          User administration actions will become
-          available after the Backend endpoints
-          are finalized.
-        </p>
-      )}
 
     </section>
   );

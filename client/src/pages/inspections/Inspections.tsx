@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
+import { Link } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 import api from "../../services/api";
 import {
   getInspections,
@@ -103,6 +105,8 @@ function formatStatus(status: InspectionStatus): string {
 }
 
 function Inspections() {
+  const { user } = useAuth();
+  const canManageInspections = user?.role === "admin" || user?.role === "hangar_manager";
   const [inspections, setInspections] = useState<Inspection[]>([]);
   // Aircraft IDs are used internally; registration numbers are displayed.
   const [aircraftTailNumbers, setAircraftTailNumbers] =
@@ -228,11 +232,23 @@ function Inspections() {
     if (updatingInspectionId) {
       return;
     }
+    let completionNotes: string | undefined;
+    if (newStatus === "Completed") {
+      const input = window.prompt("Enter inspection completion notes (required):", "Inspection completed successfully.");
+      if (input === null) return;
+      completionNotes = input.trim();
+      if (!completionNotes) {
+        setActionError("Completion notes are required.");
+        return;
+      }
+    }
+    if (newStatus === "Cancelled" && !window.confirm("Cancel this inspection?")) return;
     setUpdatingInspectionId(inspection.id);
     setActionError("");
     setActionSuccess("");
     try {
-      await updateInspectionStatus(inspection.id, newStatus);
+      const updated = await updateInspectionStatus(inspection.id, newStatus, completionNotes);
+      if (updated.status !== newStatus) throw new Error("Inspection status was not updated.");
       setActionSuccess(
         newStatus === "Completed"
           ? "Inspection marked as completed."
@@ -258,6 +274,9 @@ function Inspections() {
             Monitor scheduled inspections and review their completion status.
           </p>
         </div>
+        {canManageInspections && (
+          <Link to="/app/inspections/new" className="inspection-button">+ Add Inspection</Link>
+        )}
       </div>
       <section
         className="inspections-toolbar"
@@ -411,7 +430,7 @@ function Inspections() {
                               "Aircraft registration unavailable"
                             }
                           >
-                            {aircraftTailNumbers[inspection.aircraft_id] ??
+                            {inspection.aircraft_tail_number || aircraftTailNumbers[inspection.aircraft_id] ||
                               (loadingAircraftNames
                                 ? "Loading aircraft..."
                                 : "Aircraft unavailable")}
@@ -451,7 +470,7 @@ function Inspections() {
                                   ? "Saving..."
                                   : "Complete"}
                               </button>
-                              <button
+                              {canManageInspections && <button
                                 type="button"
                                 className="inspection-action-cancel"
                                 disabled={Boolean(updatingInspectionId)}
@@ -463,7 +482,7 @@ function Inspections() {
                                 }
                               >
                                 Cancel
-                              </button>
+                              </button>}
                             </div>
                           ) : (
                             <span className="inspection-no-actions">
