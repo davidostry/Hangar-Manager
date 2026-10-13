@@ -1,0 +1,4 @@
+# Install alongside the existing runtime dependencies (server/requirements.txt).
+pytest>=8,<10
+pytest-cov>=6,<8
+httpx>=0.27,<1
