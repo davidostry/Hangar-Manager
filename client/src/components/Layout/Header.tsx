@@ -8,19 +8,39 @@ function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  // Determine who can access Users Management
+  const canViewUsers =
+    user?.role === "admin" ||
+    user?.role === "hangar_manager" ||
+    user?.role === "team_lead";
+
   function handleLogout(): void {
     logout();
     navigate("/login", { replace: true });
   }
 
+  function navLinkClass({
+    isActive,
+  }: {
+    isActive: boolean;
+  }): string {
+    return isActive
+      ? "nav-link active"
+      : "nav-link";
+  }
+
   return (
     <header className="app-header">
+
+      {/* ========================================
+          BRAND
+      ======================================== */}
+
       <NavLink
         to="/app/dashboard"
         className="app-brand"
         aria-label="HangarManager Dashboard"
       >
-        {/* HangarManager logo */}
         <span className="brand-icon brand-icon--logo">
           <BrandLogo />
         </span>
@@ -31,6 +51,10 @@ function Header() {
         </span>
       </NavLink>
 
+      {/* ========================================
+          MAIN NAVIGATION
+      ======================================== */}
+
       <nav
         className="main-navigation"
         aria-label="Main navigation"
@@ -38,43 +62,50 @@ function Header() {
         <NavLink
           to="/app/dashboard"
           end
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
+          className={navLinkClass}
         >
           Dashboard
         </NavLink>
 
         <NavLink
           to="/app/aircraft"
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
+          className={navLinkClass}
         >
           Aircraft
         </NavLink>
 
         <NavLink
           to="/app/maintenance"
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
+          className={navLinkClass}
         >
           Maintenance
         </NavLink>
 
         <NavLink
           to="/app/inspections"
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
+          className={navLinkClass}
         >
           Inspections
         </NavLink>
+
+        {/* Only authorized roles can view Users */}
+        {canViewUsers && (
+          <NavLink
+            to="/app/users"
+            className={navLinkClass}
+          >
+            Users
+          </NavLink>
+        )}
       </nav>
+
+      {/* ========================================
+          ACCOUNT INFORMATION
+      ======================================== */}
 
       <div className="header-account">
         <div className="account-information">
+
           <span className="account-name">
             {user?.display_name || user?.email}
           </span>
@@ -82,6 +113,7 @@ function Header() {
           <span className="account-role">
             {user?.role}
           </span>
+
         </div>
 
         <button
@@ -92,6 +124,7 @@ function Header() {
           Log out
         </button>
       </div>
+
     </header>
   );
 }
