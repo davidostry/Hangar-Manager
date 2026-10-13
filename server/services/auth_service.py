@@ -50,6 +50,9 @@ def login_service(data: LoginRequest):
     if not verify_password(data.password, user["password_hash"]):
         raise ValueError("Invalid email or password")
 
+    if not user.get("is_active", False):
+        raise ValueError("Account inactive")
+
     token = create_access_token(
         str(user["id"]),
         user["role"]
