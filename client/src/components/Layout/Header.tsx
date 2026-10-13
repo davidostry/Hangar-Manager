@@ -1,6 +1,8 @@
+
 import { NavLink, useNavigate } from "react-router";
 
 import { useAuth } from "../../context/AuthContext";
+import BrandLogo from "../BrandLogo";
 
 function Header() {
   const { user, logout } = useAuth();
@@ -18,7 +20,10 @@ function Header() {
         className="app-brand"
         aria-label="HangarManager Dashboard"
       >
-        <span className="brand-icon">H</span>
+        {/* HangarManager logo */}
+        <span className="brand-icon brand-icon--logo">
+          <BrandLogo />
+        </span>
 
         <span className="brand-text">
           <strong>HangarManager</strong>

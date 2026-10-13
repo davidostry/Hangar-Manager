@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 
@@ -5,6 +6,8 @@ import { isAxiosError } from "axios";
 import { useNavigate } from "react-router";
 
 import { useAuth } from "../context/AuthContext";
+import BrandLogo from "../components/BrandLogo";
+
 import "../components/Layout/layout.css";
 
 function getLoginErrorMessage(error: unknown): string {
@@ -105,7 +108,9 @@ function Login() {
     return (
       <main className="login-page">
         <section className="login-panel" role="status">
-          <div className="login-brand-icon">H</div>
+          <div className="login-brand-icon login-brand-icon--logo">
+            <BrandLogo />
+          </div>
 
           <h1>HangarManager</h1>
 
@@ -122,13 +127,19 @@ function Login() {
   return (
     <main className="login-page">
       <section className="login-panel">
-        <div className="login-brand-icon">H</div>
+
+        <div className="login-brand-icon login-brand-icon--logo">
+          <BrandLogo />
+        </div>
 
         <h1>HangarManager</h1>
 
         <p>Sign in to manage your aircraft fleet.</p>
 
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form
+          className="login-form"
+          onSubmit={handleSubmit}
+        >
           <div className="form-field">
             <label htmlFor="email">Email</label>
 
@@ -138,7 +149,9 @@ function Login() {
               type="email"
               autoComplete="username"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) =>
+                setEmail(event.target.value)
+              }
               placeholder="Enter your email"
               required
               disabled={isSubmitting}
@@ -154,7 +167,9 @@ function Login() {
               type="password"
               autoComplete="current-password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) =>
+                setPassword(event.target.value)
+              }
               placeholder="Enter your password"
               required
               disabled={isSubmitting}
@@ -162,7 +177,10 @@ function Login() {
           </div>
 
           {errorMessage && (
-            <div className="login-error" role="alert">
+            <div
+              className="login-error"
+              role="alert"
+            >
               {errorMessage}
             </div>
           )}
@@ -172,7 +190,9 @@ function Login() {
             className="login-submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Signing in..." : "Sign in"}
+            {isSubmitting
+              ? "Signing in..."
+              : "Sign in"}
           </button>
         </form>
 
