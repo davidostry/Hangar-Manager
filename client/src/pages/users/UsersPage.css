@@ -1,0 +1,231 @@
+
+/* ========================================
+   USERS PAGE
+======================================== */
+
+.users-page {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+}
+
+.users-page-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+/* ========================================
+   BUTTONS
+======================================== */
+
+.users-button {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #163b60;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.users-button:hover:not(:disabled) {
+  background: #245985;
+}
+
+.users-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   SEARCH AND FILTERS
+======================================== */
+
+.users-toolbar {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.users-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 170px;
+  flex: 1;
+}
+
+.users-filter:first-child {
+  flex: 2;
+  min-width: 230px;
+}
+
+.users-filter label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.users-filter input,
+.users-filter select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #172b45;
+  font-size: 14px;
+}
+
+.users-filter input:focus,
+.users-filter select:focus {
+  outline: 2px solid #67c4e7;
+  outline-offset: 1px;
+}
+
+/* ========================================
+   TABLE
+======================================== */
+
+.users-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #dbe3ec;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: #172b45;
+}
+
+.users-table th,
+.users-table td {
+  padding: 16px 18px;
+  text-align: left;
+  border-bottom: 1px solid #e8edf3;
+  font-size: 14px;
+}
+
+.users-table th {
+  background: #f3f7fb;
+  color: #52647c;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.users-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.users-table tbody tr:hover {
+  background: #f7fafc;
+}
+
+.users-name {
+  font-weight: 600;
+}
+
+/* ========================================
+   BADGES
+======================================== */
+
+.users-role-badge,
+.users-status-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.users-role-badge {
+  background: #e8f1fa;
+  color: #204f7c;
+}
+
+.users-status-badge.is-active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.users-status-badge.is-inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.users-status-badge.is-unknown {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* ========================================
+   LOADING, ERROR AND EMPTY STATES
+======================================== */
+
+.users-state {
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px solid #dbe3ec;
+  border-radius: 12px;
+}
+
+.users-state h2 {
+  margin-bottom: 12px;
+}
+
+.users-state-error {
+  color: #991b1b;
+}
+
+.users-state-error button {
+  margin-top: 16px;
+}
+
+.users-results {
+  margin-top: 16px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.users-admin-note {
+  margin-top: 20px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+  .users-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .users-filter,
+  .users-filter:first-child {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 12px;
+    font-size: 13px;
+  }
+}

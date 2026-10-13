@@ -23,11 +23,26 @@ import MaintenanceReportDetails from "../pages/maintenance/MaintenanceReportDeta
 import Inspections from "../pages/inspections/Inspections";
 import InspectionForm from "../pages/inspections/InspectionForm";
 
+// Users Management
+import UsersPage from "../pages/users/UsersPage";
+
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
+
+        {/* ========================================
+            PUBLIC ROUTES
+        ======================================== */}
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        {/* ========================================
+            PROTECTED APP
+        ======================================== */}
 
         <Route
           path="/app"
@@ -37,17 +52,26 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         >
+
           <Route
             index
             element={
-              <Navigate to="/app/dashboard" replace />
+              <Navigate
+                to="/app/dashboard"
+                replace
+              />
             }
           />
 
+          {/* Dashboard */}
           <Route
             path="dashboard"
             element={<Dashboard />}
           />
+
+          {/* ========================================
+              AIRCRAFT
+          ======================================== */}
 
           <Route
             path="aircraft"
@@ -77,6 +101,10 @@ function AppRoutes() {
             element={<AircraftDetails />}
           />
 
+          {/* ========================================
+              MAINTENANCE
+          ======================================== */}
+
           <Route
             path="maintenance"
             element={<MaintenanceReports />}
@@ -92,6 +120,10 @@ function AppRoutes() {
             element={<MaintenanceReportDetails />}
           />
 
+          {/* ========================================
+              INSPECTIONS
+          ======================================== */}
+
           <Route
             path="inspections"
             element={<Inspections />}
@@ -101,21 +133,52 @@ function AppRoutes() {
             path="inspections/new"
             element={<InspectionForm />}
           />
+
+          {/* ========================================
+              USERS MANAGEMENT
+          ======================================== */}
+
+          <Route
+            path="users"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  "admin",
+                  "hangar_manager",
+                  "team_lead",
+                ]}
+              >
+                <UsersPage />
+              </ProtectedRoute>
+            }
+          />
+
         </Route>
+
+        {/* ========================================
+            REDIRECTS
+        ======================================== */}
 
         <Route
           path="/"
           element={
-            <Navigate to="/app/dashboard" replace />
+            <Navigate
+              to="/app/dashboard"
+              replace
+            />
           }
         />
 
         <Route
           path="*"
           element={
-            <Navigate to="/app/dashboard" replace />
+            <Navigate
+              to="/app/dashboard"
+              replace
+            />
           }
         />
+
       </Routes>
     </BrowserRouter>
   );
