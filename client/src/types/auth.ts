@@ -1,4 +1,17 @@
-export type UserRole = "admin" | "technician";
+
+ // ========================================
+ // USER ROLES
+ // ========================================
+
+export type UserRole =
+  | "admin"
+  | "hangar_manager"
+  | "team_lead"
+  | "technician";
+
+// ========================================
+// AUTHENTICATED USER
+// ========================================
 
 export interface AuthUser {
   id: string;
@@ -7,10 +20,18 @@ export interface AuthUser {
   role: UserRole;
 }
 
+// ========================================
+// LOGIN REQUEST
+// ========================================
+
 export interface LoginRequest {
   email: string;
   password: string;
 }
+
+// ========================================
+ // LOGIN RESPONSE
+ // ========================================
 
 export interface LoginResponse {
   access_token: string;

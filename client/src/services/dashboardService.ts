@@ -1,31 +1,62 @@
+
 import api from "./api";
 
 import type { DashboardSummary } from "../types/dashboard";
 
-const USE_MOCK_DATA =
-  import.meta.env.DEV &&
-  import.meta.env.VITE_USE_MOCK_DATA === "true";
+// ========================================
+// BACKEND RESPONSE TYPE
+// ========================================
 
-const MOCK_DASHBOARD_SUMMARY: DashboardSummary = {
-  total_aircraft: 24,
-  aircraft_by_status: {
-    Available: 16,
-    Maintenance: 4,
-    Inspection: 2,
-    Grounded: 2,
-  },
-  open_maintenance_reports: 7,
-  overdue_inspections: 3,
-};
+// Defines the response structure returned by FastAPI
+interface DashboardApiResponse {
+  aircraft: {
+    total: number;
+    by_status: DashboardSummary["aircraft_by_status"];
+  };
+
+  maintenance: {
+    total: number;
+    active: number;
+    critical_active: number;
+    by_status: {
+      Open: number;
+      InProgress: number;
+      Resolved: number;
+      Cancelled: number;
+    };
+  };
+
+  inspections: {
+    total: number;
+    scheduled: number;
+    completed: number;
+    cancelled: number;
+    overdue: number;
+    upcoming_30_days: number;
+  };
+}
+
+// ========================================
+// GET DASHBOARD SUMMARY
+// ========================================
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
-  if (USE_MOCK_DATA) {
-    return { ...MOCK_DASHBOARD_SUMMARY };
-  }
 
-  const response = await api.get<DashboardSummary>(
+  // Fetch dashboard statistics from the Backend
+  const response = await api.get<DashboardApiResponse>(
     "/dashboard/summary",
   );
 
-  return response.data;
+  const { aircraft, maintenance, inspections } = response.data;
+
+  // Convert the Backend response to the Frontend format
+  return {
+    total_aircraft: aircraft.total,
+
+    aircraft_by_status: aircraft.by_status,
+
+    open_maintenance_reports: maintenance.active,
+
+    overdue_inspections: inspections.overdue,
+  };
 }
