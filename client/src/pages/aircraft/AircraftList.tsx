@@ -91,9 +91,15 @@ function AircraftList() {
         if (!isActive) {
           return;
         }
-
-        setAircraft(result.items);
-        setTotal(result.total);
+        if (Array.isArray(result)) {
+          setAircraft(result);
+          setTotal(result.length);
+        } else if (result && Array.isArray(result.items)) {
+          setAircraft(result.items);
+          setTotal(result.total);
+        } else {
+          throw new Error("Invalid aircraft response");
+        }
       } catch (error: unknown) {
         if (!isActive) {
           return;
