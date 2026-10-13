@@ -1,459 +1,432 @@
-/*
- * HangarManager — Aircraft Form
- * Destination: client/src/pages/aircraft/AircraftFormPage.css
- * Designed to match the current AircraftFormPage.tsx class names.
- */
+/* ========================================================
+   HANGARMANAGER / AIRCRAFT FORM — PREMIUM AVIATION UI
+   Scoped to this page so shared layout & forms are safe.
+   ======================================================== */
 
-.aircraft-form-page {
-  position: relative;
+.hm-aircraft-form-page {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 24px;
   min-width: 0;
-  color: #172d47;
-  animation: hm-aircraft-form-page-enter 620ms cubic-bezier(0.2, 0.72, 0.28, 1) both;
+  width: 100%;
+  color: #183453;
+  animation: hm-form-enter 440ms ease both;
 }
 
-.aircraft-form-page .aircraft-form-back-link {
+/* Back navigation */
+.hm-aircraft-form-page .hm-aircraft-form-back {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  width: fit-content;
-  padding: 8px 0;
-  color: #1768b8;
-  font-size: 0.9rem;
+  gap: 10px;
+  align-self: flex-start;
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid #d2e3f3;
+  border-radius: 12px;
+  color: #185d9e;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: 0 5px 14px rgba(23, 70, 110, .05);
+  font-size: .86rem;
   font-weight: 800;
-  text-decoration: none;
-  transition: color 180ms ease, gap 180ms ease;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
 }
 
-.aircraft-form-page .aircraft-form-back-link::before {
-  content: "←";
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #d3e7fa;
-  border-radius: 10px;
-  color: #147dbb;
-  background: linear-gradient(145deg, #fff, #edf7ff);
-  box-shadow: 0 3px 8px rgba(28, 91, 146, 0.06);
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-}
-
-.aircraft-form-page .aircraft-form-back-link:hover {
-  gap: 13px;
-  color: #087f91;
-}
-
-.aircraft-form-page .aircraft-form-back-link:hover::before {
+.hm-aircraft-form-page .hm-aircraft-form-back:hover {
   transform: translateX(-3px);
-  border-color: #8adce5;
-  background: #e8fbfd;
+  border-color: #a5d4f4;
+  color: #087e99;
+  background: #fff;
 }
 
-/* Page heading */
-.aircraft-form-page .page-heading {
-  position: relative;
-  margin: 0;
-  padding: 4px 0 2px;
-}
-
-.aircraft-form-page .page-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0 0 10px;
-  color: #078da4;
-  font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.aircraft-form-page .page-eyebrow::before {
-  content: "";
-  width: 25px;
-  height: 3px;
-  border-radius: 99px;
-  background: linear-gradient(90deg, #2379ed, #19c2ce);
-  box-shadow: 0 0 13px rgba(25, 194, 206, 0.27);
-  transform-origin: left center;
-  animation: hm-aircraft-form-line 560ms 120ms both;
-}
-
-.aircraft-form-page .page-heading h1 {
-  margin: 0;
-  color: #102a47;
-  font-size: clamp(2rem, 4vw, 3.15rem);
-  font-weight: 950;
-  line-height: 1.08;
-  letter-spacing: -0.06em;
-  text-wrap: balance;
-}
-
-.aircraft-form-page .page-description {
-  max-width: 660px;
-  margin: 11px 0 0;
-  color: #637a93;
-  font-size: 1.02rem;
-  line-height: 1.7;
-}
-
-/* Form surface */
-.aircraft-form-card {
+/* Aviation hero */
+.hm-aircraft-form-hero {
   position: relative;
   isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 244px;
   overflow: hidden;
-  width: 100%;
-  max-width: 1000px;
-  padding: clamp(22px, 3.4vw, 36px);
-  border: 1px solid #d7e6f3;
-  border-radius: 23px;
+  padding: clamp(27px, 4vw, 45px);
+  border: 1px solid rgba(65, 157, 222, .24);
+  border-radius: 25px;
   background:
-    radial-gradient(ellipse at 100% 0%, rgba(33, 151, 221, 0.075), transparent 40%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.99), rgba(247, 251, 255, 0.98));
-  box-shadow: 0 18px 44px rgba(17, 56, 91, 0.085), 0 3px 9px rgba(17, 56, 91, 0.035), inset 0 1px 0 #fff;
-  animation: hm-aircraft-form-card-enter 720ms 90ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+    radial-gradient(circle at 93% 8%, rgba(31, 185, 226, .22), transparent 37%),
+    linear-gradient(112deg, #08192e 0%, #102c4d 63%, #165578 100%);
+  box-shadow: 0 21px 44px rgba(11, 37, 67, .17);
+  color: #fff;
 }
 
-.aircraft-form-card::before {
+.hm-aircraft-form-hero::before {
   content: "";
   position: absolute;
-  z-index: -1;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #216fe6 0%, #18b9c9 42%, #8572f1 72%, #216fe6 100%);
-  background-size: 220% 100%;
-  animation: hm-aircraft-form-topline 7s linear infinite;
-}
-
-.aircraft-form-card::after {
-  content: "AIRCRAFT REGISTRATION";
-  position: absolute;
-  top: 16px;
-  right: 22px;
-  color: rgba(30, 97, 153, 0.42);
-  font-size: 0.62rem;
-  font-weight: 900;
-  letter-spacing: 0.13em;
+  right: -70px;
+  top: -200px;
+  width: 445px;
+  height: 445px;
+  border: 1px solid rgba(108, 222, 255, .16);
+  border-radius: 50%;
+  box-shadow: 0 0 0 50px rgba(123, 204, 255, .025), 0 0 0 100px rgba(123, 204, 255, .018);
   pointer-events: none;
 }
 
-.aircraft-form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 23px 20px;
-  padding-top: 10px;
+.hm-aircraft-form-hero::after {
+  content: "";
+  position: absolute;
+  left: clamp(27px, 4vw, 45px);
+  bottom: 0;
+  width: 155px;
+  height: 4px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #359fff, #1cdbd2);
 }
 
-.aircraft-form-field {
+.hm-aircraft-form-hero-content { position: relative; z-index: 1; min-width: 0; max-width: 690px; }
+.hm-aircraft-form-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #86e3eb;
+  font-size: .74rem;
+  font-weight: 850;
+  letter-spacing: .135em;
+}
+.hm-aircraft-form-pulse {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: #30e4d2;
+  box-shadow: 0 0 0 5px rgba(48, 228, 210, .13);
+}
+.hm-aircraft-form-kicker {
+  margin: 26px 0 9px;
+  color: #9cb9d5;
+  font-size: .73rem;
+  font-weight: 850;
+  letter-spacing: .16em;
+}
+.hm-aircraft-form-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 850;
+  letter-spacing: -.06em;
+  line-height: 1.08;
+}
+.hm-aircraft-form-hero-description {
+  max-width: 620px;
+  margin: 16px 0 0;
+  color: #c0d5e8;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.hm-aircraft-form-hero-mark {
+  position: absolute;
+  z-index: 0;
+  right: 8%;
+  top: 14%;
+  transform: rotate(-17deg);
+  color: rgba(139, 212, 249, .14);
+  pointer-events: none;
+}
+.hm-aircraft-form-mode {
   position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 10px 13px;
+  border: 1px solid rgba(91, 230, 211, .26);
+  border-radius: 999px;
+  color: #9af1e1;
+  background: rgba(28, 192, 174, .11);
+  font-size: .73rem;
+  font-weight: 850;
+  letter-spacing: .06em;
+}
+
+/* Form sections */
+.hm-aircraft-form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  width: 100%;
   min-width: 0;
-  gap: 9px;
-  animation: hm-aircraft-form-field-enter 480ms both;
 }
-
-.aircraft-form-field:nth-child(1) { animation-delay: 120ms; }
-.aircraft-form-field:nth-child(2) { animation-delay: 170ms; }
-.aircraft-form-field:nth-child(3) { animation-delay: 220ms; }
-.aircraft-form-field:nth-child(4) { animation-delay: 270ms; }
-.aircraft-form-field:nth-child(5) { animation-delay: 320ms; }
-
-.aircraft-form-field label {
-  color: #304f6d;
-  font-size: 0.83rem;
+.hm-aircraft-form-panel {
+  min-width: 0;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid #d9e5f1;
+  border-radius: 23px;
+  background: linear-gradient(145deg, #fff 0%, #fbfdff 100%);
+  box-shadow: 0 12px 32px rgba(18, 55, 90, .07);
+}
+.hm-aircraft-form-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin-bottom: 27px;
+  padding-bottom: 23px;
+  border-bottom: 1px solid #e3edf6;
+}
+.hm-aircraft-form-section-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border: 1px solid #cce4fb;
+  border-radius: 17px;
+  color: #1c75cf;
+  background: linear-gradient(145deg, #e5f3ff, #eff8ff);
+}
+.hm-aircraft-form-section-icon--teal {
+  color: #087e8e;
+  border-color: #c3e9e8;
+  background: #eaf9f8;
+}
+.hm-aircraft-form-heading-text { flex: 1; min-width: 0; }
+.hm-aircraft-form-section-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  color: #098ca4;
+  font-size: .67rem;
   font-weight: 850;
-  letter-spacing: 0.005em;
-  transition: color 180ms ease;
+  letter-spacing: .14em;
+}
+.hm-aircraft-form-panel-heading h2 {
+  margin: 0;
+  color: #102c4b;
+  font-size: clamp(1.3rem, 2.15vw, 1.65rem);
+  font-weight: 850;
+  letter-spacing: -.042em;
+  line-height: 1.2;
+}
+.hm-aircraft-form-panel-heading p {
+  margin: 7px 0 0;
+  color: #71879e;
+  font-size: .88rem;
+  line-height: 1.5;
+}
+.hm-aircraft-form-section-count {
+  color: #a2b9d0;
+  font-size: .77rem;
+  font-weight: 850;
+  letter-spacing: .1em;
+  white-space: nowrap;
 }
 
-.aircraft-form-field input {
+/* Form inputs */
+.hm-aircraft-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+  row-gap: 27px;
+}
+.hm-aircraft-form-field { min-width: 0; }
+.hm-aircraft-form-page .hm-aircraft-form-field label {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0 0 10px;
+  color: #304c68;
+  font-size: .86rem;
+  font-weight: 800;
+}
+.hm-aircraft-form-field label svg { color: #2887d7; }
+.hm-aircraft-form-field label span { color: #d64865; }
+.hm-aircraft-form-page .hm-aircraft-form-field input {
   display: block;
   width: 100%;
   min-width: 0;
-  min-height: 49px;
-  padding: 12px 14px;
-  border: 1px solid #d0dfec;
+  min-height: 52px;
+  padding: 13px 16px;
+  border: 1px solid #cfdfef;
   border-radius: 12px;
   outline: none;
-  color: #163653;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: inset 0 1px 2px rgba(15, 49, 82, 0.025), 0 2px 5px rgba(15, 49, 82, 0.015);
-  font: inherit;
-  font-size: 0.94rem;
-  transition: border-color 190ms ease, box-shadow 190ms ease, background 190ms ease, transform 190ms ease;
-}
-
-.aircraft-form-field input:hover:not(:disabled) {
-  border-color: #a9cbe9;
+  color: #153857;
   background: #fff;
+  font-size: .96rem;
+  box-shadow: 0 2px 7px rgba(14, 55, 92, .028);
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
-
-.aircraft-form-field input:focus {
-  transform: translateY(-1px);
-  border-color: #2793eb;
+.hm-aircraft-form-page .hm-aircraft-form-field input::placeholder { color: #9cacc0; }
+.hm-aircraft-form-page .hm-aircraft-form-field input:hover:not(:disabled) { border-color: #a5cbe9; }
+.hm-aircraft-form-page .hm-aircraft-form-field input:focus {
+  border-color: #268be6;
   background: #fff;
-  box-shadow: 0 0 0 4px rgba(39, 147, 235, 0.12), 0 7px 17px rgba(24, 107, 179, 0.075);
+  box-shadow: 0 0 0 4px rgba(38, 139, 230, .12), 0 6px 18px rgba(30, 108, 173, .08);
 }
-
-.aircraft-form-field:focus-within label {
-  color: #087f9a;
-}
-
-.aircraft-form-field input:disabled {
+.hm-aircraft-form-page .hm-aircraft-form-field input:disabled {
   cursor: not-allowed;
-  color: #8294a7;
-  background: #f1f5f9;
+  background: #f1f5fa;
+  color: #7c8fa4;
 }
-
-.aircraft-form-field input::placeholder {
-  color: #9cabb9;
+.hm-aircraft-form-field small {
+  display: block;
+  margin-top: 9px;
+  color: #8497ac;
+  font-size: .76rem;
+  line-height: 1.55;
 }
-
-.aircraft-form-error {
+.hm-aircraft-form-manufacturing {
+  display: grid;
+  grid-template-columns: minmax(220px, .75fr) minmax(0, 1.25fr);
+  gap: 26px;
+  align-items: center;
+}
+.hm-aircraft-form-note {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-top: 22px;
-  padding: 14px 16px;
-  border: 1px solid #f0c3ca;
-  border-radius: 12px;
-  color: #a42e43;
-  background: linear-gradient(100deg, #fff2f4, #fff8f8);
-  box-shadow: 0 5px 15px rgba(181, 46, 69, 0.045);
-  font-size: 0.88rem;
-  line-height: 1.6;
-  animation: hm-aircraft-form-alert 280ms ease both;
+  gap: 13px;
+  padding: 19px 20px;
+  border: 1px solid #d2e5f5;
+  border-radius: 15px;
+  background: #f0f8ff;
+  color: #266ba6;
+}
+.hm-aircraft-form-note > svg { flex: none; margin-top: 2px; }
+.hm-aircraft-form-note strong { font-size: .84rem; font-weight: 850; }
+.hm-aircraft-form-note p {
+  margin: 7px 0 0;
+  color: #55748e;
+  font-size: .79rem;
+  line-height: 1.7;
 }
 
-.aircraft-form-error::before {
-  content: "!";
-  display: grid;
-  place-items: center;
-  flex: 0 0 21px;
-  width: 21px;
-  height: 21px;
-  margin-top: 1px;
-  border-radius: 50%;
-  color: #fff;
-  background: #d8485d;
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
-.aircraft-form-actions {
+/* Errors and actions */
+.hm-aircraft-form-error {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 30px;
-  padding-top: 22px;
-  border-top: 1px solid #e2ebf4;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 15px 18px;
+  border: 1px solid #f1c6ce;
+  border-radius: 13px;
+  color: #a12d45;
+  background: #fff0f3;
+  font-size: .89rem;
+  font-weight: 650;
 }
-
-.aircraft-form-button {
-  position: relative;
+.hm-aircraft-form-error svg { flex: none; }
+.hm-aircraft-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 8px 0 25px;
+}
+.hm-aircraft-form-actions-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #71889e;
+  font-size: .83rem;
+  font-weight: 700;
+}
+.hm-aircraft-form-actions-note svg { color: #0c9e90; }
+.hm-aircraft-form-action-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+.hm-aircraft-form-page .hm-aircraft-form-cancel,
+.hm-aircraft-form-page button.hm-aircraft-form-submit,
+.hm-aircraft-form-page button.hm-aircraft-form-retry {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  min-width: 145px;
-  min-height: 46px;
-  overflow: hidden;
-  padding: 11px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 22px;
   border-radius: 12px;
-  color: #fff;
-  background: linear-gradient(110deg, #1769d1 0%, #237fee 48%, #078da6 100%);
-  background-size: 180% 100%;
-  box-shadow: 0 8px 18px rgba(27, 111, 209, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  font: inherit;
-  font-size: 0.88rem;
+  font-size: .88rem;
   font-weight: 850;
   text-decoration: none;
-  cursor: pointer;
-  transition: background-position 300ms ease, transform 190ms ease, box-shadow 190ms ease, filter 190ms ease;
+  transition: transform 190ms ease, box-shadow 190ms ease, border-color 190ms ease, background 190ms ease;
 }
-
-.aircraft-form-button:not(.aircraft-form-button-secondary)::after {
-  content: "";
-  position: absolute;
-  top: -60%;
-  bottom: -60%;
-  left: -45%;
-  width: 28%;
-  transform: rotate(20deg);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.24), transparent);
-  transition: left 460ms ease;
-  pointer-events: none;
+.hm-aircraft-form-page .hm-aircraft-form-cancel {
+  border: 1px solid #cfdfec;
+  color: #45627d;
+  background: #fff;
 }
-
-.aircraft-form-button:not(.aircraft-form-button-secondary):hover:not(:disabled) {
+.hm-aircraft-form-page .hm-aircraft-form-cancel:hover {
   transform: translateY(-2px);
-  background-position: 100% 50%;
-  box-shadow: 0 12px 24px rgba(27, 111, 209, 0.26), 0 0 0 3px rgba(18, 198, 215, 0.1);
-  filter: saturate(1.1);
+  color: #1c5c95;
+  border-color: #9dc9ee;
+  background: #f2f9ff;
 }
-
-.aircraft-form-button:not(.aircraft-form-button-secondary):hover:not(:disabled)::after {
-  left: 130%;
+.hm-aircraft-form-page button.hm-aircraft-form-submit,
+.hm-aircraft-form-page button.hm-aircraft-form-retry {
+  border: 1px solid rgba(37, 119, 209, .25);
+  color: #fff;
+  background: linear-gradient(112deg, #1768d2, #228de8 65%, #1197ae);
+  box-shadow: 0 9px 19px rgba(22, 112, 211, .2);
 }
-
-.aircraft-form-button:active:not(:disabled) {
-  transform: translateY(0) scale(0.985);
+.hm-aircraft-form-page button.hm-aircraft-form-submit:hover:not(:disabled),
+.hm-aircraft-form-page button.hm-aircraft-form-retry:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 13px 24px rgba(22, 112, 211, .27);
 }
+.hm-aircraft-form-page button.hm-aircraft-form-submit:disabled { opacity: .7; cursor: wait; }
+.hm-aircraft-form-page .hm-aircraft-form-back:focus-visible,
+.hm-aircraft-form-page .hm-aircraft-form-cancel:focus-visible,
+.hm-aircraft-form-page button:focus-visible { outline: 3px solid #41c3dd; outline-offset: 3px; }
 
-.aircraft-form-button:focus-visible {
-  outline: 3px solid rgba(25, 166, 209, 0.36);
-  outline-offset: 3px;
-}
-
-.aircraft-form-button:disabled {
-  opacity: 0.68;
-  cursor: wait;
-  box-shadow: none;
-}
-
-.aircraft-form-button-secondary {
-  border-color: #d5e3f0;
-  color: #526b83;
-  background: linear-gradient(180deg, #fff, #f3f7fb);
-  box-shadow: 0 3px 8px rgba(15, 49, 82, 0.04);
-}
-
-.aircraft-form-button-secondary:hover {
-  transform: translateY(-1px);
-  border-color: #b5d5ee;
-  color: #185d99;
-  background: #eef7ff;
-  box-shadow: 0 6px 13px rgba(31, 95, 150, 0.08);
-}
-
-/* Loading, not-found and retry states from the same component */
-.aircraft-form-state {
+/* Fetch and error states */
+.hm-aircraft-form-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  min-height: 210px;
-  padding: 32px 22px;
-  border: 1px solid #d9e7f3;
-  border-radius: 20px;
-  color: #637a93;
-  background: linear-gradient(145deg, #fff, #f4f9fe);
-  box-shadow: 0 12px 28px rgba(17, 56, 91, 0.06);
+  gap: 15px;
+  min-height: 260px;
+  padding: 35px;
+  border: 1px solid #d8e6f2;
+  border-radius: 21px;
+  color: #667f97;
+  background: #fff;
+  box-shadow: 0 15px 33px rgba(18, 55, 90, .07);
   text-align: center;
-  animation: hm-aircraft-form-card-enter 500ms ease both;
 }
+.hm-aircraft-form-state h1 { margin: 0; color: #163657; font-size: 1.6rem; }
+.hm-aircraft-form-state p { margin: 0; line-height: 1.7; }
+.hm-aircraft-form-state > svg:not(.hm-aircraft-form-spinner) { color: #db536c; }
+.hm-aircraft-form-spinner { animation: hm-form-spin 850ms linear infinite; }
+@keyframes hm-form-spin { to { transform: rotate(360deg); } }
+@keyframes hm-form-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
 
-.aircraft-form-state h1 {
-  margin: 0;
-  color: #193b5b;
-  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-  font-weight: 900;
-  letter-spacing: -0.035em;
+/* Responsive refinements */
+@media (max-width: 900px) {
+  .hm-aircraft-form-manufacturing { grid-template-columns: 1fr; gap: 20px; }
 }
-
-.aircraft-form-state p {
-  max-width: 560px;
-  margin: 0;
-  color: #657d94;
-  line-height: 1.65;
+@media (max-width: 720px) {
+  .hm-aircraft-form-page { gap: 18px; }
+  .hm-aircraft-form-hero { padding: 29px 23px 33px; min-height: 240px; border-radius: 20px; }
+  .hm-aircraft-form-hero::after { left: 23px; }
+  .hm-aircraft-form-hero h1 { font-size: clamp(2.3rem, 9vw, 3.2rem); }
+  .hm-aircraft-form-hero-mark { right: -30px; top: 38px; }
+  .hm-aircraft-form-mode { position: absolute; right: 18px; bottom: 14px; }
+  .hm-aircraft-form-hero-description { padding-bottom: 26px; }
+  .hm-aircraft-form-grid { grid-template-columns: 1fr; gap: 23px; }
+  .hm-aircraft-form-panel { padding: 21px 18px; border-radius: 18px; }
+  .hm-aircraft-form-section-count { display: none; }
+  .hm-aircraft-form-panel-heading { gap: 12px; margin-bottom: 20px; padding-bottom: 19px; }
+  .hm-aircraft-form-section-icon { width: 46px; height: 46px; border-radius: 13px; }
+  .hm-aircraft-form-actions { align-items: stretch; flex-direction: column; }
+  .hm-aircraft-form-action-buttons { width: 100%; }
+  .hm-aircraft-form-action-buttons > * { flex: 1 1 150px; }
 }
-
-.aircraft-form-state-error {
-  border-color: #efc7ce;
-  background: linear-gradient(145deg, #fff, #fff4f5);
+@media (max-width: 420px) {
+  .hm-aircraft-form-eyebrow { font-size: .63rem; letter-spacing: .065em; }
+  .hm-aircraft-form-action-buttons { flex-direction: column-reverse; }
+  .hm-aircraft-form-action-buttons > * { width: 100%; }
 }
-
-.aircraft-form-state-error h1 {
-  color: #9f2c42;
-}
-
-/* Motion */
-@keyframes hm-aircraft-form-page-enter {
-  from { opacity: 0; transform: translateY(9px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes hm-aircraft-form-card-enter {
-  from { opacity: 0; transform: translateY(13px) scale(0.995); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes hm-aircraft-form-field-enter {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes hm-aircraft-form-line {
-  from { transform: scaleX(0); opacity: 0.3; }
-  to { transform: scaleX(1); opacity: 1; }
-}
-
-@keyframes hm-aircraft-form-topline {
-  from { background-position: 100% 50%; }
-  to { background-position: -120% 50%; }
-}
-
-@keyframes hm-aircraft-form-alert {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 700px) {
-  .aircraft-form-page {
-    gap: 17px;
-  }
-
-  .aircraft-form-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
-  }
-
-  .aircraft-form-card {
-    padding: 25px 18px 20px;
-    border-radius: 18px;
-  }
-
-  .aircraft-form-card::after {
-    top: 12px;
-    right: 17px;
-    font-size: 0.55rem;
-  }
-
-  .aircraft-form-actions {
-    flex-direction: column-reverse;
-    align-items: stretch;
-  }
-
-  .aircraft-form-button {
-    width: 100%;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .aircraft-form-page,
-  .aircraft-form-card,
-  .aircraft-form-field,
-  .aircraft-form-state,
-  .aircraft-form-error,
-  .aircraft-form-page .page-eyebrow::before,
-  .aircraft-form-card::before {
-    animation: none !important;
-  }
-
-  .aircraft-form-page *,
-  .aircraft-form-page *::before,
-  .aircraft-form-page *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-  }
+  .hm-aircraft-form-page,
+  .hm-aircraft-form-spinner { animation: none !important; }
+  .hm-aircraft-form-page *,
+  .hm-aircraft-form-page *::before,
+  .hm-aircraft-form-page *::after { transition: none !important; }
 }

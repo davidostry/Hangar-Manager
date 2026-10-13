@@ -22,6 +22,7 @@ import MaintenanceReportDetails from "../pages/maintenance/MaintenanceReportDeta
 
 import Inspections from "../pages/inspections/Inspections";
 import InspectionForm from "../pages/inspections/InspectionForm";
+import ProfilePage from "../pages/ProfilePage";
 
 // Users Management
 import UsersPage from "../pages/users/UsersPage";
@@ -68,6 +69,7 @@ function AppRoutes() {
             path="dashboard"
             element={<Dashboard />}
           />
+          <Route path="profile" element={<ProfilePage />} />
 
           {/* ========================================
               AIRCRAFT

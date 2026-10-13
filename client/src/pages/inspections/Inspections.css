@@ -1,805 +1,1694 @@
 /*
+
  * HangarManager — Inspections
+
  * Destination: client/src/pages/inspections/Inspections.css
+
  * Aviation operations UI: navy text, electric blue and cyan accents,
+
  * clear inspection states, purposeful animation, and responsive tables/forms.
+
  */
 
 :root {
+
   --hm-inspection-navy: #102a47;
+
   --hm-inspection-ink: #203a55;
+
   --hm-inspection-muted: #687f97;
+
   --hm-inspection-blue: #2376e5;
+
   --hm-inspection-cyan: #17b7c7;
+
   --hm-inspection-border: #dbe7f2;
+
   --hm-inspection-shadow: 0 12px 30px rgba(16, 52, 86, 0.075);
+
 }
 
 /* Page canvas and heading */
+
 .inspections-page,
+
 .inspections-container,
+
 .inspection-list-page,
+
 .inspection-page,
+
 .inspections-list-page {
+
   min-width: 0;
+
   color: var(--hm-inspection-ink);
+
   animation: hm-inspection-page-enter 560ms cubic-bezier(0.2, 0.72, 0.28, 1) both;
+
 }
 
 .inspections-page > header,
+
 .inspections-header,
+
 .inspections-page-header,
+
 .inspections-page-top,
+
 .inspection-list-header,
+
 .inspection-page-header {
+
   display: flex;
+
   align-items: flex-end;
+
   justify-content: space-between;
+
   flex-wrap: wrap;
+
   gap: 18px;
+
   margin-bottom: 24px;
+
 }
 
 .inspections-page h1,
+
 .inspections-container h1,
+
 .inspection-list-page h1,
+
 .inspection-page h1,
+
 .inspections-header h1,
+
 .inspections-page-header h1,
+
 .inspections-page-top h1,
+
 .inspection-list-header h1,
+
 .inspection-page-header h1 {
+
   margin: 0;
+
   color: var(--hm-inspection-navy);
+
   font-size: clamp(1.9rem, 3.8vw, 2.8rem);
+
   font-weight: 900;
+
   line-height: 1.08;
+
   letter-spacing: -0.055em;
+
   text-wrap: balance;
+
 }
 
 .inspections-header p,
+
 .inspections-page-header p,
+
 .inspections-page-top p,
+
 .inspection-list-header p,
+
 .inspection-page-header p {
+
   max-width: 720px;
+
   margin: 10px 0 0;
+
   color: var(--hm-inspection-muted);
+
   line-height: 1.7;
+
 }
 
 .inspections-header h1::after,
+
 .inspections-page-header h1::after,
+
 .inspections-page-top h1::after,
+
 .inspection-list-header h1::after {
+
   content: "";
+
   display: block;
+
   width: 76px;
+
   height: 4px;
+
   margin-top: 13px;
+
   border-radius: 999px;
+
   background: linear-gradient(90deg, var(--hm-inspection-blue), var(--hm-inspection-cyan));
+
   transform-origin: left center;
+
   animation: hm-inspection-title-line 580ms 120ms both;
+
 }
 
 /* Main action buttons */
+
 .inspections-page a,
+
 .inspections-page button,
+
 .inspection-list-page a,
+
 .inspection-list-page button,
+
 .inspection-page a,
+
 .inspection-page button {
+
   -webkit-tap-highlight-color: transparent;
+
 }
 
 .inspections-header > a,
+
 .inspections-header > button,
+
 .inspections-page-header > a,
+
 .inspections-page-header > button,
+
 .inspections-page-top > a,
+
 .inspections-page-top > button,
+
 .inspection-list-header > a,
+
 .inspection-list-header > button,
+
 .inspection-new-button,
+
 .inspections-new-button,
+
 .inspection-primary-button,
+
 .inspection-submit-button {
+
   display: inline-flex;
+
   align-items: center;
+
   justify-content: center;
+
   gap: 9px;
+
   min-height: 44px;
+
   padding: 11px 17px;
+
   border: 1px solid rgba(255, 255, 255, 0.22);
+
   border-radius: 12px;
+
   color: #fff;
+
   background: linear-gradient(112deg, #1668d4 0%, #267fec 52%, #078fa8 100%);
+
   background-size: 200% 100%;
+
   box-shadow: 0 8px 19px rgba(35, 118, 229, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
   font: inherit;
+
   font-size: 0.9rem;
+
   font-weight: 850;
+
   text-decoration: none;
+
   cursor: pointer;
+
   transition: transform 200ms ease, box-shadow 200ms ease, background-position 320ms ease, filter 200ms ease;
+
 }
 
 .inspections-header > a:hover,
+
 .inspections-header > button:hover,
+
 .inspections-page-header > a:hover,
+
 .inspections-page-header > button:hover,
+
 .inspections-page-top > a:hover,
+
 .inspections-page-top > button:hover,
+
 .inspection-list-header > a:hover,
+
 .inspection-list-header > button:hover,
+
 .inspection-new-button:hover,
+
 .inspections-new-button:hover,
+
 .inspection-primary-button:hover,
+
 .inspection-submit-button:hover {
+
   color: #fff;
+
   background-position: 100% 50%;
+
   transform: translateY(-2px);
+
   box-shadow: 0 13px 25px rgba(35, 118, 229, 0.27), 0 0 0 3px rgba(23, 183, 199, 0.1);
+
   filter: saturate(1.12);
+
 }
 
 /* Filters and toolbar */
+
 .inspections-toolbar,
+
 .inspections-filters,
+
 .inspection-filters,
+
 .inspection-filter-bar,
+
 .inspections-filter-bar,
+
 .inspection-toolbar {
+
   position: relative;
+
   display: flex;
+
   align-items: center;
+
   flex-wrap: wrap;
+
   gap: 12px;
+
   margin-bottom: 19px;
+
   padding: 16px;
+
   border: 1px solid rgba(209, 225, 239, 0.95);
+
   border-radius: 17px;
+
   background: linear-gradient(125deg, rgba(255, 255, 255, 0.98), rgba(242, 249, 255, 0.97));
+
   box-shadow: 0 7px 21px rgba(20, 56, 91, 0.05), inset 0 1px 0 #fff;
+
   animation: hm-inspection-panel-enter 520ms 50ms both;
+
 }
 
 .inspections-toolbar input,
+
 .inspections-toolbar select,
+
 .inspections-filters input,
+
 .inspections-filters select,
+
 .inspection-filters input,
+
 .inspection-filters select,
+
 .inspection-filter-bar input,
+
 .inspection-filter-bar select,
+
 .inspections-page input,
+
 .inspections-page select,
+
 .inspection-list-page input,
+
 .inspection-list-page select {
+
   min-width: 145px;
+
   min-height: 42px;
+
   padding: 10px 13px;
+
   border: 1px solid #d4e1ee;
+
   border-radius: 11px;
+
   outline: none;
+
   color: #183b5a;
+
   background: #fff;
+
   font: inherit;
+
   transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+
 }
 
 .inspections-toolbar input:focus,
+
 .inspections-toolbar select:focus,
+
 .inspections-filters input:focus,
+
 .inspections-filters select:focus,
+
 .inspection-filters input:focus,
+
 .inspection-filters select:focus,
+
 .inspection-filter-bar input:focus,
+
 .inspection-filter-bar select:focus,
+
 .inspections-page input:focus,
+
 .inspections-page select:focus,
+
 .inspection-list-page input:focus,
+
 .inspection-list-page select:focus {
+
   border-color: #4098f5;
+
   background: #fff;
+
   box-shadow: 0 0 0 4px rgba(40, 135, 235, 0.12), 0 5px 14px rgba(21, 96, 170, 0.06);
+
 }
 
 /* Table wrapper and scrolling */
+
 .inspections-table-wrapper,
+
 .inspection-table-wrapper,
+
 .inspections-table-container,
+
 .inspection-table-container,
+
 .inspections-list-table-wrapper {
+
   position: relative;
+
   max-width: 100%;
+
   overflow: auto;
+
   border: 1px solid #d6e4f0;
+
   border-radius: 18px;
+
   background: #fff;
+
   box-shadow: var(--hm-inspection-shadow);
+
   animation: hm-inspection-panel-enter 600ms 100ms both;
+
   scrollbar-color: #a9c5df #f0f5fb;
+
   scrollbar-width: thin;
+
 }
 
 .inspections-table-wrapper::before,
+
 .inspection-table-wrapper::before,
+
 .inspections-table-container::before,
+
 .inspection-table-container::before,
+
 .inspections-list-table-wrapper::before {
+
   content: "";
+
   position: absolute;
+
   z-index: 2;
+
   top: 0;
+
   left: 0;
+
   right: 0;
+
   height: 3px;
+
   background: linear-gradient(90deg, #2376e5, #17b7c7, #8b73f0, #2376e5);
+
   background-size: 220% 100%;
+
   animation: hm-inspection-light-sweep 8s linear infinite;
+
   pointer-events: none;
+
 }
 
 .inspections-table,
+
 .inspection-table,
+
 .inspections-page table,
+
 .inspection-list-page table,
+
 .inspection-page table {
+
   width: 100%;
+
   border-collapse: separate;
+
   border-spacing: 0;
+
   text-align: left;
+
   font-size: 0.9rem;
+
 }
 
 .inspections-table thead th,
+
 .inspection-table thead th,
+
 .inspections-page thead th,
+
 .inspection-list-page thead th,
+
 .inspection-page thead th {
+
   position: sticky;
+
   top: 0;
+
   z-index: 1;
+
   padding: 14px 16px;
+
   border-bottom: 1px solid #dbe8f4;
+
   color: #5e7590;
+
   background: linear-gradient(180deg, #f3f8fe, #ebf3fb);
+
   font-size: 0.72rem;
+
   font-weight: 900;
+
   letter-spacing: 0.065em;
+
   text-transform: uppercase;
+
   white-space: nowrap;
+
 }
 
 .inspections-table tbody tr,
+
 .inspection-table tbody tr,
+
 .inspections-page tbody tr,
+
 .inspection-list-page tbody tr,
+
 .inspection-page tbody tr {
+
   background: #fff;
+
   animation: hm-inspection-row-enter 400ms both;
+
   transition: background 180ms ease, box-shadow 180ms ease;
+
 }
 
 .inspections-table tbody tr:nth-child(even),
+
 .inspection-table tbody tr:nth-child(even),
+
 .inspections-page tbody tr:nth-child(even),
+
 .inspection-list-page tbody tr:nth-child(even),
+
 .inspection-page tbody tr:nth-child(even) {
+
   background: #f9fbfe;
+
 }
 
 .inspections-table tbody tr:hover,
+
 .inspection-table tbody tr:hover,
+
 .inspections-page tbody tr:hover,
+
 .inspection-list-page tbody tr:hover,
+
 .inspection-page tbody tr:hover {
+
   background: #eff8ff;
+
 }
 
 .inspections-table tbody td,
+
 .inspection-table tbody td,
+
 .inspections-page tbody td,
+
 .inspection-list-page tbody td,
+
 .inspection-page tbody td {
+
   padding: 14px 16px;
+
   border-bottom: 1px solid #e8eff6;
+
   color: #38546f;
+
   vertical-align: middle;
+
 }
 
 .inspections-table tbody tr:last-child td,
+
 .inspection-table tbody tr:last-child td,
+
 .inspections-page tbody tr:last-child td,
+
 .inspection-list-page tbody tr:last-child td,
+
 .inspection-page tbody tr:last-child td {
+
   border-bottom: 0;
+
 }
 
 /* Status badges: Scheduled, Completed, Cancelled and computed overdue */
+
 .inspection-status-badge,
+
 .inspections-status-badge,
+
 .inspection-status,
+
 .inspections-status,
+
 .inspection-overdue-badge,
+
 .inspections-page [class*="status-badge"],
+
 .inspection-list-page [class*="status-badge"] {
+
   display: inline-flex;
+
   align-items: center;
+
   justify-content: center;
+
   gap: 7px;
+
   min-height: 27px;
+
   padding: 5px 10px;
+
   border: 1px solid #cfe3f5;
+
   border-radius: 999px;
+
   color: #1b68ad;
+
   background: #eff7ff;
+
   font-size: 0.75rem;
+
   font-weight: 850;
+
   line-height: 1.2;
+
   white-space: nowrap;
+
 }
 
 .inspection-status-badge::before,
+
 .inspections-status-badge::before,
+
 .inspection-status::before,
+
 .inspections-status::before {
+
   content: "";
+
   width: 6px;
+
   height: 6px;
+
   flex: 0 0 auto;
+
   border-radius: 50%;
+
   background: currentColor;
+
 }
 
 .inspection-status--scheduled,
+
 .inspection-status.scheduled,
+
 .inspections-status--scheduled,
+
 .status-scheduled {
+
   border-color: #c4ddfb;
+
   color: #185da8;
+
   background: #edf6ff;
+
 }
 
 .inspection-status--completed,
+
 .inspection-status.completed,
+
 .inspections-status--completed,
+
 .status-completed {
+
   border-color: #bcebd9;
+
   color: #117b59;
+
   background: #eafaf3;
+
 }
 
 .inspection-status--cancelled,
+
 .inspection-status.cancelled,
+
 .inspections-status--cancelled,
+
 .status-cancelled {
+
   border-color: #dfe5ec;
+
   color: #64748b;
+
   background: #f3f5f8;
+
 }
 
 .inspection-status--overdue,
+
 .inspection-status.overdue,
+
 .inspection-overdue-badge,
+
 .status-overdue {
+
   border-color: #f2c5cc;
+
   color: #b12e46;
+
   background: #fff0f2;
+
   box-shadow: 0 3px 10px rgba(177, 46, 70, 0.055);
+
 }
 
 /* Row actions */
+
 .inspection-actions,
+
 .inspection-row-actions,
+
 .inspections-actions,
+
 .inspections-row-actions {
+
   display: flex;
+
   align-items: center;
+
   flex-wrap: wrap;
+
   gap: 7px;
+
   white-space: nowrap;
+
 }
 
 .inspection-actions button,
+
 .inspection-row-actions button,
+
 .inspections-actions button,
+
 .inspections-row-actions button,
+
 .inspections-page td button,
+
 .inspection-list-page td button {
+
   display: inline-flex;
+
   align-items: center;
+
   justify-content: center;
+
   min-height: 33px;
+
   padding: 7px 10px;
+
   border: 1px solid #d3e4f4;
+
   border-radius: 9px;
+
   color: #1c65a6;
+
   background: #f6fbff;
+
   font: inherit;
+
   font-size: 0.78rem;
+
   font-weight: 800;
+
   cursor: pointer;
+
   transition: transform 180ms ease, color 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+
 }
 
 .inspection-actions button:hover:not(:disabled),
+
 .inspection-row-actions button:hover:not(:disabled),
+
 .inspections-actions button:hover:not(:disabled),
+
 .inspections-row-actions button:hover:not(:disabled),
+
 .inspections-page td button:hover:not(:disabled),
+
 .inspection-list-page td button:hover:not(:disabled) {
+
   transform: translateY(-1px);
+
   border-color: #9cc9f2;
+
   color: #104e8c;
+
   background: #eaf5ff;
+
   box-shadow: 0 4px 10px rgba(25, 103, 174, 0.1);
+
 }
 
 .inspection-actions button:disabled,
+
 .inspection-row-actions button:disabled,
+
 .inspections-actions button:disabled,
+
 .inspections-row-actions button:disabled,
+
 .inspections-page td button:disabled,
+
 .inspection-list-page td button:disabled {
+
   opacity: 0.5;
+
   cursor: not-allowed;
+
   transform: none;
+
 }
 
 /* Feedback states and loading spinner */
+
 .inspections-loading,
+
 .inspections-empty-state,
+
 .inspections-error-state,
+
 .inspection-loading,
+
 .inspection-empty-state,
+
 .inspection-error-state,
+
 .inspections-state,
+
 .inspection-state {
+
   display: grid;
+
   place-items: center;
+
   gap: 10px;
+
   min-height: 140px;
+
   padding: 27px;
+
   border: 1px dashed #bfd3e7;
+
   border-radius: 17px;
+
   color: #657e96;
+
   background: linear-gradient(145deg, #fff, #f3f9ff);
+
   text-align: center;
+
   animation: hm-inspection-panel-enter 460ms ease both;
+
 }
 
 .inspections-error-state,
+
 .inspection-error-state {
+
   border-color: #f0c6ce;
+
   color: #a93147;
+
   background: #fff3f5;
+
 }
 
 .inspections-success-state,
+
 .inspection-success-state,
+
 .inspections-page .success-message,
+
 .inspection-page .success-message {
+
   padding: 12px 15px;
+
   border: 1px solid #bce8d8;
+
   border-radius: 11px;
+
   color: #126e53;
+
   background: #ecfbf4;
+
 }
 
 .inspections-spinner,
+
 .inspection-spinner,
+
 .inspections-loading-spinner {
+
   width: 30px;
+
   height: 30px;
+
   border: 3px solid #d5eaff;
+
   border-top-color: #2376e5;
+
   border-right-color: #17b7c7;
+
   border-radius: 50%;
+
   animation: hm-inspection-spin 800ms linear infinite;
+
 }
 
 /* Pagination */
+
 .inspections-pagination,
+
 .inspection-pagination,
+
 .inspection-pagination-controls {
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   flex-wrap: wrap;
+
   gap: 9px;
+
   margin-top: 19px;
+
   color: #687f97;
+
   font-size: 0.86rem;
+
 }
 
 .inspections-pagination button,
+
 .inspection-pagination button,
+
 .inspection-pagination-controls button {
+
   min-width: 38px;
+
   min-height: 36px;
+
   padding: 7px 11px;
+
   border: 1px solid #d2e3f3;
+
   border-radius: 9px;
+
   color: #1a5f9c;
+
   background: #fff;
+
   font: inherit;
+
   font-weight: 800;
+
   cursor: pointer;
+
   transition: transform 180ms ease, border-color 180ms ease, color 180ms ease, background 180ms ease;
+
 }
 
 .inspections-pagination button:hover:not(:disabled),
+
 .inspection-pagination button:hover:not(:disabled),
+
 .inspection-pagination-controls button:hover:not(:disabled) {
+
   transform: translateY(-1px);
+
   border-color: #93c4f2;
+
   background: #edf7ff;
+
 }
 
 .inspections-pagination button:disabled,
+
 .inspection-pagination button:disabled,
+
 .inspection-pagination-controls button:disabled {
+
   opacity: 0.45;
+
   cursor: not-allowed;
+
 }
 
 /* Create inspection form — these selectors are harmless when the list shares this stylesheet */
+
 .inspection-form-page,
+
 .inspection-create-page,
+
 .inspections-form-page {
+
   display: flex;
+
   flex-direction: column;
+
   gap: 22px;
+
   min-width: 0;
+
   color: var(--hm-inspection-ink);
+
   animation: hm-inspection-page-enter 560ms cubic-bezier(0.2, 0.72, 0.28, 1) both;
+
 }
 
 .inspection-form-card,
+
 .inspection-create-card,
+
 .inspections-form-card {
+
   position: relative;
+
   isolation: isolate;
+
   overflow: hidden;
+
   width: 100%;
+
   max-width: 980px;
+
   padding: clamp(22px, 3.3vw, 35px);
+
   border: 1px solid #d7e6f3;
+
   border-radius: 21px;
+
   background: radial-gradient(ellipse at 100% 0%, rgba(33, 151, 221, 0.07), transparent 42%), linear-gradient(145deg, #fff, #f7fbff);
+
   box-shadow: 0 17px 42px rgba(17, 56, 91, 0.08), inset 0 1px 0 #fff;
+
   animation: hm-inspection-panel-enter 680ms 80ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+
 }
 
 .inspection-form-card::before,
+
 .inspection-create-card::before,
+
 .inspections-form-card::before {
+
   content: "";
+
   position: absolute;
+
   z-index: -1;
+
   top: 0;
+
   left: 0;
+
   right: 0;
+
   height: 3px;
+
   background: linear-gradient(90deg, #2376e5, #17b7c7, #8b73f0, #2376e5);
+
   background-size: 220% 100%;
+
   animation: hm-inspection-light-sweep 8s linear infinite;
+
 }
 
 .inspection-form-card form,
+
 .inspection-create-card form,
+
 .inspections-form-card form,
+
 .inspection-form-page form {
+
   display: grid;
+
   grid-template-columns: repeat(2, minmax(0, 1fr));
+
   gap: 19px;
+
 }
 
 .inspection-form-card label,
+
 .inspection-create-card label,
+
 .inspections-form-card label,
+
 .inspection-form-page label {
+
   display: flex;
+
   flex-direction: column;
+
   gap: 8px;
+
   color: #294a68;
+
   font-size: 0.87rem;
+
   font-weight: 800;
+
 }
 
 .inspection-form-card input,
+
 .inspection-form-card select,
+
 .inspection-form-card textarea,
+
 .inspection-create-card input,
+
 .inspection-create-card select,
+
 .inspection-create-card textarea,
+
 .inspections-form-card input,
+
 .inspections-form-card select,
+
 .inspections-form-card textarea,
+
 .inspection-form-page input,
+
 .inspection-form-page select,
+
 .inspection-form-page textarea {
+
   width: 100%;
+
   min-height: 44px;
+
   padding: 11px 13px;
+
   border: 1px solid #d4e1ee;
+
   border-radius: 11px;
+
   outline: none;
+
   color: #183b5a;
+
   background: #fff;
+
   font: inherit;
+
   transition: border-color 180ms ease, box-shadow 180ms ease;
+
 }
 
 .inspection-form-card textarea,
+
 .inspection-create-card textarea,
+
 .inspections-form-card textarea,
+
 .inspection-form-page textarea {
+
   min-height: 118px;
+
   resize: vertical;
+
 }
 
 .inspection-form-card input:focus,
+
 .inspection-form-card select:focus,
+
 .inspection-form-card textarea:focus,
+
 .inspection-create-card input:focus,
+
 .inspection-create-card select:focus,
+
 .inspection-create-card textarea:focus,
+
 .inspections-form-card input:focus,
+
 .inspections-form-card select:focus,
+
 .inspections-form-card textarea:focus,
+
 .inspection-form-page input:focus,
+
 .inspection-form-page select:focus,
+
 .inspection-form-page textarea:focus {
+
   border-color: #4098f5;
+
   box-shadow: 0 0 0 4px rgba(40, 135, 235, 0.12);
+
 }
 
 .inspection-form-card .form-full-width,
+
 .inspection-create-card .form-full-width,
+
 .inspections-form-card .form-full-width,
+
 .inspection-form-page .form-full-width {
+
   grid-column: 1 / -1;
+
 }
 
 .inspection-form-card button[type="submit"],
+
 .inspection-create-card button[type="submit"],
+
 .inspections-form-card button[type="submit"],
+
 .inspection-form-page button[type="submit"] {
+
   justify-self: start;
+
   min-width: 150px;
+
 }
 
 /* Keyboard focus */
+
 .inspections-page a:focus-visible,
+
 .inspections-page button:focus-visible,
+
 .inspection-list-page a:focus-visible,
+
 .inspection-list-page button:focus-visible,
+
 .inspection-form-page a:focus-visible,
+
 .inspection-form-page button:focus-visible {
+
   outline: 3px solid rgba(23, 183, 199, 0.48);
+
   outline-offset: 3px;
+
 }
 
 /* Motion */
+
 @keyframes hm-inspection-page-enter {
+
   from { opacity: 0; transform: translateY(11px); }
+
   to { opacity: 1; transform: translateY(0); }
+
 }
 
 @keyframes hm-inspection-panel-enter {
+
   from { opacity: 0; transform: translateY(14px) scale(0.992); }
+
   to { opacity: 1; transform: translateY(0) scale(1); }
+
 }
 
 @keyframes hm-inspection-row-enter {
+
   from { opacity: 0; transform: translateY(5px); }
+
   to { opacity: 1; transform: translateY(0); }
+
 }
 
 @keyframes hm-inspection-title-line {
+
   from { transform: scaleX(0); opacity: 0.25; }
+
   to { transform: scaleX(1); opacity: 1; }
+
 }
 
 @keyframes hm-inspection-light-sweep {
+
   from { background-position: 100% 50%; }
+
   to { background-position: -120% 50%; }
+
 }
 
 @keyframes hm-inspection-spin {
+
   to { transform: rotate(360deg); }
+
 }
 
 /* Responsive layout */
+
 @media (max-width: 760px) {
+
   .inspections-header,
+
   .inspections-page-header,
+
   .inspections-page-top,
+
   .inspection-list-header,
+
   .inspection-page-header {
+
     align-items: stretch;
+
     flex-direction: column;
+
   }
 
   .inspections-header > a,
+
   .inspections-header > button,
+
   .inspections-page-header > a,
+
   .inspections-page-header > button,
+
   .inspections-page-top > a,
+
   .inspections-page-top > button {
+
     align-self: flex-start;
+
   }
 
   .inspections-table,
+
   .inspection-table,
+
   .inspections-page table,
+
   .inspection-list-page table,
+
   .inspection-page table {
+
     min-width: 720px;
+
   }
 
   .inspection-form-card form,
+
   .inspection-create-card form,
+
   .inspections-form-card form,
+
   .inspection-form-page form {
+
     grid-template-columns: minmax(0, 1fr);
+
   }
 
   .inspection-form-card .form-full-width,
+
   .inspection-create-card .form-full-width,
+
   .inspections-form-card .form-full-width,
+
   .inspection-form-page .form-full-width {
+
     grid-column: auto;
+
   }
+
 }
 
 @media (max-width: 480px) {
+
   .inspections-toolbar,
+
   .inspections-filters,
+
   .inspection-filters,
+
   .inspection-filter-bar,
+
   .inspections-filter-bar,
+
   .inspection-toolbar {
+
     padding: 12px;
+
     border-radius: 14px;
+
   }
 
   .inspections-toolbar input,
+
   .inspections-toolbar select,
+
   .inspections-filters input,
+
   .inspections-filters select,
+
   .inspection-filters input,
+
   .inspection-filters select {
+
     width: 100%;
+
     flex-basis: 100%;
+
   }
 
   .inspection-form-card,
+
   .inspection-create-card,
+
   .inspections-form-card {
+
     padding: 19px 15px;
+
     border-radius: 16px;
+
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .inspections-page *,
+
   .inspections-page *::before,
+
   .inspections-page *::after,
+
   .inspection-list-page *,
+
   .inspection-list-page *::before,
+
   .inspection-list-page *::after,
+
   .inspection-form-page *,
+
   .inspection-form-page *::before,
+
   .inspection-form-page *::after {
+
     animation-duration: 0.01ms !important;
+
     animation-iteration-count: 1 !important;
+
     transition-duration: 0.01ms !important;
+
     scroll-behavior: auto !important;
+
   }
+
+}
+
+
+/* =========================================================
+   PREMIUM INSPECTIONS LIST — isolated from InspectionForm
+   hm-inspect-* avoids common ad-blocker naming collisions.
+   ========================================================= */
+.hm-inspect-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+  color: #18334f;
+  animation: hm-inspect-enter 440ms ease-out both;
+}
+.hm-inspect-page *, .hm-inspect-page *::before, .hm-inspect-page *::after { box-sizing: border-box; }
+.hm-inspect-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* Compact aviation hero */
+.hm-inspect-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  border: 1px solid rgba(76, 158, 221, 0.22);
+  border-radius: 26px;
+  padding: clamp(23px, 2.6vw, 34px) clamp(27px, 3.9vw, 52px);
+  background: radial-gradient(circle at 100% 18%, rgba(38, 174, 205, .29), transparent 40%), linear-gradient(112deg, #08192e, #123858 84%, #13506f);
+  box-shadow: 0 21px 43px rgba(9, 38, 66, .18);
+  color: white;
+}
+.hm-inspect-hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: clamp(27px, 3.9vw, 52px);
+  width: 155px;
+  height: 4px;
+  border-radius: 5px 5px 0 0;
+  background: linear-gradient(90deg, #3a9fff, #16dcc6);
+}
+.hm-inspect-hero-content { position: relative; z-index: 1; }
+.hm-inspect-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #84e7e8;
+  font-size: .73rem;
+  font-weight: 850;
+  letter-spacing: .14em;
+}
+.hm-inspect-pulse { width: 9px; height: 9px; flex: 0 0 auto; border-radius: 50%; background: #24d6bd; box-shadow: 0 0 0 5px rgba(36, 214, 189, .15); }
+.hm-inspect-kicker { margin: 14px 0 4px; color: #9fbcd4; font-size: .75rem; font-weight: 850; letter-spacing: .17em; }
+.hm-inspect-hero h1 { margin: 0; color: #fff; font-size: clamp(2.35rem, 4vw, 3.4rem); line-height: 1.1; letter-spacing: -.055em; font-weight: 900; }
+.hm-inspect-hero-description { max-width: 745px; margin: 12px 0 0; color: #c4d6e9; font-size: .98rem; line-height: 1.65; }
+.hm-inspect-hero-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; margin-top: 17px; }
+.hm-inspect-hero-note { display: inline-flex; align-items: center; gap: 10px; color: #a9c9dc; font-size: .87rem; font-weight: 650; }
+.hm-inspect-hero-note svg { color: #2ad8d1; }
+.hm-inspect-hero-watermark { position: absolute; right: 25px; top: -31px; color: rgba(109, 209, 243, .17); transform: rotate(-13deg); pointer-events: none; }
+.hm-inspect-create, .hm-inspect-retry {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 46px; padding: 11px 20px; border: 1px solid rgba(169,223,255,.27);
+  border-radius: 12px; color: #fff; font: inherit; font-size: .89rem; font-weight: 850;
+  background: linear-gradient(115deg, #1973eb, #248ae9 58%, #139db4);
+  box-shadow: 0 10px 23px rgba(0, 90, 190, .22); cursor: pointer; text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.hm-inspect-create:hover, .hm-inspect-retry:hover { color: #fff; transform: translateY(-2px); filter: saturate(1.1); box-shadow: 0 13px 25px rgba(0,90,190,.3); }
+
+/* Filters */
+.hm-inspect-toolbar {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.1fr) minmax(190px, 1fr) minmax(190px, 1fr) auto auto;
+  gap: 16px;
+  align-items: end;
+  padding: 23px;
+  border: 1px solid #d5e5f4;
+  border-radius: 22px;
+  background: linear-gradient(120deg, #ffffff, #f5faff);
+  box-shadow: 0 13px 31px rgba(25, 73, 113, .075);
+}
+.hm-inspect-filter { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.hm-inspect-filter label { display: inline-flex; align-items: center; gap: 9px; color: #355574; font-size: .85rem; font-weight: 850; }
+.hm-inspect-filter label svg { color: #2286de; }
+.hm-inspect-filter select, .hm-inspect-filter input {
+  display: block;
+  width: 100%; min-width: 0; min-height: 51px;
+  padding: 12px 14px; border: 1px solid #cadff1; border-radius: 12px; outline: none;
+  background: #fff; color: #183a58; font: inherit; font-size: .91rem;
+  box-shadow: 0 2px 5px rgba(9,48,90,.02); transition: border-color .18s, box-shadow .18s;
+}
+.hm-inspect-filter input:focus-visible, .hm-inspect-filter select:focus-visible { border-color: #318bec; box-shadow: 0 0 0 4px rgba(49,139,236,.12); }
+.hm-inspect-overdue {
+  display: inline-flex; align-items: center; justify-content: center; gap: 11px;
+  min-height: 51px; margin: 0; padding: 0 15px; border: 1px solid #cee1f1;
+  border-radius: 12px; white-space: nowrap; background: #f5faff;
+  cursor: pointer; transition: border-color .2s, background .2s;
+}
+.hm-inspect-overdue:has(input:checked) { border-color: #f5ceaa; background: #fff5e9; }
+.hm-inspect-overdue input { flex: 0 0 auto; width: 18px; height: 18px; margin: 0; accent-color: #178bda; cursor: pointer; }
+.hm-inspect-overdue-text { display: inline-flex; align-items: center; gap: 8px; color: #355574; font-size: .83rem; font-weight: 800; }
+.hm-inspect-overdue-text svg { color: #e49b22; }
+.hm-inspect-clear {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 51px; padding: 12px 15px; border: 1px solid #cfe1f2;
+  border-radius: 12px; color: #1e639f; background: #f4f9ff;
+  font: inherit; font-size: .82rem; font-weight: 850; white-space: nowrap;
+  cursor: pointer; transition: background .18s, transform .18s;
+}
+.hm-inspect-clear:hover { background: #e8f4ff; transform: translateY(-1px); }
+
+/* Section heading */
+.hm-inspect-register-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
+.hm-inspect-section-eyebrow { color: #088da5; letter-spacing: .15em; font-size: .72rem; font-weight: 900; }
+.hm-inspect-register-heading h2 { margin: 10px 0 0; color: #102a47; font-size: clamp(1.5rem, 2.4vw, 1.85rem); font-weight: 900; letter-spacing: -.04em; }
+.hm-inspect-register-heading p { margin: 8px 0 0; color: #7b91a9; line-height: 1.55; }
+.hm-inspect-total { display: inline-flex; align-items: center; gap: 10px; flex: 0 0 auto; padding: 10px 15px; border: 1px solid #c8ddf4; border-radius: 999px; background: #edf6ff; color: #1667b6; font-size: .82rem; font-weight: 850; white-space: nowrap; }
+
+/* Table */
+.hm-inspect-table-wrap { position: relative; width: 100%; min-width: 0; overflow-x: auto; border: 1px solid #d7e6f3; border-radius: 22px; background: #fff; box-shadow: 0 14px 35px rgba(20,58,90,.09); scrollbar-width: thin; scrollbar-color: #a6c7df #eef5fc; }
+.hm-inspect-table-wrap::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; z-index: 2; background: linear-gradient(90deg, #267eef, #19c5c4, #8f77e9); pointer-events: none; }
+.hm-inspect-table { width: 100%; min-width: 930px; border-collapse: separate; border-spacing: 0; font-size: .88rem; text-align: left; }
+.hm-inspect-table thead th { padding: 20px 18px; border-bottom: 1px solid #d7e5f2; color: #58738e; background: linear-gradient(#f3f8fe, #eaf2fb); font-size: .7rem; font-weight: 900; letter-spacing: .075em; text-transform: uppercase; white-space: nowrap; }
+.hm-inspect-table tbody tr { background: #fff; transition: background .18s; }
+.hm-inspect-table tbody tr:nth-child(even) { background: #f8fbff; }
+.hm-inspect-table tbody tr:hover { background: #eff8ff; }
+.hm-inspect-table tbody td { padding: 17px 18px; border-bottom: 1px solid #e6eef6; color: #395b79; vertical-align: middle; }
+.hm-inspect-table tbody tr:last-child td { border-bottom: 0; }
+.hm-inspect-type { display: flex; align-items: flex-start; gap: 9px; max-width: 245px; color: #153f68; font-weight: 850; line-height: 1.5; }
+.hm-inspect-type svg { flex: 0 0 auto; margin-top: 2px; color: #258bdd; }
+.hm-inspect-id { display: inline-block; margin: 5px 0 0 26px; color: #899eb4; font: 700 .74rem ui-monospace, Consolas, monospace; }
+.hm-inspect-aircraft { display: inline-flex; align-items: center; gap: 8px; color: #1764a7; font-weight: 850; white-space: nowrap; }
+.hm-inspect-aircraft svg { color: #18a6c2; flex-shrink: 0; }
+.hm-inspect-date { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; color: #5c7590; }
+.hm-inspect-date svg { color: #82a6c7; flex-shrink: 0; }
+.hm-inspect-status { display: inline-flex; align-items: center; gap: 7px; width: fit-content; min-height: 29px; padding: 6px 11px; border: 1px solid #c5dffb; border-radius: 999px; background: #edf6ff; color: #1662ac; font-size: .76rem; font-weight: 850; white-space: nowrap; }
+.hm-inspect-status::before { content: ""; width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; background: currentColor; }
+.hm-inspect-status--completed { background: #eafaf3; border-color: #bcebd9; color: #0f8562; }
+.hm-inspect-status--cancelled { background: #f1f4f8; border-color: #e0e5ec; color: #68788d; }
+.hm-inspect-notes { display: block; max-width: 265px; overflow-wrap: anywhere; line-height: 1.6; color: #57708c; }
+.hm-inspect-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.hm-inspect-action { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 34px; padding: 7px 11px; border: 1px solid #cce1f3; border-radius: 9px; background: #f4faff; color: #1568af; font: inherit; font-size: .76rem; font-weight: 850; cursor: pointer; white-space: nowrap; transition: transform .18s, box-shadow .18s, background .18s; }
+.hm-inspect-action--complete { background: #eafaf3; border-color: #c5eadc; color: #087c5c; }
+.hm-inspect-action--cancel { background: #fff4f5; border-color: #f3d1d7; color: #b84458; }
+.hm-inspect-action:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 14px rgba(17,76,122,.10); }
+.hm-inspect-action:disabled { cursor: not-allowed; opacity: .45; }
+.hm-inspect-no-actions { color: #9aacbf; font-size: .78rem; white-space: nowrap; }
+
+/* Pagination */
+.hm-inspect-pagination { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+.hm-inspect-pagination p { margin: 0; color: #7d91a8; font-size: .84rem; }
+.hm-inspect-pagination p strong { color: #34546e; }
+.hm-inspect-page-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; color: #6b8299; font-size: .84rem; }
+.hm-inspect-page-controls button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 38px; padding: 8px 13px; border: 1px solid #d1e3f3; border-radius: 10px; color: #1767aa; background: #fff; font: inherit; font-size: .83rem; font-weight: 850; cursor: pointer; transition: background .18s, transform .18s; }
+.hm-inspect-page-controls button:hover:not(:disabled) { background: #edf7ff; transform: translateY(-1px); }
+.hm-inspect-page-controls button:disabled { opacity: .42; cursor: not-allowed; }
+
+/* Error/loading/empty */
+.hm-inspect-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; min-height: 230px; padding: 32px 20px; border: 1px solid #d9e6f1; border-radius: 22px; background: #fff; color: #738aa1; text-align: center; box-shadow: 0 14px 30px rgba(20,58,90,.05); }
+.hm-inspect-state > svg { color: #2985d9; }
+.hm-inspect-state h2 { margin: 0; color: #183955; font-size: 1.35rem; }
+.hm-inspect-state p { margin: 0; max-width: 520px; line-height: 1.65; }
+.hm-inspect-state--error { background: #fff8f8; border-color: #f4ccd2; }
+.hm-inspect-state--error > svg { color: #ce4860; }
+.hm-inspect-spinner { animation: hm-inspect-spin .9s linear infinite; }
+.hm-inspect-feedback { display: flex; align-items: center; gap: 9px; padding: 13px 16px; border: 1px solid; border-radius: 12px; font-size: .87rem; font-weight: 650; }
+.hm-inspect-feedback--success { color: #137f5e; background: #edfbf5; border-color: #b9e9d5; }
+.hm-inspect-feedback--error { color: #a9344b; background: #fff1f4; border-color: #f2c2cd; }
+.hm-inspect-filter-note { display: flex; align-items: center; gap: 8px; margin: -8px 0 0; color: #946523; font-size: .85rem; }
+.hm-inspect-filter-note svg { flex-shrink: 0; }
+.hm-inspect-page a:focus-visible, .hm-inspect-page button:focus-visible, .hm-inspect-page input:focus-visible, .hm-inspect-page select:focus-visible { outline: 3px solid rgba(29,161,209,.42); outline-offset: 3px; }
+
+/* Responsive desktop => compact toolbar, then mobile cards */
+@media (max-width: 1390px) {
+  .hm-inspect-toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hm-inspect-overdue { justify-self: stretch; }
+  .hm-inspect-clear { justify-self: start; }
+}
+@media (max-width: 1000px) {
+  .hm-inspect-toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-inspect-hero-watermark { opacity: .65; }
+}
+@media (max-width: 720px) {
+  .hm-inspect-page { gap: 20px; }
+  .hm-inspect-hero { padding: 23px 24px; border-radius: 20px; }
+  .hm-inspect-hero::after { left: 24px; }
+  .hm-inspect-hero-watermark { right: -60px; opacity: .4; }
+  .hm-inspect-hero h1 { font-size: clamp(2.2rem, 8vw, 2.8rem); }
+  .hm-inspect-hero-footer { margin-top: 16px; }
+  .hm-inspect-toolbar { grid-template-columns: 1fr; padding: 18px; border-radius: 19px; }
+  .hm-inspect-clear, .hm-inspect-overdue { width: 100%; }
+  .hm-inspect-register-heading { align-items: flex-start; }
+  .hm-inspect-table-wrap { overflow: visible; border: 0; background: transparent; border-radius: 0; box-shadow: none; }
+  .hm-inspect-table-wrap::before { display: none; }
+  .hm-inspect-table { min-width: 0; display: block; }
+  .hm-inspect-table thead { display: none; }
+  .hm-inspect-table tbody { display: grid; gap: 14px; }
+  .hm-inspect-table tbody tr, .hm-inspect-table tbody tr:nth-child(even) { display: grid; padding: 12px 17px; border: 1px solid #d7e7f4; border-radius: 17px; background: #fff; box-shadow: 0 9px 22px rgba(20,58,90,.07); }
+  .hm-inspect-table tbody td { display: grid; grid-template-columns: 102px minmax(0, 1fr); align-items: start; gap: 12px; padding: 11px 0; border-bottom: 1px solid #eaf1f8; overflow-wrap: anywhere; }
+  .hm-inspect-table tbody tr td:last-child { border-bottom: 0; }
+  .hm-inspect-table tbody td::before { content: attr(data-label); color: #829ab1; font-size: .72rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; padding-top: 3px; }
+  .hm-inspect-type { max-width: 100%; }
+  .hm-inspect-notes { max-width: none; }
+  .hm-inspect-pagination { justify-content: center; text-align: center; }
+}
+@media (max-width: 420px) {
+  .hm-inspect-table tbody td { grid-template-columns: 87px minmax(0,1fr); gap: 9px; }
+  .hm-inspect-page-controls { justify-content: center; }
+  .hm-inspect-hero-footer { align-items: flex-start; flex-direction: column; }
+}
+@keyframes hm-inspect-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes hm-inspect-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .hm-inspect-page, .hm-inspect-spinner { animation: none !important; }
+  .hm-inspect-page *, .hm-inspect-page *::before, .hm-inspect-page *::after { transition: none !important; }
 }

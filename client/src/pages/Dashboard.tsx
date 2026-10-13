@@ -1,5 +1,7 @@
+
 import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
+import { Plane, Wrench, TriangleAlert } from "lucide-react";
 
 import { getDashboardSummary } from "../services/dashboardService";
 
@@ -130,8 +132,15 @@ function Dashboard() {
 
   return (
     <section className="dashboard-page">
+
+      {/* ========================================
+          DASHBOARD HEADER
+      ======================================== */}
+
       <div className="page-heading">
-        <p className="page-eyebrow">Fleet Management</p>
+        <p className="page-eyebrow">
+          Fleet Management
+        </p>
 
         <h1>Dashboard</h1>
 
@@ -140,6 +149,10 @@ function Dashboard() {
           and inspection status from one place.
         </p>
       </div>
+
+      {/* ========================================
+          LOADING STATE
+      ======================================== */}
 
       {isLoading && (
         <div className="dashboard-state" role="status">
@@ -151,6 +164,10 @@ function Dashboard() {
           <p>Loading dashboard...</p>
         </div>
       )}
+
+      {/* ========================================
+          ERROR STATE
+      ======================================== */}
 
       {!isLoading && errorMessage && (
         <div className="dashboard-state dashboard-state-error">
@@ -170,9 +187,21 @@ function Dashboard() {
         </div>
       )}
 
+      {/* ========================================
+          DASHBOARD CONTENT
+      ======================================== */}
+
       {!isLoading && !errorMessage && summary && (
         <>
+
+          {/* ========================================
+              OVERVIEW / KPI CARDS
+          ======================================== */}
+
           <div className="dashboard-overview-grid">
+
+            {/* Total Aircraft */}
+
             <article className="dashboard-overview-card dashboard-overview-primary">
               <div className="dashboard-card-heading">
                 <span className="dashboard-card-label">
@@ -183,7 +212,7 @@ function Dashboard() {
                   className="dashboard-card-icon"
                   aria-hidden="true"
                 >
-                  A
+                  <Plane size={23} strokeWidth={2} />
                 </span>
               </div>
 
@@ -196,6 +225,8 @@ function Dashboard() {
               </p>
             </article>
 
+            {/* Open Maintenance Reports */}
+
             <article className="dashboard-overview-card">
               <div className="dashboard-card-heading">
                 <span className="dashboard-card-label">
@@ -206,7 +237,7 @@ function Dashboard() {
                   className="dashboard-card-icon dashboard-icon-warning"
                   aria-hidden="true"
                 >
-                  M
+                  <Wrench size={23} strokeWidth={2} />
                 </span>
               </div>
 
@@ -219,6 +250,8 @@ function Dashboard() {
               </p>
             </article>
 
+            {/* Overdue Inspections */}
+
             <article className="dashboard-overview-card">
               <div className="dashboard-card-heading">
                 <span className="dashboard-card-label">
@@ -229,7 +262,7 @@ function Dashboard() {
                   className="dashboard-card-icon dashboard-icon-danger"
                   aria-hidden="true"
                 >
-                  !
+                  <TriangleAlert size={23} strokeWidth={2} />
                 </span>
               </div>
 
@@ -243,7 +276,12 @@ function Dashboard() {
             </article>
           </div>
 
+          {/* ========================================
+              FLEET STATUS SECTION
+          ======================================== */}
+
           <section className="dashboard-status-section">
+
             <div className="dashboard-section-heading">
               <div>
                 <h2>Fleet Status</h2>
@@ -258,6 +296,8 @@ function Dashboard() {
               </span>
             </div>
 
+            {/* Aircraft status cards */}
+
             <div className="dashboard-status-grid">
               {AIRCRAFT_STATUSES.map((item) => {
                 const count =
@@ -269,7 +309,10 @@ function Dashboard() {
                     className={`dashboard-status-card dashboard-status-${item.status.toLowerCase()}`}
                   >
                     <div className="dashboard-status-card-heading">
-                      <span className="dashboard-status-indicator" />
+                      <span
+                        className="dashboard-status-indicator"
+                        aria-hidden="true"
+                      />
 
                       <h3>{item.label}</h3>
                     </div>

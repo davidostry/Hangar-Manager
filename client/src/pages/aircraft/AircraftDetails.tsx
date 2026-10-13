@@ -1,32 +1,33 @@
-
 import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
 import { Link, useNavigate, useParams } from "react-router";
-import { useAuth } from "../../context/AuthContext";
+import {
+  ArrowLeft,
+  CalendarDays,
+  Clock3,
+  Factory,
+  FileText,
+  Hash,
+  Pencil,
+  Plane,
+  RefreshCw,
+  ShieldCheck,
+  Trash2,
+} from "lucide-react";
 
+import { useAuth } from "../../context/AuthContext";
 import { deleteAircraft, getAircraftById } from "../../services/aircraftService";
 
-import type {
-  Aircraft,
-  AircraftStatus,
-} from "../../types/aircraft";
+import type { Aircraft, AircraftStatus } from "../../types/aircraft";
 
 import "./AircraftDetails.css";
 
-// ========================================
-// DATE FORMATTING
-// ========================================
-
+// Date formatting stays independent of the page design.
 function formatDate(value: string | null): string {
-  if (!value) {
-    return "Not available";
-  }
+  if (!value) return "Not available";
 
   const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return "Invalid date";
-  }
+  if (Number.isNaN(date.getTime())) return "Invalid date";
 
   return new Intl.DateTimeFormat("en-GB", {
     dateStyle: "medium",
@@ -34,32 +35,20 @@ function formatDate(value: string | null): string {
   }).format(date);
 }
 
-// ========================================
-// AIRCRAFT STATUS
-// ========================================
-
 function formatStatus(status: AircraftStatus): string {
   switch (status) {
     case "Available":
       return "Available";
-
     case "Maintenance":
       return "Maintenance";
-
     case "Inspection":
       return "Inspection";
-
     case "Grounded":
       return "Grounded";
-
     default:
       return status;
   }
 }
-
-// ========================================
-// ERROR HANDLING
-// ========================================
 
 function getErrorMessage(error: unknown): string {
   if (isAxiosError(error)) {
@@ -67,14 +56,8 @@ function getErrorMessage(error: unknown): string {
       return "Cannot connect to the Backend. Check that the server is running.";
     }
 
-    const data = error.response.data as
-      | { detail?: unknown }
-      | undefined;
-
-    if (
-      typeof data?.detail === "string" &&
-      data.detail.trim()
-    ) {
+    const data = error.response.data as { detail?: unknown } | undefined;
+    if (typeof data?.detail === "string" && data.detail.trim()) {
       return data.detail;
     }
 
@@ -89,48 +72,44 @@ function getErrorMessage(error: unknown): string {
         )
         .map((item) => item.msg);
 
-      if (messages.length > 0) {
-        return messages.join(" ");
-      }
+      if (messages.length > 0) return messages.join(" ");
     }
 
     return `Failed to load aircraft. HTTP status: ${error.response.status}.`;
   }
 
-  if (error instanceof Error) {
-    return error.message;
-  }
-
+  if (error instanceof Error) return error.message;
   return "An unexpected error occurred.";
 }
 
-// ========================================
-// AIRCRAFT DETAILS PAGE
-// ========================================
+// Shared page-level states: loading, not found, and request errors.
+function BackToAircraft() {
+  return (
+    <Link to="/app/aircraft" className="hm-profile-back-link">
+      <ArrowLeft size={17} strokeWidth={2} aria-hidden="true" />
+      <span>Back to Aircraft</span>
+    </Link>
+  );
+}
 
 function AircraftDetails() {
-  // Aircraft UUID from the URL
-  // Used for API requests, not displayed to the user
   const { aircraftId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const canManageAircraft = user?.role === "admin" || user?.role === "hangar_manager";
 
+  // Keep the exact original access policy for edit and delete.
+  const canManageAircraft =
+    user?.role === "admin" || user?.role === "hangar_manager";
+
+  const [aircraft, setAircraft] = useState<Aircraft | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotFound, setIsNotFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [retryCount, setRetryCount] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
-  const [aircraft, setAircraft] = useState<Aircraft | null>(null);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [isNotFound, setIsNotFound] = useState(false);
-
-  const [errorMessage, setErrorMessage] = useState("");
-  const [retryCount, setRetryCount] = useState(0);
-
-  // ========================================
-  // LOAD AIRCRAFT
-  // ========================================
-
+  // Preserve the existing API request, retry flow, and 404 handling.
   useEffect(() => {
     let isActive = true;
 
@@ -139,6 +118,7 @@ function AircraftDetails() {
       setAircraft(null);
       setIsNotFound(false);
       setErrorMessage("");
+      setDeleteError("");
 
       if (!aircraftId) {
         setIsNotFound(true);
@@ -148,10 +128,7 @@ function AircraftDetails() {
 
       try {
         const result = await getAircraftById(aircraftId);
-
-        if (!isActive) {
-          return;
-        }
+        if (!isActive) return;
 
         if (!result) {
           setIsNotFound(true);
@@ -160,36 +137,25 @@ function AircraftDetails() {
 
         setAircraft(result);
       } catch (error: unknown) {
-        if (!isActive) {
-          return;
-        }
+        if (!isActive) return;
 
-        if (
-          isAxiosError(error) &&
-          error.response?.status === 404
-        ) {
+        if (isAxiosError(error) && error.response?.status === 404) {
           setIsNotFound(true);
         } else {
           setErrorMessage(getErrorMessage(error));
         }
       } finally {
-        if (isActive) {
-          setIsLoading(false);
-        }
+        if (isActive) setIsLoading(false);
       }
     }
 
     void loadAircraft();
-
     return () => {
       isActive = false;
     };
   }, [aircraftId, retryCount]);
 
-  // ========================================
-  // DELETE (MANAGERS ONLY)
-  // ========================================
-
+  // Preserve confirmation before the original delete request.
   async function handleDelete(): Promise<void> {
     if (!canManageAircraft || !aircraft || isDeleting) return;
 
@@ -210,82 +176,48 @@ function AircraftDetails() {
     }
   }
 
-  // ========================================
-  // LOADING
-  // ========================================
-
   if (isLoading) {
     return (
       <section className="aircraft-details-page">
-        <div
-          className="aircraft-details-state"
-          role="status"
-        >
-          <span
-            className="aircraft-spinner"
-            aria-hidden="true"
-          />
-
-          <p>Loading aircraft details...</p>
+        <div className="hm-profile-state" role="status">
+          <span className="hm-profile-spinner" aria-hidden="true" />
+          <h1>Loading aircraft profile</h1>
+          <p>Retrieving the latest fleet information...</p>
         </div>
       </section>
     );
   }
-
-  // ========================================
-  // NOT FOUND
-  // ========================================
 
   if (isNotFound) {
     return (
       <section className="aircraft-details-page">
-        <Link
-          className="aircraft-back-link"
-          to="/app/aircraft"
-        >
-          Back to Aircraft
-        </Link>
-
-        <div className="aircraft-details-state">
+        <BackToAircraft />
+        <div className="hm-profile-state">
+          <Plane size={36} strokeWidth={1.6} aria-hidden="true" />
           <h1>Aircraft not found</h1>
-
           <p>
-            The requested aircraft does not exist
-            or is no longer available.
+            The requested aircraft does not exist or is no longer available.
           </p>
         </div>
       </section>
     );
   }
 
-  // ========================================
-  // ERROR
-  // ========================================
-
   if (!aircraft || errorMessage) {
     return (
       <section className="aircraft-details-page">
-        <Link
-          className="aircraft-back-link"
-          to="/app/aircraft"
-        >
-          Back to Aircraft
-        </Link>
-
-        <div className="aircraft-details-state aircraft-state-error">
+        <BackToAircraft />
+        <div className="hm-profile-state hm-profile-state--error">
           <h1>Unable to load aircraft</h1>
-
           <p role="alert">
             {errorMessage || "An unexpected error occurred."}
           </p>
-
           <button
             type="button"
-            className="aircraft-button"
-            onClick={() =>
-              setRetryCount((current) => current + 1)
-            }
+            className="hm-profile-btn hm-profile-btn--primary"
+            onClick={() => setRetryCount((current) => current + 1)}
           >
+            <RefreshCw size={16} aria-hidden="true" />
             Try again
           </button>
         </div>
@@ -293,107 +225,143 @@ function AircraftDetails() {
     );
   }
 
-  // ========================================
-  // AIRCRAFT INFORMATION
-  // ========================================
-
   return (
     <section className="aircraft-details-page">
-      <Link
-        className="aircraft-back-link"
-        to="/app/aircraft"
-      >
-        Back to Aircraft
-      </Link>
+      <BackToAircraft />
 
-      {/* PAGE HEADER */}
-      <div className="page-heading">
-        <p className="page-eyebrow">
-          Fleet Management
-        </p>
-
-        {/* Display tail number instead of UUID */}
-        <h1>{aircraft.tail_number}</h1>
-
-        <p className="page-description">
-          {aircraft.manufacturer} {aircraft.model}
-        </p>
-
-        {canManageAircraft && (
-          <div className="aircraft-row-actions">
-            <Link
-              to={`/app/aircraft/${aircraft.id}/edit`}
-              className="aircraft-button"
-            >
-              Edit Aircraft
-            </Link>
-            <button
-              type="button"
-              className="aircraft-button aircraft-button-secondary"
-              onClick={() => void handleDelete()}
-              disabled={isDeleting}
-            >
-              {isDeleting ? "Deleting..." : "Delete Aircraft"}
-            </button>
-          </div>
-        )}
-        {deleteError && (
-          <p role="alert">{deleteError}</p>
-        )}
-      </div>
-
-      {/* AIRCRAFT DETAILS CARD */}
-      <section className="aircraft-details-card">
-        <div className="aircraft-details-card-heading">
-          <div>
-            <h2>Aircraft Information</h2>
-
-            <p>
-              Current aircraft details and operational status.
-            </p>
-          </div>
-
-          <span
-            className={`aircraft-status-badge status-${aircraft.status.toLowerCase()}`}
-          >
-            {formatStatus(aircraft.status)}
-          </span>
+      {/* Aircraft identity: all values come from the existing API response. */}
+      <header className="hm-profile-hero">
+        <div className="hm-profile-hero-decor" aria-hidden="true">
+          <Plane size={190} strokeWidth={0.75} />
         </div>
 
-        <dl className="aircraft-details-grid">
-          <div className="aircraft-detail-field">
-            <dt>Tail Number</dt>
-            <dd>{aircraft.tail_number}</dd>
+        <div className="hm-profile-hero-content">
+          <div className="hm-profile-eyebrow">
+            <span className="hm-profile-live-dot" aria-hidden="true" />
+            Fleet Operations / Aircraft Profile
           </div>
 
-          <div className="aircraft-detail-field">
-            <dt>Manufacturer</dt>
+          <div className="hm-profile-hero-heading">
+            <div className="hm-profile-hero-title">
+              <p className="hm-profile-hero-label">TAIL NUMBER</p>
+              <h1>{aircraft.tail_number}</h1>
+              <p className="hm-profile-hero-subtitle">
+                {aircraft.manufacturer} <span aria-hidden="true">·</span>{" "}
+                {aircraft.model}
+              </p>
+            </div>
+
+            <span
+              className={`hm-profile-status hm-profile-status--${aircraft.status.toLowerCase()}`}
+              aria-label={`Operational status: ${formatStatus(aircraft.status)}`}
+            >
+              <span className="hm-profile-status-dot" aria-hidden="true" />
+              {formatStatus(aircraft.status)}
+            </span>
+          </div>
+
+          <div className="hm-profile-hero-bottom">
+            <span className="hm-profile-hero-caption">
+              <ShieldCheck size={17} aria-hidden="true" />
+              Aircraft fleet record
+            </span>
+
+            {canManageAircraft && (
+              <div className="hm-profile-hero-actions">
+                <Link
+                  to={`/app/aircraft/${aircraft.id}/edit`}
+                  className="hm-profile-btn hm-profile-btn--hero"
+                >
+                  <Pencil size={17} aria-hidden="true" />
+                  Edit Aircraft
+                </Link>
+                <button
+                  type="button"
+                  className="hm-profile-btn hm-profile-btn--delete"
+                  onClick={() => void handleDelete()}
+                  disabled={isDeleting}
+                  aria-busy={isDeleting}
+                >
+                  <Trash2 size={17} aria-hidden="true" />
+                  {isDeleting ? "Deleting..." : "Delete Aircraft"}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {deleteError && (
+        <div className="hm-profile-delete-error" role="alert">
+          {deleteError}
+        </div>
+      )}
+
+      {/* No fictional flight logs or maintenance history: only actual fields. */}
+      <section className="hm-profile-panel" aria-labelledby="hm-profile-spec-heading">
+        <div className="hm-profile-panel-heading">
+          <div className="hm-profile-panel-heading-icon">
+            <Plane size={21} aria-hidden="true" />
+          </div>
+          <div>
+            <p className="hm-profile-panel-eyebrow">AIRCRAFT PROFILE</p>
+            <h2 id="hm-profile-spec-heading">Technical Specifications</h2>
+            <p>Identification and manufacturing details</p>
+          </div>
+          <span className="hm-profile-panel-mark" aria-hidden="true">01 / 02</span>
+        </div>
+
+        <dl className="hm-profile-spec-grid">
+          <div className="hm-profile-detail-field">
+            <dt><Hash size={16} aria-hidden="true" />Tail Number</dt>
+            <dd className="hm-profile-detail-field--accent">{aircraft.tail_number}</dd>
+          </div>
+          <div className="hm-profile-detail-field">
+            <dt><Factory size={16} aria-hidden="true" />Manufacturer</dt>
             <dd>{aircraft.manufacturer}</dd>
           </div>
-
-          <div className="aircraft-detail-field">
-            <dt>Model</dt>
+          <div className="hm-profile-detail-field">
+            <dt><Plane size={16} aria-hidden="true" />Model</dt>
             <dd>{aircraft.model}</dd>
           </div>
-
-          <div className="aircraft-detail-field">
-            <dt>Serial Number</dt>
+          <div className="hm-profile-detail-field">
+            <dt><FileText size={16} aria-hidden="true" />Serial Number</dt>
             <dd>{aircraft.serial_number}</dd>
           </div>
-
-          <div className="aircraft-detail-field">
-            <dt>Manufacture Year</dt>
+          <div className="hm-profile-detail-field">
+            <dt><CalendarDays size={16} aria-hidden="true" />Manufacture Year</dt>
             <dd>{aircraft.manufacture_year}</dd>
           </div>
+        </dl>
+      </section>
 
-          <div className="aircraft-detail-field">
-            <dt>Created At</dt>
-            <dd>{formatDate(aircraft.created_at)}</dd>
+      <section className="hm-profile-panel hm-profile-panel--activity" aria-labelledby="hm-profile-record-heading">
+        <div className="hm-profile-panel-heading">
+          <div className="hm-profile-panel-heading-icon hm-profile-panel-heading-icon--teal">
+            <Clock3 size={21} aria-hidden="true" />
           </div>
+          <div>
+            <p className="hm-profile-panel-eyebrow">RECORD INFORMATION</p>
+            <h2 id="hm-profile-record-heading">Record Timeline</h2>
+            <p>When this aircraft record was created and updated</p>
+          </div>
+          <span className="hm-profile-panel-mark" aria-hidden="true">02 / 02</span>
+        </div>
 
-          <div className="aircraft-detail-field">
-            <dt>Last Updated</dt>
-            <dd>{formatDate(aircraft.updated_at)}</dd>
+        <dl className="hm-profile-timeline-grid">
+          <div className="hm-profile-timeline-item">
+            <div className="hm-profile-timeline-icon"><CalendarDays size={19} aria-hidden="true" /></div>
+            <div>
+              <dt>Created At</dt>
+              <dd>{formatDate(aircraft.created_at)}</dd>
+            </div>
+          </div>
+          <div className="hm-profile-timeline-item">
+            <div className="hm-profile-timeline-icon"><RefreshCw size={19} aria-hidden="true" /></div>
+            <div>
+              <dt>Last Updated</dt>
+              <dd>{formatDate(aircraft.updated_at)}</dd>
+            </div>
           </div>
         </dl>
       </section>
