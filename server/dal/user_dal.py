@@ -1,11 +1,19 @@
 from db.supabase_client import supabase
 
 
-def get_all_users():
-    response = (
+
+def get_all_users(role: str | None = None):
+    query = (
         supabase
         .table("users")
         .select("id, display_name, email, role")
+    )
+
+    if role is not None:
+        query = query.eq("role", role)
+
+    response = (
+        query
         .order("display_name")
         .execute()
     )

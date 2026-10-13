@@ -44,4 +44,6 @@ def get_users(
         )
     )
 ):
-    return get_all_users_controller()
+    return get_all_users_controller(
+        current_user["role"]
+    )

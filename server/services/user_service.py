@@ -5,7 +5,7 @@ from dal.user_dal import (
     get_all_users,
 )
 
-from schemas.user_schema import RoleUpdate
+from schemas.user_schema import RoleUpdate, UserRole
 
 
 def update_user_role_service(user_id: str, data: RoleUpdate):
@@ -26,5 +26,17 @@ def update_user_role_service(user_id: str, data: RoleUpdate):
         "role": updated_user["role"],
     }
 
-def get_all_users_service():
-    return get_all_users()
+
+def get_all_users_service(user_role: str):
+    if user_role == UserRole.TEAM_LEAD.value:
+        return get_all_users(
+            role=UserRole.TECHNICIAN.value
+        )
+
+    if user_role in (
+        UserRole.ADMIN.value,
+        UserRole.HANGAR_MANAGER.value,
+    ):
+        return get_all_users()
+
+    raise PermissionError("Insufficient permissions")

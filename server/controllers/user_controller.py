@@ -23,5 +23,13 @@ def update_user_role_controller(
             detail=str(error)
         )
 
-def get_all_users_controller():
-    return get_all_users_service()    
+
+def get_all_users_controller(user_role: str):
+    try:
+        return get_all_users_service(user_role)
+
+    except PermissionError as error:
+        raise HTTPException(
+            status_code=403,
+            detail=str(error)
+        )
