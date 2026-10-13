@@ -40,3 +40,4 @@ class InspectionResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     is_overdue: bool
+    aircraft_tail_number: str | None = None
